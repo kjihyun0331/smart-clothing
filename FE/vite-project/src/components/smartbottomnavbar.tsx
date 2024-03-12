@@ -8,13 +8,13 @@ function SmartBottomNavbar() {
 
   return (
     <NavContainer>
-      {navConfig.map(({ Icon, path, title }) => {
+      {navConfig.map(({ Icon, path, title, name }) => {
         const isActive = location.pathname === title;
-        console.log(location.pathname);
         return (
-          <div key={title} onClick={() => navigate(path)}>
-            <Icon isActive={isActive} />;
-          </div>
+          <NavMenu key={title} onClick={() => navigate(path)}>
+            <Icon isActive={isActive} />
+            <p className="name">{name}</p>
+          </NavMenu>
         );
       })}
     </NavContainer>
@@ -31,10 +31,23 @@ const NavContainer = styled.div`
   bottom: 0;
   display: flex;
   box-sizing: border-box;
-  padding-top: 1rem;
   justify-content: space-around;
+  padding-bottom: 1.5rem;
 `;
 
+const NavMenu = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 0.5rem;
+
+  .name {
+    color: white;
+    opacity: 0.7;
+    font-size: 0.7rem;
+  }
+`;
 // { navConfig.map(
 //   (
 //     (title, path, icon)

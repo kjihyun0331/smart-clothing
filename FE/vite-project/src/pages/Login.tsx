@@ -1,4 +1,4 @@
-import { Container, Title, Form, Button } from "@/pages/loginStyle";
+import { Container, Title, Form, Button } from "@/pages/smartStyle";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -6,7 +6,7 @@ function Login() {
 
   const handlelogin = (): void => {
     localStorage.setItem("token", "dummyuser");
-    navigate("/smart");
+    navigate("/smarthome");
   };
 
   return (

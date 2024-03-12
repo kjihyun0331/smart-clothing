@@ -4,6 +4,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import Login from "@/pages/Login";
 import SmartThings from "@/pages/SmartThings";
 import PageNotFound from "@/pages/PageNotFound";
+import AddDevice from "@/pages/Device";
 
 const router = createBrowserRouter([
   {
@@ -14,12 +15,12 @@ const router = createBrowserRouter([
     element: <ProtectedRoutes />,
     children: [
       {
-        path: "/smart",
+        path: "/smarthome",
         element: <SmartThings />,
       },
       {
         path: "/device",
-        element: <SmartThings />,
+        element: <AddDevice />,
       },
     ],
   },
