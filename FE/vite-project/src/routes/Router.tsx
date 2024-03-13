@@ -1,10 +1,14 @@
 // import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
-import Login from "@/pages/Login";
-import SmartThings from "@/pages/SmartThings";
+import Login from "@/pages/SmartThings/Login";
+import SmartThings from "@/pages/SmartThings/SmartThings";
 import PageNotFound from "@/pages/PageNotFound";
-import AddDevice from "@/pages/Device";
+import AddDevice from "@/pages/SmartThings/Device";
+import Agreement from "@/pages/SmartThings/Agreement";
+import Home from "@/pages/Home";
+import Calendar from "@/pages/Calendar";
+import Closet from "@/pages/Closet";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +25,26 @@ const router = createBrowserRouter([
       {
         path: "/device",
         element: <AddDevice />,
+      },
+      {
+        path: "/agreement",
+        element: <Agreement />,
+      },
+      {
+        path: "/home",
+        element: <Home />,
+      },
+      {
+        path: "/calendar",
+        element: <Calendar />,
+      },
+      {
+        path: "/closet",
+        element: <Closet />,
+      },
+      {
+        path: "/basket",
+        element: <Closet />,
       },
     ],
   },

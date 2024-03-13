@@ -1,15 +1,15 @@
 import styled from "styled-components";
-import navConfig from "@/components/config-smartbottomnavbar";
-import { useLocation, useNavigate } from "react-router-dom";
+import smartNavConfig from "./config-smartbottomnavbar";
+import { useNavigate } from "react-router-dom";
 
 function SmartBottomNavbar() {
-  const location = useLocation();
+  // const location = useLocation();
   const navigate = useNavigate();
 
   return (
     <NavContainer>
-      {navConfig.map(({ Icon, path, title, name }) => {
-        const isActive = location.pathname === title;
+      {smartNavConfig.map(({ Icon, path, title, name }) => {
+        const isActive = false;
         return (
           <NavMenu key={title} onClick={() => navigate(path)}>
             <Icon isActive={isActive} />

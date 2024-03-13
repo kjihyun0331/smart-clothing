@@ -1,3 +1,3 @@
-export interface SmartNavbarUITypes {
+export interface NavbarUITypes {
   isActive: boolean;
 }

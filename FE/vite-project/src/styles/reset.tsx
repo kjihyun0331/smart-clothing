@@ -39,7 +39,6 @@ body {
     /* font-family: "notosans"; */
 	font-family: 'SamsungSans', sans-serif;
 	box-sizing: border-box;
-
 }
 ol, ul {
 	list-style: none;

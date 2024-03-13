@@ -1,6 +1,6 @@
-import { SmartNavbarUITypes } from "types/smartNavbarUi/smartNavbarUi";
+import { NavbarUITypes } from "types/smartNavbarUi/smartNavbarUi";
 
-export default function Menu({ isActive }: SmartNavbarUITypes) {
+export default function Menu({ isActive }: NavbarUITypes) {
   return (
     <svg
       fill="none"

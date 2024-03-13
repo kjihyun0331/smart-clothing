@@ -1,11 +1,11 @@
 import Layout from "@/components/Layout";
 
-function Home() {
+function Basket() {
   return (
     <Layout>
-      <div>HOME</div>
+      <div>Basket</div>
     </Layout>
   );
 }
 
-export default Home;
+export default Basket;

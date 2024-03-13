@@ -1,6 +1,6 @@
-import { SmartNavbarUITypes } from "types/smartNavbarUi/smartNavbarUi";
+import { NavbarUITypes } from "types/smartNavbarUi/smartNavbarUi";
 
-export default function Star({ isActive }: SmartNavbarUITypes) {
+export default function Star({ isActive }: NavbarUITypes) {
   return (
     <svg
       viewBox="0 0 1024 1024"

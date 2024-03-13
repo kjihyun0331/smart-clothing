@@ -1,4 +1,4 @@
-import { Container, Title, Form, Button } from "@/pages/smartStyle";
+import { Container, Title, Form, Button } from "@/pages/SmartThings/smartStyle";
 import { useNavigate } from "react-router-dom";
 
 function Login() {

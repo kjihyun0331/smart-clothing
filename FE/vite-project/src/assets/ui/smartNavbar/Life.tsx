@@ -1,11 +1,11 @@
-import { SmartNavbarUITypes } from "types/smartNavbarUi/smartNavbarUi";
+import { NavbarUITypes } from "types/smartNavbarUi/smartNavbarUi";
 
-export default function Life({ isActive }: SmartNavbarUITypes) {
+export default function Life({ isActive }: NavbarUITypes) {
   return (
     <svg
       fill="white"
       viewBox="0 0 16 16"
-      height="2em"
+      height="2rem"
       width="2em"
       opacity={isActive ? 1 : 0.6}
     >

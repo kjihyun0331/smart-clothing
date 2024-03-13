@@ -4,7 +4,7 @@ import Automatic from "@/assets/ui/smartNavbar/Automatic";
 import Life from "@/assets/ui/smartNavbar/Life";
 import Menu from "@/assets/ui/smartNavbar/Menu";
 
-const navConfig = [
+const smartNavConfig = [
   {
     title: "/smart",
     path: "/smarthome",
@@ -19,7 +19,7 @@ const navConfig = [
   },
   {
     title: "/smarthome",
-    path: "/smarthome",
+    path: "/agreement",
     Icon: Life,
     name: "라이프",
   },
@@ -37,4 +37,4 @@ const navConfig = [
   },
 ];
 
-export default navConfig;
+export default smartNavConfig;
