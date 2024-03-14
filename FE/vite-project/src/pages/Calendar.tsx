@@ -1,18 +1,12 @@
 import Layout from "@/components/Layout";
-import styled from "styled-components";
+import MyCalendar from "@/sections/calendar/Calendar";
 
 function Calendar() {
   return (
     <Layout>
-      <Test>Calendar</Test>
+      <MyCalendar />
     </Layout>
   );
 }
 
 export default Calendar;
-
-const Test = styled.div`
-  width: 100%;
-  height: 200dvh;
-  background-color: lightcoral;
-`;

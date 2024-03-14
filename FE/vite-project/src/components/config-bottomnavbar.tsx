@@ -8,25 +8,21 @@ const navConfig = [
     title: "home",
     path: "/home",
     Icon: IconHome,
-    name: "홈",
   },
   {
     title: "calendar",
     path: "/calendar",
     Icon: IconCalendar,
-    name: "캘린더",
   },
   {
     title: "closet",
     path: "/closet",
     Icon: IconCloset,
-    name: "옷장",
   },
   {
     title: "basket",
     path: "/basket",
     Icon: IconBasket,
-    name: "모아보기",
   },
 ];
 

@@ -1,6 +1,6 @@
 import { NavbarUITypes } from "types/smartNavbarUi/smartNavbarUi";
 
-export default function Device({ isActive }: NavbarUITypes) {
+export default function Device({ isactive }: NavbarUITypes) {
   return (
     <svg
       fill="none"
@@ -10,7 +10,7 @@ export default function Device({ isActive }: NavbarUITypes) {
       viewBox="0 0 24 24"
       height="2em"
       width="2em"
-      opacity={isActive ? 1 : 0.6}
+      opacity={isactive ? 1 : 0.6}
     >
       <path stroke="none" d="M0 0h24v24H0z" />
       <path d="M5 4 H9 A1 1 0 0 1 10 5 V9 A1 1 0 0 1 9 10 H5 A1 1 0 0 1 4 9 V5 A1 1 0 0 1 5 4 z" />

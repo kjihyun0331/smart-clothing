@@ -10,12 +10,11 @@ function BottomNavBar() {
   const navigate = useNavigate();
   return (
     <NavbarContainer>
-      {navConfig.map(({ Icon, path, title, name }) => {
+      {navConfig.map(({ Icon, path, title }) => {
         const isActive = location.pathname.includes(title);
         return (
           <NavMenu key={title} onClick={() => navigate(path)}>
-            <Icon isActive={isActive} />
-            <p className="name">{name}</p>
+            <Icon isactive={isActive} />
           </NavMenu>
         );
       })}
@@ -46,10 +45,4 @@ const NavMenu = styled.div`
   justify-content: center;
   align-items: center;
   row-gap: 0.5rem;
-
-  .name {
-    color: ${theme.colors.lightgrey};
-    opacity: 0.7;
-    font-size: 0.7rem;
-  }
 `;

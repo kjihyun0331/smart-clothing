@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import "@/fonts/font.css";
 
 export const GlobalStyles = createGlobalStyle`
 	html, body, div, span, applet, object, iframe,
@@ -80,10 +81,10 @@ input:-webkit-autofill:active {
     src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 } */
 
-@font-face {
+/* @font-face {
     font-family: 'SamsungSans';
-    src: url('./fonts/SamsungSans-Regular.ttf') format('truetype');
+    src: url('./../fonts/SamsungSans-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-}
+} */
 `;

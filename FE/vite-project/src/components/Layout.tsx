@@ -19,5 +19,4 @@ const Container = styled.div`
   height: 100dvh;
   position: relative;
   box-sizing: border-box;
-  min-width: 0;
 `;
