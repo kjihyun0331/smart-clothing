@@ -6,6 +6,7 @@ import {
   StyledDot,
 } from "./CalendarStyle";
 import Schedule from "./Schedule";
+import React from "react";
 import { useState } from "react";
 import moment from "moment";
 import "moment/dist/locale/ko";
@@ -16,14 +17,14 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 const MyCalendar = () => {
   const today = new Date();
   moment.locale("ko");
-  const [date, setDate] = useState<ValuePiece>(today);
+  const [date, setDate] = useState<Value>(today);
   const [activeStartDate, setActiveStartDate] = useState<Date | null>(
     new Date()
   );
 
   const attendDay = ["2024-03-01", "2024-05-02"];
 
-  const handleDateChange = (newDate: ValuePiece) => {
+  const handleDateChange = (newDate: Value) => {
     setDate(newDate);
   };
 
@@ -38,7 +39,7 @@ const MyCalendar = () => {
       <StyledCalendarWrapper>
         <StyledCalendar
           value={date}
-          onChange={handleDateChange}
+          onChange={(e) => handleDateChange(e)}
           formatDay={(locale, date) => moment(date).format("D")}
           formatYear={(locale, date) => moment(date).format("YYYY")}
           formatMonthYear={(locale, date) => moment(date).format("YYYY. MM")}
@@ -64,10 +65,17 @@ const MyCalendar = () => {
             ) {
               html.push(<StyledToday key={"today"}>오늘</StyledToday>);
             }
-            if (
-              attendDay.find((x) => x === moment(date).format("YYYY-MM-DD"))
-            ) {
-              html.push(<StyledDot key={moment(date).format("YYYY-MM-DD")} />);
+            if (view === "month") {
+              if (
+                attendDay.find((x) => x === moment(date).format("YYYY-MM-DD"))
+              ) {
+                html.push(
+                  <React.Fragment key={moment(date).format("YYYY-MM-DD")}>
+                    <StyledDot />
+                    {/* <p>kk</p> */}
+                  </React.Fragment>
+                );
+              }
             }
             return <>{html}</>;
           }}

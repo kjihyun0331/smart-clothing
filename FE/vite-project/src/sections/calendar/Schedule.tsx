@@ -3,17 +3,20 @@ import "moment/dist/locale/ko";
 import styled from "styled-components";
 import { AddSchedule } from "./AddSchedule";
 import { useState } from "react";
+import { MomentInput } from "moment";
 
 type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece] | string | number;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface SchedulePropType {
-  date: Value | undefined;
+  date: Value;
 }
 
 const Schedule = ({ date }: SchedulePropType) => {
   moment.locale("ko");
-  const selected: string | null = moment(date).format("M월 DD일 (dd)");
+  const selected: string | null = moment(date as MomentInput).format(
+    "M월 DD일 (dd)"
+  );
   const isLoading: boolean = true;
 
   // const { isCommentLoading, isCommentError, commentState } = useCommentQuery(shopId);

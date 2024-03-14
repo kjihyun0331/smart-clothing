@@ -63,11 +63,11 @@ export const StyledCalendarWrapper = styled.div`
     }
     /* 일요일에만 빨간색 폰트 */
     abbr[title="일요일"] {
-      color: red;
+      color: #fc5d5d;
     }
     /* 토요일에만 파란색 폰트 */
     abbr[title="토요일"] {
-      color: blue;
+      color: ${(props) => props.theme.colors.blue};
     }
   }
 
