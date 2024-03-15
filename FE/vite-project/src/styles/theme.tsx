@@ -15,7 +15,7 @@ const colors = {
   backgroundcolor: "#f2f2f2 ",
   grey: "#aeaeae",
   lightgrey: "#D6D6D6",
-  pointcolor: "#42A981",
+  pointcolor: "#45ba8c",
   blue: "#0070cc",
 };
 
@@ -31,6 +31,13 @@ const common = {
     flex-direction: column;
     justify-contents: center;
     align-items: center;
+  `,
+  PointButton: `
+    border: none;
+    background-color: #45ba8c;
+    color: white;
+    border-radius: 7px;
+    box-sizing: border-box;
   `,
 };
 

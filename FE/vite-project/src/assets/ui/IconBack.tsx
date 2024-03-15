@@ -1,10 +1,6 @@
-type IconBackProps = {
-  onClick: () => void;
-};
+import { IconProp } from "@/types/IconProp";
 
-// Device({ isActive }: SmartNavbarUITypes) {
-
-function IconBack({ onClick }: IconBackProps) {
+function IconBack({ onClick }: IconProp) {
   return (
     <svg viewBox="0 0 512 512" fill="currentColor" height="2em" width="2em">
       <path

@@ -12,7 +12,7 @@ function SmartBottomNavbar() {
         const isActive = false;
         return (
           <NavMenu key={title} onClick={() => navigate(path)}>
-            <Icon isActive={isActive} />
+            <Icon isactive={isActive} />
             <p className="name">{name}</p>
           </NavMenu>
         );

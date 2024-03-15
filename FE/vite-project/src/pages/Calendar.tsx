@@ -1,10 +1,10 @@
 import Layout from "@/components/Layout";
-import MyCalendar from "@/sections/calendar/Calendar";
+import { Outlet } from "react-router-dom";
 
 function Calendar() {
   return (
     <Layout>
-      <MyCalendar />
+      <Outlet />
     </Layout>
   );
 }
