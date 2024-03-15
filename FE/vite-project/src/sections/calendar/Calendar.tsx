@@ -6,7 +6,6 @@ import {
   StyledDot,
 } from "./CalendarStyle";
 import Schedule from "./Schedule";
-import React from "react";
 import { useState } from "react";
 import moment from "moment";
 import "moment/dist/locale/ko";
@@ -18,7 +17,7 @@ const MyCalendar = () => {
   const today = new Date();
   moment.locale("ko");
   const [date, setDate] = useState<Value>(today);
-  const [activeStartDate, setActiveStartDate] = useState<Date | null>(
+  const [activeStartDate, setActiveStartDate] = useState<ValuePiece>(
     new Date()
   );
 
@@ -39,10 +38,10 @@ const MyCalendar = () => {
       <StyledCalendarWrapper>
         <StyledCalendar
           value={date}
-          onChange={(e) => handleDateChange(e)}
-          formatDay={(locale, date) => moment(date).format("D")}
-          formatYear={(locale, date) => moment(date).format("YYYY")}
-          formatMonthYear={(locale, date) => moment(date).format("YYYY. MM")}
+          onChange={handleDateChange}
+          formatDay={(date) => moment(date).format("D")}
+          formatYear={(date) => moment(date).format("YYYY")}
+          formatMonthYear={(date) => moment(date).format("YYYY. MM")}
           calendarType="gregory"
           showNeighboringMonth={false}
           next2Label={null}
@@ -65,17 +64,10 @@ const MyCalendar = () => {
             ) {
               html.push(<StyledToday key={"today"}>오늘</StyledToday>);
             }
-            if (view === "month") {
-              if (
-                attendDay.find((x) => x === moment(date).format("YYYY-MM-DD"))
-              ) {
-                html.push(
-                  <React.Fragment key={moment(date).format("YYYY-MM-DD")}>
-                    <StyledDot />
-                    {/* <p>kk</p> */}
-                  </React.Fragment>
-                );
-              }
+            if (
+              attendDay.find((x) => x === moment(date).format("YYYY-MM-DD"))
+            ) {
+              html.push(<StyledDot key={moment(date).format("YYYY-MM-DD")} />);
             }
             return <>{html}</>;
           }}

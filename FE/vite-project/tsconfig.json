@@ -20,10 +20,10 @@
     "jsx": "react-jsx",
 
     /* Linting  : develop에 올릴 때는 false로!*/
-    "strict": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": false
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src", "src/main.tsx", "vite-env.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
