@@ -8,8 +8,8 @@ export default function IconCalendar({ isactive }: NavbarUITypes) {
       <svg
         viewBox="0 0 16 16"
         fill={isactive ? theme.colors.pointcolor : theme.colors.grey}
-        height="1.5em"
-        width="1.5em"
+        height="1.7em"
+        width="1.7em"
         opacity={isactive ? 1 : 0.6}
       >
         <path
@@ -30,11 +30,8 @@ export default function IconCalendar({ isactive }: NavbarUITypes) {
 }
 
 const NavMenu = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  row-gap: 0.5rem;
+  ${({ theme }) => theme.common.flexCenterColumn};
+  row-gap: 0.7rem;
 
   .name {
     opacity: 0.7;

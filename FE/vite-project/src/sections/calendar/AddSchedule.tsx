@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import IconClose from "@/assets/ui/IconClose";
-import { situation } from "./config-situation";
+import { situation } from "./config-schedule";
 import { useState } from "react";
 import { theme } from "@/styles/theme";
+import { outfitSelectionOptions } from "./config-schedule";
+import { useNavigate } from "react-router-dom";
 
 interface propType {
   selected: string | null;
@@ -10,6 +12,7 @@ interface propType {
 }
 
 export const AddSchedule = ({ selected, setPopup }: propType) => {
+  const navigator = useNavigate();
   const close = () => {
     setPopup(false);
   };
@@ -62,6 +65,13 @@ export const AddSchedule = ({ selected, setPopup }: propType) => {
           onChange={handleInputChange}
           value={title}
         />
+        {outfitSelectionOptions.map(({ name, path }) => {
+          return (
+            <GreenButton key={name} onClick={() => navigator(path)}>
+              {name}
+            </GreenButton>
+          );
+        })}
       </Container>
     </AddSKEDPopUp>
   );
@@ -99,7 +109,7 @@ const Container = styled.div`
 
   .date {
     align-self: baseline;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
   }
 
   .situation {
@@ -123,4 +133,11 @@ const Container = styled.div`
   input::placeholder {
     color: lightgrey;
   }
+`;
+
+const GreenButton = styled.button`
+  ${({ theme }) => theme.common.PointButton};
+  width: 60%;
+  height: 2.1rem;
+  margin-top: 0.5rem;
 `;

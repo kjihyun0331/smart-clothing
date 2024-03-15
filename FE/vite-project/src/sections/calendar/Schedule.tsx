@@ -49,9 +49,7 @@ const NoSchedule = ({ selected }: NoSchedulePropType) => {
   return (
     <ContentWrapper>
       <p className="description">아직 등록된 일정이 없습니다.</p>
-      <button className="newschedule" onClick={() => setPopup(true)}>
-        일정 등록하기
-      </button>
+      <GreenButton onClick={() => setPopup(true)}>일정 등록하기</GreenButton>
       {popup ? <AddSchedule setPopup={setPopup} selected={selected} /> : <></>}
     </ContentWrapper>
   );
@@ -69,14 +67,11 @@ const ContentWrapper = styled.div`
     color: ${(props) => props.theme.colors.grey};
     margin-bottom: 1rem;
   }
+`;
 
-  .newschedule {
-    border: none;
-    background-color: ${(props) => props.theme.colors.pointcolor};
-    opacity: 0.7;
-    box-sizing: border-box;
-    padding: 1rem 1rem;
-    border-radius: 0.5rem;
-    color: white;
-  }
+const GreenButton = styled.button`
+  ${({ theme }) => theme.common.PointButton};
+  opacity: 0.7;
+  width: 50%;
+  padding: 1rem 1rem;
 `;

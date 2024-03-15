@@ -1,3 +1,4 @@
+// situation : 상황 키워드, outfitSelectionOptions : 옷 선택 버튼 3종류
 export const situation = [
   {
     name: "졸업식",
@@ -34,5 +35,20 @@ export const situation = [
   },
   {
     name: "기타",
+  },
+];
+
+export const outfitSelectionOptions = [
+  {
+    name: "옷장에서 고르기",
+    path: "makeoutfit",
+  },
+  {
+    name: "과거 코디에서 고르기",
+    path: "past",
+  },
+  {
+    name: "코디 추천 받기",
+    path: "recommend",
   },
 ];

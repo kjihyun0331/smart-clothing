@@ -64,7 +64,7 @@ export const Title = styled.p`
   letter-spacing: 0.05rem;
   position: absolute;
   top: 15%;
-  left: 30%;
+  left: 35%;
   transform: translate(-50%, -50%);
 `;
 
@@ -72,10 +72,12 @@ export const Button = styled.button`
   border: none;
   background-color: ${theme.colors.blue};
   color: white;
-  border-radius: 20px;
-  width: 80%;
-  height: 2.5rem;
+  border-radius: 30px;
+  width: 90%;
+  height: 3rem;
   font-size: 1rem;
+  box-sizing: border-box;
+  padding: 0.7rem 0;
 `;
 
 export const Plus = styled.div`

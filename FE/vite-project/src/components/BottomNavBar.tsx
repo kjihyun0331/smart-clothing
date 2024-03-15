@@ -34,15 +34,10 @@ const NavbarContainer = styled.div`
   display: flex;
   box-sizing: border-box;
   justify-content: space-around;
+  padding-top: 0.5rem;
   padding-bottom: 1.5rem;
   max-width: 450px;
   min-width: 320px;
 `;
 
-const NavMenu = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  row-gap: 0.5rem;
-`;
+const NavMenu = styled.div``;

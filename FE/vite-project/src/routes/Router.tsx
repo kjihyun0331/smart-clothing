@@ -9,6 +9,10 @@ import Agreement from "@/pages/SmartThings/Agreement";
 import Home from "@/pages/Home";
 import Calendar from "@/pages/Calendar";
 import Closet from "@/pages/Closet";
+import MyCalendar from "@/sections/calendar/Calendar";
+import Recommend from "@/sections/calendar/Recommend";
+import Past from "@/sections/calendar/Past";
+import MakeOutfit from "@/sections/calendar/MakeOutfit";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +22,7 @@ const router = createBrowserRouter([
   {
     element: <ProtectedRoutes />,
     children: [
+      // 처음 진입 페이지
       {
         path: "/smarthome",
         element: <SmartThings />,
@@ -30,6 +35,7 @@ const router = createBrowserRouter([
         path: "/agreement",
         element: <Agreement />,
       },
+      // 우리 서비스 메인 Navbar
       {
         path: "/home",
         element: <Home />,
@@ -37,6 +43,24 @@ const router = createBrowserRouter([
       {
         path: "/calendar",
         element: <Calendar />,
+        children: [
+          {
+            path: "",
+            element: <MyCalendar />,
+          },
+          {
+            path: "recommend",
+            element: <Recommend />,
+          },
+          {
+            path: "past",
+            element: <Past />,
+          },
+          {
+            path: "makeoutfit",
+            element: <MakeOutfit />,
+          },
+        ],
       },
       {
         path: "/closet",
