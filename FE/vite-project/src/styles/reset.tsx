@@ -21,6 +21,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+	box-sizing: border-box;
 }
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
@@ -39,7 +40,6 @@ body {
     overflow-x: hidden;
     /* font-family: "notosans"; */
 	font-family: 'SamsungSans', sans-serif;
-	box-sizing: border-box;
 }
 ol, ul {
 	list-style: none;
