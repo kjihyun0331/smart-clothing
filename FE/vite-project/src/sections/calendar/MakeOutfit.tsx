@@ -1,55 +1,57 @@
-import { useState } from "react";
 import { imgarr } from "./testimgarr";
 import styled from "styled-components";
+import { useSelectedItemsStore } from "@/store/ClothesStore";
+import Canvas from "./Canvas";
+import { useState, useEffect } from "react";
+import { Loader } from "@/components/Loader";
+import IconBack from "@/assets/ui/IconBack";
+import { useNavigate } from "react-router-dom";
 
 const MakeOutfit = () => {
+  const [showCanvas, setShowCanvas] = useState(false);
+  const clearItems = useSelectedItemsStore((state) => state.clearItems);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 컴포넌트가 마운트된 후 2초 뒤에 showCanvas 상태를 true로 설정
+    clearItems();
+    const timer = setTimeout(() => {
+      setShowCanvas(true);
+    }, 500);
+
+    // 컴포넌트가 언마운트되거나 업데이트되기 전에 타이머를 정리
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []); // 빈 의존성 배열을 전달하여 컴포넌트 마운트 시에만 useEffect가 실행되도록 함
+
   return (
-    <div>
-      <p style={{ height: "6dvh", backgroundColor: "pink" }}>옷 고르기~</p>
-      <Canvas />
+    <>
+      <Header style={{ height: "6dvh" }}>
+        <IconBack onClick={() => navigate("/calendar")} />
+        <p className="title">옷장에서 코디 고르기</p>
+      </Header>
+      {showCanvas ? <Canvas /> : <Loader />}
       <ChooseClothes />
-    </div>
+    </>
   );
 };
 
 export default MakeOutfit;
 
-const Canvas = () => {
-  return (
-    <CanvasWrapper>
-      <p>canvas</p>
-      <div></div>
-    </CanvasWrapper>
-  );
-};
-
-const CanvasWrapper = styled.div`
-  width: 100%;
-  height: 49dvh;
-  background-color: green;
-`;
-
 const ChooseClothes = () => {
-  const [selectedItems, setSelectedItems] = useState([]);
-
-  const handleItemClick = (item) => {
-    const isSelected = selectedItems.some(
-      (selectedItem) => selectedItem.id === item.id
-    );
-
-    if (isSelected) {
-      setSelectedItems(
-        selectedItems.filter((selectedItem) => selectedItem.id !== item.id)
-      );
-    } else {
-      setSelectedItems([...selectedItems, item]);
-    }
-  };
+  // const { selectedItems, toggleItem } = useSelectedItemsStore();
+  const { selectedItems, toggleItem } = useSelectedItemsStore((state) => ({
+    selectedItems: state.selectedItems,
+    toggleItem: state.toggleItem,
+  }));
+  console.log("지정됨");
+  console.log(toggleItem);
 
   return (
     <ChooseClothesWrapper>
       {imgarr.map((item) => {
-        // 선택된 아이템인지 확인
+        // 선택된 아이템인지 확인합니다.
         const isSelected = selectedItems.some(
           (selectedItem) => selectedItem.id === item.id
         );
@@ -58,7 +60,7 @@ const ChooseClothes = () => {
           <div
             className={`imgarea ${isSelected ? "selected" : ""}`}
             key={item.id}
-            onClick={() => handleItemClick(item)}
+            onClick={() => toggleItem(item)}
           >
             <img className="clothesimg" src={item.url} alt={item.id} />
             {isSelected && <div className="itemId">{item.id}</div>}
@@ -118,3 +120,15 @@ const ChooseClothesWrapper = styled.div`
 `;
 
 /* ${({ theme }) => theme.common.flexCenterColumn}; */
+
+const Header = styled.div`
+  height: 6dvh;
+  ${({ theme }) => theme.common.flexCenter};
+  background-color: white;
+
+  .title {
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: auto;
+  }
+`;
