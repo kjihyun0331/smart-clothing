@@ -48,9 +48,7 @@ type NoSchedulePropType = {
 
 const NoSchedule = ({ selected }: NoSchedulePropType) => {
   const [popup, setPopup] = useState<popupType>(false);
-  const setSelectedDate = useSelectedDateStore(
-    (state) => state.setSelectedDate
-  );
+  const { setSelectedDate } = useSelectedDateStore();
 
   return (
     <ContentWrapper>

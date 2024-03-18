@@ -2,26 +2,26 @@ import { imgarr } from "./testimgarr";
 import styled from "styled-components";
 import { useSelectedItemsStore } from "@/store/ClothesStore";
 import Canvas from "./Canvas";
-import { useState, useEffect } from "react";
-import { Loader } from "@/components/Loader";
+// import { useState, useEffect } from "react";
+// import { Loader } from "@/components/Loader";
 import IconBack from "@/assets/ui/IconBack";
 import { useNavigate } from "react-router-dom";
 
 const MakeOutfit = () => {
-  const [showCanvas, setShowCanvas] = useState(false);
+  // const [showCanvas, setShowCanvas] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // 컴포넌트가 마운트된 후 2초 뒤에 showCanvas 상태를 true로 설정
-    const timer = setTimeout(() => {
-      setShowCanvas(true);
-    }, 500);
+  // useEffect(() => {
+  //   // 컴포넌트가 마운트된 후 2초 뒤에 showCanvas 상태를 true로 설정
+  //   const timer = setTimeout(() => {
+  //     setShowCanvas(true);
+  //   }, 500);
 
-    // 컴포넌트가 언마운트되거나 업데이트되기 전에 타이머를 정리
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []); // 빈 의존성 배열을 전달하여 컴포넌트 마운트 시에만 useEffect가 실행되도록 함
+  //   // 컴포넌트가 언마운트되거나 업데이트되기 전에 타이머를 정리
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, []); // 빈 의존성 배열을 전달하여 컴포넌트 마운트 시에만 useEffect가 실행되도록 함
 
   return (
     <>
@@ -29,7 +29,8 @@ const MakeOutfit = () => {
         <IconBack onClick={() => navigate("/calendar")} />
         <p className="title">옷장에서 코디 고르기</p>
       </Header>
-      {showCanvas ? <Canvas /> : <Loader />}
+      {/* {showCanvas ? <Canvas /> : <Loader />} */}
+      <Canvas />
       <ChooseClothes />
     </>
   );
@@ -39,10 +40,7 @@ export default MakeOutfit;
 
 const ChooseClothes = () => {
   // const { selectedItems, toggleItem } = useSelectedItemsStore();
-  const { selectedItems, toggleItem } = useSelectedItemsStore((state) => ({
-    selectedItems: state.selectedItems,
-    toggleItem: state.toggleItem,
-  }));
+  const { selectedItems, toggleItem } = useSelectedItemsStore();
 
   return (
     <ChooseClothesWrapper>
