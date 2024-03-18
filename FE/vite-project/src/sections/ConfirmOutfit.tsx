@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 
 const ConfirmOutfit = () => {
   const navigate = useNavigate();
-  const confirmOutfit = useSelectedItemsStore((state) => state.confirmOutfit);
-  const selectedDate = useSelectedDateStore((state) => state.selectedDate);
+  const { clearItems, confirmOutfit } = useSelectedItemsStore();
+  const { selectedDate } = useSelectedDateStore();
 
   //   console.log(confirmOutfit);
   //   const clearItems = useSelectedItemsStore((state) => state.clearItems);
@@ -18,7 +18,12 @@ const ConfirmOutfit = () => {
     <>
       <Header>
         <IconBack onClick={() => navigate("/calendar/makeoutfit")} />
-        <IconCheck onClick={() => navigate("/calendar")} />
+        <IconCheck
+          onClick={() => {
+            navigate("/calendar");
+            clearItems();
+          }}
+        />
       </Header>
       <Wrapper>
         <p>{selectedDate}</p>

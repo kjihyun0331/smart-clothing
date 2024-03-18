@@ -103,10 +103,7 @@ const IMG: React.FC<{
 
 function Canvas() {
   const navigate = useNavigate();
-  const selectedItems = useSelectedItemsStore((state) => state.selectedItems);
-  const setConfirmOutfit = useSelectedItemsStore(
-    (state) => state.setConfirmOutfit
-  );
+  const { selectedItems, setConfirmOutfit } = useSelectedItemsStore();
 
   const stageRef = useRef<Konva.Stage>(null);
   const [loadedImages, setLoadedImages] = useState<{
@@ -134,7 +131,9 @@ function Canvas() {
     setLoadedImages(newLoadedImages);
   };
 
-  loadImages();
+  useEffect(() => {
+    loadImages();
+  }, [selectedItems]);
 
   const exportAndSaveImage = () => {
     if (stageRef.current) {
