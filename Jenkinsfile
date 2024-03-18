@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
                     // Docker Compose를 시작하는 단계
-                    sh 'docker-compose up -d'
+                    sh 'docker-compose up --build -d'
                 }
             }
         }
