@@ -1,0 +1,27 @@
+version: "0.0.0"
+
+services:
+  supertizen_frontend:
+    container_name: supertizen_frontend
+    build:
+      context: ./FE/vite-project
+      dockerfile: Dockerfile
+    image: supertizen_frontend_img
+    ports:
+      - "80:80"
+    networks:
+      - supertizen_net  
+
+  supertizen_backend:
+    container_name: supertizen_backend
+    build:
+      context: ./BE/smartclothing
+      dockerfile: Dockerfile
+    image: supertizen_backend_img
+    ports:
+      - "8080:8080"
+    networks:
+      - supertizen_net
+
+networks:
+  supertizen_net:
