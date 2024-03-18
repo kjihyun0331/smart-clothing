@@ -29,7 +29,7 @@ const common = {
   flexCenterColumn: `
     display: flex;
     flex-direction: column;
-    justify-contents: center;
+    justify-content: center;
     align-items: center;
   `,
   PointButton: `

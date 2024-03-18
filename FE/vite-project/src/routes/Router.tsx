@@ -13,6 +13,7 @@ import MyCalendar from "@/sections/calendar/Calendar";
 import Recommend from "@/sections/calendar/Recommend";
 import Past from "@/sections/calendar/Past";
 import MakeOutfit from "@/sections/calendar/MakeOutfit";
+import ConfirmOutfit from "@/sections/ConfirmOutfit";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
           {
             path: "makeoutfit",
             element: <MakeOutfit />,
+          },
+          {
+            path: "confirmoutfit",
+            element: <ConfirmOutfit />,
           },
         ],
       },

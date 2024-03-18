@@ -13,6 +13,8 @@ interface SelectedItemsState {
   selectedItems: SelectedItem[];
   toggleItem: (item: SelectedItem) => void;
   clearItems: () => void;
+  confirmOutfit: string;
+  setConfirmOutfit: (item: string) => void;
 }
 
 export const useSelectedItemsStore = create<SelectedItemsState>((set) => ({
@@ -41,4 +43,12 @@ export const useSelectedItemsStore = create<SelectedItemsState>((set) => ({
       ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
       selectedItems: [],
     })),
+  confirmOutfit: "",
+  setConfirmOutfit: (input) =>
+    set((state) => {
+      return {
+        ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
+        confirmOutfit: input,
+      };
+    }),
 }));

@@ -9,12 +9,10 @@ import { useNavigate } from "react-router-dom";
 
 const MakeOutfit = () => {
   const [showCanvas, setShowCanvas] = useState(false);
-  const clearItems = useSelectedItemsStore((state) => state.clearItems);
   const navigate = useNavigate();
 
   useEffect(() => {
     // 컴포넌트가 마운트된 후 2초 뒤에 showCanvas 상태를 true로 설정
-    clearItems();
     const timer = setTimeout(() => {
       setShowCanvas(true);
     }, 500);
@@ -45,15 +43,13 @@ const ChooseClothes = () => {
     selectedItems: state.selectedItems,
     toggleItem: state.toggleItem,
   }));
-  console.log("지정됨");
-  console.log(toggleItem);
 
   return (
     <ChooseClothesWrapper>
       {imgarr.map((item) => {
         // 선택된 아이템인지 확인합니다.
         const isSelected = selectedItems.some(
-          (selectedItem) => selectedItem.id === item.id
+          (selectedItem: { id: string }) => selectedItem.id === item.id
         );
 
         return (
@@ -125,6 +121,7 @@ const Header = styled.div`
   height: 6dvh;
   ${({ theme }) => theme.common.flexCenter};
   background-color: white;
+  padding: 8px 8px 0 8px;
 
   .title {
     font-weight: bold;

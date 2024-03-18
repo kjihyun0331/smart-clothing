@@ -104,7 +104,10 @@ const IMG: React.FC<{
 function Canvas() {
   const navigate = useNavigate();
   const selectedItems = useSelectedItemsStore((state) => state.selectedItems);
-  const clearItems = useSelectedItemsStore((state) => state.clearItems);
+  const setConfirmOutfit = useSelectedItemsStore(
+    (state) => state.setConfirmOutfit
+  );
+
   const stageRef = useRef<Konva.Stage>(null);
   const [loadedImages, setLoadedImages] = useState<{
     [key: string]: HTMLImageElement;
@@ -162,9 +165,10 @@ function Canvas() {
         date.getMonth() + 1
       }-${date.getDate()}_${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}.png`;
       console.log(fileName);
-      console.log(uri);
-      clearItems();
-      navigate("/home");
+      // console.log(uri);
+      // console.log(typeof uri);
+      setConfirmOutfit(uri);
+      navigate("/calendar/confirmoutfit");
     }
   };
 
@@ -213,7 +217,9 @@ function Canvas() {
                 isDragging: false,
               }}
               isSelected={item.id === selectedId}
-              onSelect={() => setSelectedId(item.id)}
+              onSelect={() => {
+                setSelectedId(item.id);
+              }}
               onChange={(newAttrs) =>
                 handleShapeChange(
                   selectedItems.findIndex((img) => img.id === item.id),
