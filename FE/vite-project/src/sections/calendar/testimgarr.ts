@@ -42,7 +42,7 @@ export const imgarr = [
   {
     url: "https://cdn-icons-png.flaticon.com/512/6137/6137608.png",
     x: 10,
-    y: 15000,
+    y: 20,
     width: 100,
     height: 100,
     id: "rect6",
@@ -66,7 +66,7 @@ export const imgarr = [
   {
     url: "https://cdn-icons-png.flaticon.com/512/6137/6137608.png",
     x: 10,
-    y: 15000,
+    y: 15,
     width: 100,
     height: 100,
     id: "rect9",

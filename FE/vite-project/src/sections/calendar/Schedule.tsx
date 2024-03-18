@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { AddSchedule } from "./AddSchedule";
 import { useState } from "react";
 import { MomentInput } from "moment";
+import { useSelectedDateStore } from "@/store/DateStore";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -17,6 +18,7 @@ const Schedule = ({ date }: SchedulePropType) => {
   const selected: string | null = moment(date as MomentInput).format(
     "M월 DD일 (dd)"
   );
+
   const isLoading: boolean = true;
 
   // const { isCommentLoading, isCommentError, commentState } = useCommentQuery(shopId);
@@ -46,10 +48,23 @@ type NoSchedulePropType = {
 
 const NoSchedule = ({ selected }: NoSchedulePropType) => {
   const [popup, setPopup] = useState<popupType>(false);
+  const setSelectedDate = useSelectedDateStore(
+    (state) => state.setSelectedDate
+  );
+
   return (
     <ContentWrapper>
       <p className="description">아직 등록된 일정이 없습니다.</p>
-      <GreenButton onClick={() => setPopup(true)}>일정 등록하기</GreenButton>
+      <GreenButton
+        onClick={() => {
+          setPopup(true);
+          if (selected) {
+            setSelectedDate(selected);
+          }
+        }}
+      >
+        일정 등록하기
+      </GreenButton>
       {popup ? <AddSchedule setPopup={setPopup} selected={selected} /> : <></>}
     </ContentWrapper>
   );
