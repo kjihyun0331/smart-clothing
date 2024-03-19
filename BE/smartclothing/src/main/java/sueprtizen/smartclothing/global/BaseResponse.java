@@ -14,8 +14,8 @@ public class BaseResponse {
         this.result=MessageUtils.success;
         this.reason="";
     }
-    public BaseResponse(String result){
-        this.reason = MessageUtils.fail;
-        this.result=result;
+    public BaseResponse(String reason){
+        this.result=MessageUtils.fail;
+        this.reason=reason;
     }
 }
