@@ -5,6 +5,7 @@ import { AddSchedule } from "./AddSchedule";
 import { useState } from "react";
 import { MomentInput } from "moment";
 import { useSelectedDateStore } from "@/store/DateStore";
+import { useSelectedItemsStore } from "@/store/ClothesStore";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -43,12 +44,13 @@ const ScheduleWrapper = styled.div`
 
 type popupType = boolean;
 type NoSchedulePropType = {
-  selected: string | null;
+  selected: string;
 };
 
 const NoSchedule = ({ selected }: NoSchedulePropType) => {
   const [popup, setPopup] = useState<popupType>(false);
   const { setSelectedDate } = useSelectedDateStore();
+  const { clearItems } = useSelectedItemsStore();
 
   return (
     <ContentWrapper>
@@ -56,6 +58,7 @@ const NoSchedule = ({ selected }: NoSchedulePropType) => {
       <GreenButton
         onClick={() => {
           setPopup(true);
+          clearItems();
           if (selected) {
             setSelectedDate(selected);
           }

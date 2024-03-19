@@ -43,7 +43,7 @@ export const AddSchedule = ({ selected, setPopup }: propType) => {
           {situation.map((item) => (
             <button
               className="situation"
-              key={item.name} // React의 리스트 렌더링에서 key는 필수입니다.
+              key={item.name}
               onClick={() => handleButtonClick(item.name)}
               style={{
                 backgroundColor: selectedSituations.includes(item.name)

@@ -1,4 +1,4 @@
-import { imgarr } from "./testimgarr";
+import { imgarr } from "../testimgarr";
 import styled from "styled-components";
 import { useSelectedItemsStore } from "@/store/ClothesStore";
 import Canvas from "./Canvas";
@@ -25,7 +25,7 @@ const MakeOutfit = () => {
 
   return (
     <>
-      <Header style={{ height: "6dvh" }}>
+      <Header style={{ height: "8dvh" }}>
         <IconBack onClick={() => navigate("/calendar")} />
         <p className="title">옷장에서 코디 고르기</p>
       </Header>
@@ -45,7 +45,6 @@ const ChooseClothes = () => {
   return (
     <ChooseClothesWrapper>
       {imgarr.map((item) => {
-        // 선택된 아이템인지 확인합니다.
         const isSelected = selectedItems.some(
           (selectedItem: { id: string }) => selectedItem.id === item.id
         );

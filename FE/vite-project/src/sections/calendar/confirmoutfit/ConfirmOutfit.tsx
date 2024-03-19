@@ -4,6 +4,7 @@ import { useSelectedDateStore } from "@/store/DateStore";
 import IconBack from "@/assets/ui/IconBack";
 import IconCheck from "@/assets/ui/IconCheck";
 import { useNavigate } from "react-router-dom";
+import HashTag from "./HashTag";
 
 const ConfirmOutfit = () => {
   const navigate = useNavigate();
@@ -26,10 +27,11 @@ const ConfirmOutfit = () => {
         />
       </Header>
       <Wrapper>
-        <p>{selectedDate}</p>
+        <p className="date">{selectedDate}</p>
         <div className="imgarea">
           <img src={confirmOutfit} alt="confirmOutfit" />
         </div>
+        <HashTag />
       </Wrapper>
     </>
   );
@@ -39,7 +41,7 @@ export default ConfirmOutfit;
 
 const Header = styled.div`
   padding: 8px 8px 0 8px;
-  height: 6dvh;
+  height: 7dvh;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -47,15 +49,25 @@ const Header = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 100%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  .date {
+    font-size: 1rem;
+    align-self: self-start;
+  }
 
   .imgarea {
-    margin-top: 1rem;
-    width: 80%;
-    aspect-ratio: 1 / 1.2;
+    margin: 1rem 0 0 0;
+    width: 100%;
+    aspect-ratio: 1 / 1.1;
     background-color: #fcdddd;
-    margin-left: auto;
-    margin-right: auto;
     border-radius: 20px;
     padding: 1rem 1rem;
   }

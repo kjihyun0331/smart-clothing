@@ -1,9 +1,11 @@
 import Layout from "@/components/Layout";
+import BasketState from "@/sections/basket/BasketState";
 
 function Basket() {
   return (
     <Layout>
-      <div>Basket</div>
+      <div style={{ height: "7dvh" }}>(뒤) 여기에 헤더 들어갈 자리 (알림)</div>
+      <BasketState />
     </Layout>
   );
 }

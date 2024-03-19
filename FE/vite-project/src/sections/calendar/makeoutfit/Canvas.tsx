@@ -197,7 +197,7 @@ function Canvas() {
 
   return (
     <>
-      <Button onClick={exportAndSaveImage}>저장</Button>
+      <Button onClick={exportAndSaveImage}>확인</Button>
       <Stage
         width={window.innerWidth}
         height={window.innerHeight * 0.49}
@@ -238,6 +238,6 @@ export default Canvas;
 
 const Button = styled.button`
   position: absolute;
-  top: 1.7dvh;
+  top: 3dvh;
   right: 10px;
 `;
