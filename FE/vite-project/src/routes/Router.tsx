@@ -6,14 +6,20 @@ import SmartThings from "@/pages/SmartThings/SmartThings";
 import PageNotFound from "@/pages/PageNotFound";
 import AddDevice from "@/pages/SmartThings/Device";
 import Agreement from "@/pages/SmartThings/Agreement";
+///////////메인
 import Home from "@/pages/Home";
 import Calendar from "@/pages/Calendar";
 import Closet from "@/pages/Closet";
+import Basket from "@/pages/Basket";
+///////////캘린더 하위
 import MyCalendar from "@/sections/calendar/Calendar";
 import Recommend from "@/sections/calendar/Recommend";
 import Past from "@/sections/calendar/Past";
-import MakeOutfit from "@/sections/calendar/MakeOutfit";
-import ConfirmOutfit from "@/sections/ConfirmOutfit";
+import MakeOutfit from "@/sections/calendar/makeoutfit/MakeOutfit";
+import ConfirmOutfit from "@/sections/calendar/confirmoutfit/ConfirmOutfit";
+////////////옷장 하위
+import DetailClothes from "@/sections/closet/DetailClothes";
+import MyCloset from "@/sections/closet/MyCloset";
 
 const router = createBrowserRouter([
   {
@@ -70,10 +76,20 @@ const router = createBrowserRouter([
       {
         path: "/closet",
         element: <Closet />,
+        children: [
+          {
+            path: "",
+            element: <MyCloset />,
+          },
+          {
+            path: ":id",
+            element: <DetailClothes />,
+          },
+        ],
       },
       {
         path: "/basket",
-        element: <Closet />,
+        element: <Basket />,
       },
     ],
   },

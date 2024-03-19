@@ -26,28 +26,28 @@ export const useSelectedItemsStore = create<SelectedItemsState>((set) => ({
       );
       if (isSelected) {
         return {
-          ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
+          // ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
           selectedItems: state.selectedItems.filter(
             (selectedItem) => selectedItem.id !== item.id
           ),
         };
       } else {
         return {
-          ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
+          // ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
           selectedItems: [...state.selectedItems, item],
         };
       }
     }),
   clearItems: () =>
-    set((state) => ({
-      ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
+    set(() => ({
+      // ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
       selectedItems: [],
     })),
   confirmOutfit: "",
   setConfirmOutfit: (input) =>
-    set((state) => {
+    set(() => {
       return {
-        ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
+        // ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
         confirmOutfit: input,
       };
     }),

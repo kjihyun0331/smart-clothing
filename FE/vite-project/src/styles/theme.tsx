@@ -36,7 +36,7 @@ const common = {
     border: none;
     background-color: #45ba8c;
     color: white;
-    border-radius: 7px;
+    border-radius: 40px;
     box-sizing: border-box;
   `,
 };

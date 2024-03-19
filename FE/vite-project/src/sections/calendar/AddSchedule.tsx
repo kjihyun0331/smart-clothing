@@ -43,7 +43,7 @@ export const AddSchedule = ({ selected, setPopup }: propType) => {
           {situation.map((item) => (
             <button
               className="situation"
-              key={item.name} // React의 리스트 렌더링에서 key는 필수입니다.
+              key={item.name}
               onClick={() => handleButtonClick(item.name)}
               style={{
                 backgroundColor: selectedSituations.includes(item.name)
@@ -110,6 +110,7 @@ const Container = styled.div`
   .date {
     align-self: baseline;
     font-size: 1.4rem;
+    margin-bottom: 1rem;
   }
 
   .situation {
@@ -117,8 +118,8 @@ const Container = styled.div`
     border-radius: 1rem;
     margin: 3px 5px;
     box-sizing: border-box;
-    padding: 10px 15px;
-    border-radius: 1rem;
+    padding: 5px 10px;
+    border-radius: 10px;
   }
 
   input {
@@ -137,7 +138,7 @@ const Container = styled.div`
 
 const GreenButton = styled.button`
   ${({ theme }) => theme.common.PointButton};
-  width: 60%;
+  width: 70%;
   height: 2.1rem;
   margin-top: 0.5rem;
 `;
