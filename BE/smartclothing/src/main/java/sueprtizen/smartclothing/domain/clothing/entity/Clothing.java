@@ -3,6 +3,7 @@ package sueprtizen.smartclothing.domain.clothing.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sueprtizen.smartclothing.domain.users.entity.User;
 
 @NoArgsConstructor
 @Getter
@@ -10,24 +11,34 @@ import lombok.NoArgsConstructor;
 public class Clothing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
     private int clothingId;
-    @Column(nullable = false)
-    private int userId;
-    @Column(nullable = false)
-    private String clothingDetailId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "clothing_detail_id")
+    private ClothingDetail clothingDetail;
+
     @Column
     private String nowAt;
-    @Column
+
+    @Column(name = "RFID_uid")
     private String RFIDUid;
+
     @Column
     private String clothingName;
+
     @Column
     private String washedAt;
+
     @Column
     private String polluted;
+
     @Column
     private String wornCount;
+
     @Column
     private String category;
 }
