@@ -2,7 +2,7 @@ export const testclothesarr = [
   {
     id: 1,
     url: "https://cdn-icons-png.flaticon.com/512/9752/9752702.png",
-    date: "04월 02일",
+    date: "12월 22일",
     keyword: "결혼식",
     weatherid: 1,
     weatherhigh: 30,
@@ -11,7 +11,7 @@ export const testclothesarr = [
   {
     id: 2,
     url: "https://cdn-icons-png.flaticon.com/512/9752/9752702.png",
-    date: "05월 06일",
+    date: "5월 6일",
     keyword: "졸업식",
     weatherid: 2,
     weatherhigh: 28,
@@ -20,7 +20,7 @@ export const testclothesarr = [
   {
     id: 3,
     url: "https://cdn-icons-png.flaticon.com/512/9752/9752702.png",
-    date: "06월 12일",
+    date: "6월 12일",
     keyword: "면접",
     weatherid: 3,
     weatherhigh: 32,
@@ -29,7 +29,7 @@ export const testclothesarr = [
   {
     id: 4,
     url: "https://cdn-icons-png.flaticon.com/512/9752/9752702.png",
-    date: "07월 15일",
+    date: "7월 15일",
     keyword: "데이트",
     weatherid: 1,
     weatherhigh: 28,
@@ -38,7 +38,7 @@ export const testclothesarr = [
   {
     id: 5,
     url: "https://cdn-icons-png.flaticon.com/512/9752/9752702.png",
-    date: "08월 20일",
+    date: "8월 20일",
     keyword: "업무",
     weatherid: 2,
     weatherhigh: 27,
@@ -47,7 +47,7 @@ export const testclothesarr = [
   {
     id: 6,
     url: "https://cdn-icons-png.flaticon.com/512/9752/9752702.png",
-    date: "09월 25일",
+    date: "12월 25일",
     keyword: "여행",
     weatherid: 3,
     weatherhigh: 31,
@@ -83,7 +83,7 @@ export const testclothesarr = [
   {
     id: 10,
     url: "https://cdn-icons-png.flaticon.com/512/9752/9752702.png",
-    date: "01월 15일",
+    date: "11월 15일",
     keyword: "소개팅",
     weatherid: 1,
     weatherhigh: 27,
@@ -92,7 +92,7 @@ export const testclothesarr = [
   {
     id: 11,
     url: "https://cdn-icons-png.flaticon.com/512/9752/9752702.png",
-    date: "02월 20일",
+    date: "2월 20일",
     keyword: "경조사",
     weatherid: 2,
     weatherhigh: 28,

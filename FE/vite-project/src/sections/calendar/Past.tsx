@@ -10,7 +10,7 @@ function Past() {
 
   return (
     <>
-      <Header style={{ height: "8dvh" }}>
+      <Header>
         <IconBack onClick={() => navigate("/calendar")} />
         <p className="title">내 과거 코디에서 고르기</p>
       </Header>
@@ -43,10 +43,14 @@ function Past() {
 export default Past;
 
 const Header = styled.div`
-  height: 6dvh;
+  height: 8dvh;
   ${({ theme }) => theme.common.flexCenter};
   background-color: white;
   padding: 10px 8px 0 8px;
+  width: 100%;
+  position: fixed;
+  max-width: 450px;
+  min-width: 320px;
 
   .title {
     font-weight: bold;
@@ -56,6 +60,8 @@ const Header = styled.div`
 `;
 
 const Content = styled.div`
+  padding-top: 8dvh;
+  padding-bottom: 12dvh;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -74,10 +80,11 @@ const Item = styled.div`
 
   .keyword {
     display: inline-block;
-    border-radius: 10px;
+    border-radius: 5px;
     background-color: lightblue;
-    padding: 4px 10px;
+    padding: 5px 5px;
     color: white;
+    font-size: 0.7rem;
   }
 
   .weather {
