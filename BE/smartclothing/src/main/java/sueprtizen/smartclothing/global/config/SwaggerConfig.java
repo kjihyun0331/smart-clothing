@@ -21,4 +21,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/users/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi clothingApi() {
+        return GroupedOpenApi.builder()
+                .group("clothing-api")
+                .pathsToMatch("/clothings/**")
+                .build();
+    }
 }
