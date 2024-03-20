@@ -40,7 +40,13 @@ body {
     overflow-x: hidden;
     /* font-family: "notosans"; */
 	font-family: 'SamsungSans', sans-serif;
+	-ms-overflow-style: none;
+
 }
+::-webkit-scrollbar {
+  display: none;
+}
+
 ol, ul {
 	list-style: none;
 }
