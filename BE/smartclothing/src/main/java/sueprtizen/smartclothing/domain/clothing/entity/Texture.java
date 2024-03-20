@@ -1,6 +1,9 @@
 package sueprtizen.smartclothing.domain.clothing.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,20 +13,15 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Entity
-public class ClothingDetail {
+public class Texture {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    private int clothingDetailId;
+    @Column(nullable = false)
+    private int textureId;
 
     @Column(nullable = false)
-    private String clothingImgPath;
+    private String textureName;
 
-    @Column(nullable = false)
-    private String color;
-
-    @OneToMany(mappedBy = "clothingDetail")
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "texture")
     private Set<ClothingTexture> clothingTextures = new HashSet<>();
 
 }
