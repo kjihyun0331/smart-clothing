@@ -78,8 +78,46 @@ const BasketState = () => {
               );
             })}
           </SwiperSlide>
-          <SwiperSlide>세탁기</SwiperSlide>
-          <SwiperSlide>에어드레서</SwiperSlide>
+          <SwiperSlide>
+            {FAKEDATA.map((item) => {
+              if (item.device === "세탁기")
+                return (
+                  <Item key={item.id}>
+                    <div className="imgarea">
+                      <img src={item.img} alt={item.name} />
+                    </div>
+                    <div className="textarea">
+                      <p className="message">
+                        <span className="type">{item.device}</span>에
+                        추가되었습니다.
+                      </p>
+                      <p className="name">{item.name}</p>
+                      <p className="date">{item.date}</p>
+                    </div>
+                  </Item>
+                );
+            })}
+          </SwiperSlide>
+          <SwiperSlide>
+            {FAKEDATA.map((item) => {
+              if (item.device === "에어드레서")
+                return (
+                  <Item key={item.id}>
+                    <div className="imgarea">
+                      <img src={item.img} alt={item.name} />
+                    </div>
+                    <div className="textarea">
+                      <p className="message">
+                        <span className="type">{item.device}</span>에
+                        추가되었습니다.
+                      </p>
+                      <p className="name">{item.name}</p>
+                      <p className="date">{item.date}</p>
+                    </div>
+                  </Item>
+                );
+            })}
+          </SwiperSlide>
         </Swiper>
       </BasketContent>
     </>
