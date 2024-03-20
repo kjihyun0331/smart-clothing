@@ -3,11 +3,13 @@ package sueprtizen.smartclothing.domain.clothing.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import sueprtizen.smartclothing.domain.users.entity.User;
 
 @NoArgsConstructor
 @Getter
 @Entity
+@ToString
 public class Clothing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +36,7 @@ public class Clothing {
     private String washedAt;
 
     @Column
-    private String polluted;
+    private int polluted;
 
     @Column
     private String wornCount;

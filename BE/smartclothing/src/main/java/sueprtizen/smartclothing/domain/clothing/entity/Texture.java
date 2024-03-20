@@ -7,8 +7,8 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -22,6 +22,6 @@ public class Texture {
     private String textureName;
 
     @OneToMany(mappedBy = "texture")
-    private Set<ClothingTexture> clothingTextures = new HashSet<>();
+    private List<ClothingTexture> clothingTextures = new ArrayList<>();
 
 }
