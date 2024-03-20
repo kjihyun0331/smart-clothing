@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ClothingAllResponseDTO {
+public class ClosetConfirmResponseDTO {
     @Schema(description = "옷 아이디", example = "1")
     private int clothingId;
     @Schema(description = "옷 이미지 주소", example = "aaaa/bbb.png")

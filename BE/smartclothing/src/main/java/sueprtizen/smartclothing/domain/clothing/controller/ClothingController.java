@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingAllResponseDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
-import sueprtizen.smartclothing.global.DataResponse;
+import sueprtizen.smartclothing.global.dto.Message;
 
 import java.util.List;
 
@@ -21,19 +21,19 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class ClothingController {
+
     private final ClothingService clothingService;
 
     @Operation(summary = "옷장 조회", description = "사용자의 옷장안의 모든 옷의 이미지와 id를 가져옵니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ClothingAllResponseDTO.class))),
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ClosetConfirmResponseDTO.class))),
     })
     @GetMapping
-    public ResponseEntity<DataResponse<List<ClothingAllResponseDTO>>> getClothingList(
+    public ResponseEntity<Message<List<ClosetConfirmResponseDTO>>> getClothingList(
             @RequestHeader("User-ID") int userId
     ) {
-        List<ClothingAllResponseDTO> clothingList = clothingService.closetConfirmation(userId);
-        DataResponse<List<ClothingAllResponseDTO>> response = new DataResponse<>(clothingList);
-        return ResponseEntity.ok(response);
+        List<ClosetConfirmResponseDTO> clothingList = clothingService.closetConfirmation(userId);
+        return ResponseEntity.ok(Message.success(clothingList));
     }
 
 }
