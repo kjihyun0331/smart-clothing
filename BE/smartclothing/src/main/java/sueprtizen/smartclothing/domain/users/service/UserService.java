@@ -1,19 +1,24 @@
 package sueprtizen.smartclothing.domain.users.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import sueprtizen.smartclothing.domain.users.dto.UserRequest;
-import sueprtizen.smartclothing.domain.users.entity.User;
-import sueprtizen.smartclothing.domain.users.repository.UserRepository;
+import sueprtizen.smartclothing.domain.users.dto.UserDetailResponseDTO;
+import sueprtizen.smartclothing.domain.users.dto.UserRequestDTO;
+import sueprtizen.smartclothing.domain.users.dto.UserResponseDTO;
 
+public interface UserService {
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
+    /**
+     * 로그인을 처리하고, 로그인 응답 데이터를 반환합니다.
+     *
+     * @param userRequestDTO - email, password
+     * @return UserResponseDTO - userID
+     */
+    UserResponseDTO signIn(UserRequestDTO userRequestDTO);
 
-    public User select(UserRequest userRequest){
-        User user = userRepository.findUserByEmailAndPassword(userRequest.getEmail(),userRequest.getPassword());
-        return user;
-    }
+    /**
+     * 유저의 나이와 성별을 반환합니다.
+     *
+     * @return UserDetailResponseDTO
+     */
+    UserDetailResponseDTO getUserDetail(int userId);
+
 }
