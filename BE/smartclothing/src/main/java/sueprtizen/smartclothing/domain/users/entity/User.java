@@ -31,8 +31,4 @@ public class User extends BaseEntity {
     private String gender;
     @Column(nullable = false)
     private String profileImgPath;
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 }

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import sueprtizen.smartclothing.domain.users.dto.UserRequestDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserResponseDTO;
 import sueprtizen.smartclothing.domain.users.service.UserService;
-import sueprtizen.smartclothing.domain.users.service.UserServiceImpl;
 import sueprtizen.smartclothing.global.dto.Message;
 
 @RequestMapping("/users")
@@ -25,6 +24,6 @@ public class UserController {
     public ResponseEntity<Message<UserResponseDTO>> signIn(@RequestBody @Valid UserRequestDTO userRequestDTO,
                                                            HttpServletResponse response) {
         UserResponseDTO signInResponse = userService.signIn(userRequestDTO);
-        return ResponseEntity.ok().body(Message.success(signInResponse));
+        return ResponseEntity.ok(Message.success(signInResponse));
     }
 }

@@ -2,6 +2,8 @@ package sueprtizen.smartclothing.global.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 /**
  * 응답 메시지를 위한 제네릭 클래스입니다.
@@ -10,7 +12,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class Message<T> {
-
     private final DataHeader dataHeader;
     private final T dataBody;
 
@@ -20,8 +21,7 @@ public class Message<T> {
     @Getter
     @Builder
     private static class DataHeader {
-        private final int successCode;
-        private final String resultCode;
+        private final HttpStatusCode resultCode;
         private final Object resultMessage;
 
         /**
@@ -30,7 +30,8 @@ public class Message<T> {
          */
         private static DataHeader success() {
             return DataHeader.builder()
-                    .successCode(0)
+                    .resultCode(HttpStatus.OK)
+                    .resultMessage("성공")
                     .build();
         }
 
@@ -40,9 +41,8 @@ public class Message<T> {
          * @param resultMessage 결과 메시지입니다.
          * @return 실패한 DataHeader 인스턴스입니다.
          */
-        private static DataHeader fail(String resultCode, Object resultMessage) {
+        private static DataHeader fail(HttpStatusCode resultCode, Object resultMessage) {
             return DataHeader.builder()
-                    .successCode(1)
                     .resultCode(resultCode)
                     .resultMessage(resultMessage)
                     .build();
@@ -79,7 +79,7 @@ public class Message<T> {
      * @param <T> 데이터 본문의 타입입니다.
      * @return 실패한 메시지 인스턴스입니다.
      */
-    public static <T> Message<T> fail(String resultCode, Object resultMessage) {
+    public static <T> Message<T> fail(HttpStatusCode resultCode, Object resultMessage) {
         return Message.<T>builder()
                 .dataHeader(DataHeader.fail(resultCode, resultMessage))
                 .dataBody(null)
