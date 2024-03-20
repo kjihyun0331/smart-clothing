@@ -1,6 +1,6 @@
 import { Header, DetailContent } from "./ClosetStyle";
 import IconBack from "@/assets/ui/IconBack";
-// import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 type DetailClothesResponseType = {
   nowAt: string;
@@ -33,11 +33,18 @@ const exampledata: DetailClothesResponseType = {
 };
 
 const DetailClothes = () => {
-  // const { id } = useParams();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   const handleGoBack = () => {
     window.history.back();
   };
+
+  const handleDelete = () => {
+    // 삭제 하기
+    navigate("/closet");
+  };
+
   return (
     <>
       <Header>
@@ -76,8 +83,15 @@ const DetailClothes = () => {
           </div>
         </div>
         <div className="btnarea">
-          <button className="btn edit">수정하기</button>
-          <button className="btn delete">삭제하기</button>
+          <button
+            className="btn edit"
+            onClick={() => navigate(`/closet/update/${id}`)}
+          >
+            수정하기
+          </button>
+          <button className="btn delete" onClick={handleDelete}>
+            삭제하기
+          </button>
         </div>
       </DetailContent>
     </>

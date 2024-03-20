@@ -1,5 +1,5 @@
 import { testclothesarr } from "../calendar/testclothesarr";
-import { Header, Filter, Content, Item } from "./ClosetStyle";
+import { Header, Filter, ClosetContent, Item } from "./ClosetStyle";
 import { useNavigate } from "react-router-dom";
 
 const MyCloset = () => {
@@ -16,7 +16,7 @@ const MyCloset = () => {
         <Filter>카테고리, 정렬</Filter>
       </Header>
 
-      <Content>
+      <ClosetContent>
         {testclothesarr.map((item) => {
           return (
             <Item key={item.id} onClick={() => handleDetailClick(item.id)}>
@@ -27,7 +27,7 @@ const MyCloset = () => {
             </Item>
           );
         })}
-      </Content>
+      </ClosetContent>
     </>
   );
 };

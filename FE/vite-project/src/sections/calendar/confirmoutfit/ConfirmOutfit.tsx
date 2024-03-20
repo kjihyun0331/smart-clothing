@@ -57,6 +57,7 @@ const Wrapper = styled.div`
   padding: 1rem 0;
   margin-left: auto;
   margin-right: auto;
+  overflow-y: auto;
 
   .date {
     font-size: 1rem;
@@ -65,8 +66,8 @@ const Wrapper = styled.div`
 
   .imgarea {
     margin: 1rem 0 0 0;
-    width: 100%;
-    aspect-ratio: 1 / 1.1;
+    width: 80%;
+    aspect-ratio: 1 / 1;
     background-color: #fcdddd;
     border-radius: 20px;
     padding: 1rem 1rem;

@@ -18,8 +18,9 @@ import Past from "@/sections/calendar/Past";
 import MakeOutfit from "@/sections/calendar/makeoutfit/MakeOutfit";
 import ConfirmOutfit from "@/sections/calendar/confirmoutfit/ConfirmOutfit";
 ////////////옷장 하위
-import DetailClothes from "@/sections/closet/DetailClothes";
 import MyCloset from "@/sections/closet/MyCloset";
+import DetailClothes from "@/sections/closet/DetailClothes";
+import UpdateClothes from "@/sections/closet/UpdateClothes";
 
 const router = createBrowserRouter([
   {
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: <DetailClothes />,
+          },
+          {
+            path: "update/:id",
+            element: <UpdateClothes />,
           },
         ],
       },
