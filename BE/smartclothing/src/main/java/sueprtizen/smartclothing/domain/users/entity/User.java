@@ -1,39 +1,38 @@
 package sueprtizen.smartclothing.domain.users.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import sueprtizen.smartclothing.global.entity.BaseEntity;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@DynamicInsert
-@DynamicUpdate
-@Getter
 @Entity
-public class User {
+@Table(name = "user")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false,nullable = false)
-    private int user_id;
+    @Column(columnDefinition = "INT")
+    private int userId;
     @Column(nullable = false)
-    private int family_id;
-    @Column
+    private int familyId;
+    @Column(nullable = false)
     private String email;
-    @Column
+    @Column(nullable = false)
     private String password;
-    @Column
-    private String user_name;
-    @Column
-    private String profile_img_path;
-    @Column
-    private LocalDateTime created_at;
-    @Column
-    private LocalDateTime updated_at;
-    @Column
+    @Column(nullable = false)
+    private String userName;
+    @Column(nullable = false)
     private int age;
-    @Column
+    @Column(nullable = false)
     private String gender;
+    @Column(nullable = false)
+    private String profileImgPath;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 }

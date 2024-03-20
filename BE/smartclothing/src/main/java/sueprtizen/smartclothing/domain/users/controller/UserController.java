@@ -1,17 +1,18 @@
 package sueprtizen.smartclothing.domain.users.controller;
 
-import jakarta.persistence.Column;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sueprtizen.smartclothing.domain.users.dto.UserRequest;
-import sueprtizen.smartclothing.domain.users.entity.User;
+import sueprtizen.smartclothing.domain.users.dto.UserRequestDTO;
+import sueprtizen.smartclothing.domain.users.dto.UserResponseDTO;
 import sueprtizen.smartclothing.domain.users.service.UserService;
-import sueprtizen.smartclothing.global.BaseResponse;
-import sueprtizen.smartclothing.global.DataResponse;
+import sueprtizen.smartclothing.domain.users.service.UserServiceImpl;
+import sueprtizen.smartclothing.global.dto.Message;
 
 @RequestMapping("/users")
 @RestController
@@ -19,12 +20,11 @@ import sueprtizen.smartclothing.global.DataResponse;
 public class UserController {
 
     private final UserService userService;
+
     @PostMapping("")
-    public BaseResponse select(@RequestBody @Valid UserRequest userRequest){
-        User user = userService.select(userRequest);
-        if(user!=null){
-            return new DataResponse<>(user);
-        }
-        return new BaseResponse("일치하는 회원 정보가 없습니다. 사용자의 id와 비밀번호를 확인해주세요.");
+    public ResponseEntity<Message<UserResponseDTO>> signIn(@RequestBody @Valid UserRequestDTO userRequestDTO,
+                                                           HttpServletResponse response) {
+        UserResponseDTO signInResponse = userService.signIn(userRequestDTO);
+        return ResponseEntity.ok().body(Message.success(signInResponse));
     }
 }
