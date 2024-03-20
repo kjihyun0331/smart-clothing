@@ -4,23 +4,33 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"></SignatureMethod>
 <Reference URI="author-signature-default.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>U0R32wXbvTtHjQjc7wGZqL1Rk3YjEJgTAqvxe2rDSU/LRLINthqbSXjiu9KjYXYPqb+eg+1E8z5t
-QtsjbqjsQw==</DigestValue>
+<DigestValue>oQZibIR5D+abrwRy59AsEQ/wsfUsbSrKmYVzozoAYIkbeqHf3C7FhnOoNG/U5+sf9zseLfgUrt3l
+SxzUVuldXg==</DigestValue>
 </Reference>
 <Reference URI="bin%2Fwasher">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>Q3Zn4orx5VBG+4zXdeOZ9OvroP2l/UI7CKVpz96V5q7HWyVNAkGGNaVQfhMEU15TNaZP2zg53sEQ
-f36360DGSg==</DigestValue>
+<DigestValue>lLBTbnZMEsRBSnBRpm2en+UQE1luwqMvO8QIq6TkVGRUinj3nZ+kp/g31P3prTFGhuEGc2HZ4acz
+nbMa0qP0Jg==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fclothes_example.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
 <DigestValue>NCPTVC8G69cmR7HMAWg9NgIABTorHM/q+yBq4KM1Tzu/xejYF8g24RhDK6AbqVgi4s6eBKFGMydN
 h1Qal+GikQ==</DigestValue>
 </Reference>
+<Reference URI="res%2Fcontents%2Fcourse_ai.png">
+<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
+<DigestValue>hXQD5GA9Dx5EtTVCWRgZEXjcDG2MlGg8f8WUq/FTPSBnTOjK/3bX6ZFsc7PAgSlMzk1kUNCEL7jc
+83dbpzdaSw==</DigestValue>
+</Reference>
+<Reference URI="res%2Fcontents%2Fcourse_standard.png">
+<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
+<DigestValue>C+8oxfgQsCQm5+OXR4kGOqEf04HHBYX43NQVw3kJ1W3UVTnLEhfMlTkiXBK5DH6Puy9xvBvzv61w
+AktI9349Cw==</DigestValue>
+</Reference>
 <Reference URI="res%2Fcontents%2Fedje_res%2Fsample.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>X61oYqLm0aAenMrDWres4/7tasqMVFYlkNMKdTHJ0JDKqeNvr9Cxt5oAVdda56rq7MyjR1PE73AC
-7lYYGLcgnw==</DigestValue>
+<DigestValue>+0Ll4/RXVJO4zwZBU/Mgy4MQu2RViP1+zq5SDlT2B38hI6i+Bwq7ZEVGYvu46fsI6A7poYRBPNvK
+gloIaw9wgA==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fexpand.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -57,9 +67,9 @@ QY10fG1EWQ==</DigestValue>
 </Reference>
 </SignedInfo>
 <SignatureValue>
-PcukyNWylldBP/u4p8zABRAvhVqobn0MOiXfkayKseJrRXGOW+h4dgsILhxc90HZnQTQBSQSkTJP
-fWsiswW8JJZcIQA1Kt80Uj5CHDjYuOcVxZPoSLt23Jjcl7Aeo3C155EgxtPWVuk86Uwzff9Rr86N
-W/916UIPxF3i+3Hgbv8=
+BAF/L7SBXs2D10DFYCAPSGN5v0gXk3o7AuAb2tPTYdNO6hMl6b6pq4y8Gi9v7LR23JUx0ydwNP7a
+eUoPE7Ybox/ve5Q89HJyF8AZRx0E7ixziNGoaYrEzGm5EkGlQPa7TrlFZD04y6R0n+0le1cJiKnB
+j94Y4kxs5GzuwL7DtYM=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
