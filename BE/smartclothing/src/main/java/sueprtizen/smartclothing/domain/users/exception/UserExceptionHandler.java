@@ -9,8 +9,7 @@ import sueprtizen.smartclothing.global.dto.Message;
 
 @Slf4j
 @RestControllerAdvice
-public class UserExceptionHandler {
-
+public class UserExceptionHandler{
     @ExceptionHandler(UserException.class)
     public ResponseEntity<Message<Void>> userException(UserException e) {
         log.error("회원 관련 오류: {}", e.getMessage());
