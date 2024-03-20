@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import sueprtizen.smartclothing.domain.users.entity.User;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Entity
@@ -22,6 +24,9 @@ public class Clothing {
     @ManyToOne
     @JoinColumn(name = "clothing_detail_id")
     private ClothingDetail clothingDetail;
+
+    @OneToMany(mappedBy = "clothing")
+    private List<ClothingStyle> clothingStyles;
 
     @Column
     private String nowAt;

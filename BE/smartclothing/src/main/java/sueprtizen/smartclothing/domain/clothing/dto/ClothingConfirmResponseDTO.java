@@ -14,7 +14,7 @@ public class ClothingConfirmResponseDTO {
     private String washedAt;
     private int polluted;
     private String category;
-    private String style;
+    private List<String> styleList;
     private List<Integer> season;
     private String clothingImgPath;
     private List<String> textureList;

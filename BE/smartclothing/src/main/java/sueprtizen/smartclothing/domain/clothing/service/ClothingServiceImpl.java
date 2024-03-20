@@ -46,7 +46,7 @@ public class ClothingServiceImpl implements ClothingService {
                 .clothingId(clothing.getClothingId())
                 .nowAt(clothing.getNowAt())
                 .clothingName(clothing.getClothingName())
-                .style(null)
+                .styleList(clothing.getClothingStyles().stream().map(s -> s.getStyle().getStyleName()).toList())
                 .polluted(clothing.getPolluted())
                 .category(clothing.getCategory())
                 .washedAt(clothing.getWashedAt())
