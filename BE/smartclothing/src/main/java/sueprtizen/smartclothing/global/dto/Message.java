@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatusCode;
 
 /**
  * 응답 메시지를 위한 제네릭 클래스입니다.
+ *
  * @param <T> 메시지 본문의 데이터 타입입니다.
  */
 @Getter
@@ -26,6 +27,7 @@ public class Message<T> {
 
         /**
          * 기본값으로 성공 DataHeader를 생성합니다.
+         *
          * @return 성공한 DataHeader 인스턴스입니다.
          */
         private static DataHeader success() {
@@ -37,7 +39,8 @@ public class Message<T> {
 
         /**
          * 지정된 코드와 메시지로 실패 DataHeader를 생성합니다.
-         * @param resultCode 결과 코드입니다.
+         *
+         * @param resultCode    결과 코드입니다.
          * @param resultMessage 결과 메시지입니다.
          * @return 실패한 DataHeader 인스턴스입니다.
          */
@@ -51,8 +54,9 @@ public class Message<T> {
 
     /**
      * 본문을 포함한 성공 메시지를 생성합니다.
+     *
      * @param dataBody 메시지 본문입니다.
-     * @param <T> 데이터 본문의 타입입니다.
+     * @param <T>      데이터 본문의 타입입니다.
      * @return 성공한 메시지 인스턴스입니다.
      */
     public static <T> Message<T> success(T dataBody) {
@@ -64,6 +68,7 @@ public class Message<T> {
 
     /**
      * 본문 없이 성공 메시지를 생성합니다.
+     *
      * @return 성공한 메시지 인스턴스입니다.
      */
     public static Message<Void> success() {
@@ -74,9 +79,10 @@ public class Message<T> {
 
     /**
      * 실패 메시지를 생성합니다.
-     * @param resultCode 결과 코드입니다.
+     *
+     * @param resultCode    결과 코드입니다.
      * @param resultMessage 결과 메시지입니다.
-     * @param <T> 데이터 본문의 타입입니다.
+     * @param <T>           데이터 본문의 타입입니다.
      * @return 실패한 메시지 인스턴스입니다.
      */
     public static <T> Message<T> fail(HttpStatusCode resultCode, Object resultMessage) {

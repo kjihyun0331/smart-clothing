@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sueprtizen.smartclothing.global.entity.BaseEntity;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "user")
 @Getter

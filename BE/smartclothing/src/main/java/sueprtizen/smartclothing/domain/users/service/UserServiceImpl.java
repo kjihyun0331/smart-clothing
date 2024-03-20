@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sueprtizen.smartclothing.domain.users.dto.UserDetailResponseDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserRequestDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserResponseDTO;
 import sueprtizen.smartclothing.domain.users.entity.User;
@@ -31,5 +32,13 @@ public class UserServiceImpl implements UserService {
             throw new UserException(UserErrorCode.NOT_MATCH_PASSWORD);
         }
         return new UserResponseDTO(user.getUserId());
+    }
+
+    @Override
+    public UserDetailResponseDTO getUserDetail(int userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow(()
+                -> new UserException(UserErrorCode.NOT_FOUND_MEMBER));
+
+        return new UserDetailResponseDTO(user.getAge(), user.getGender());
     }
 }
