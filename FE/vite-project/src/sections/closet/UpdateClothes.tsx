@@ -5,7 +5,7 @@ import { useState } from "react";
 import { theme } from "@/styles/theme";
 import { useNavigate, useParams } from "react-router-dom";
 
-const Month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const UpdateClothes = () => {
   const { id } = useParams();
@@ -66,7 +66,7 @@ const UpdateClothes = () => {
           <span className="title">월</span>{" "}
         </div>
         <div className="month">
-          {Month.map((item) => {
+          {MONTH.map((item) => {
             const isSelected = selectedMonth.some((m) => {
               return item === m;
             });
