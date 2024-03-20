@@ -34,11 +34,12 @@ public class ClothingController {
         return ResponseEntity.ok(Message.success(clothingList));
     }
 
-    @GetMapping
+    @GetMapping("/{clothingId}")
     public ResponseEntity<Message<ClothingConfirmResponseDTO>> clothingConfirm(
-            @RequestParam int clothingId
+            @RequestHeader("User-ID") int userId,
+            @PathVariable int clothingId
     ) {
-        ClothingConfirmResponseDTO clothingConfirmResponseDTO = clothingService.clothingConfirm(clothingId);
+        ClothingConfirmResponseDTO clothingConfirmResponseDTO = clothingService.clothingConfirm(userId, clothingId);
         return ResponseEntity.ok(Message.success(clothingConfirmResponseDTO));
     }
 

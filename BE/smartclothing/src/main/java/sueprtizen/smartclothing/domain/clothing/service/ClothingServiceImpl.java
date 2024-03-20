@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
+import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
 import sueprtizen.smartclothing.domain.clothing.repository.ClothingRepository;
 
 import java.util.List;
@@ -28,12 +30,18 @@ public class ClothingServiceImpl implements ClothingService {
     }
 
     @Override
-    public ClothingConfirmResponseDTO clothingConfirm(int clothingId) {
+    public ClothingConfirmResponseDTO clothingConfirm(int userId, int clothingId) {
 
+        //옷 아이디에 해당하는 옷 가져오기
         Clothing clothing = clothingRepository.findById(clothingId).orElseThrow(
-                () -> new IllegalArgumentException("clothing not found")
+                () -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND)
         );
 
+        //옷 주인과 사용자 id 비교
+        if (clothing.getUser().getUserId() != userId) throw new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND);
+
+
+        //TODO: style, season 추가
         return ClothingConfirmResponseDTO.builder()
                 .clothingId(clothing.getClothingId())
                 .nowAt(clothing.getNowAt())
@@ -43,7 +51,8 @@ public class ClothingServiceImpl implements ClothingService {
                 .category(clothing.getCategory())
                 .washedAt(clothing.getWashedAt())
                 .season(null)
-                .textureList(clothing.getClothingDetail().getClothingTextures().stream().map(t -> t.getTexture().getTextureName()).toList())
+                .textureList(clothing.getClothingDetail().getClothingTextures()
+                        .stream().map(t -> t.getTexture().getTextureName()).toList())
                 .clothingImgPath(clothing.getClothingDetail().getClothingImgPath())
                 .build();
     }
