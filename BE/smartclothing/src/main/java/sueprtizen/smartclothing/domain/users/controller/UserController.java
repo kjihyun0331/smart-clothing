@@ -1,5 +1,6 @@
 package sueprtizen.smartclothing.domain.users.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,14 @@ public class UserController {
 
     private final UserService userService;
 
+    @Operation(summary = "로그인", description = "로그인을 처리하고, 로그인 응답 데이터를 반환합니다.")
     @PostMapping("")
     public ResponseEntity<Message<UserResponseDTO>> signIn(@RequestBody @Valid UserRequestDTO userRequestDTO) {
         UserResponseDTO signInResponse = userService.signIn(userRequestDTO);
         return ResponseEntity.ok(Message.success(signInResponse));
     }
 
+    @Operation(summary = "유저 정보 조회", description = "유저의 나이와 성별을 반환합니다.")
     @GetMapping("")
     public ResponseEntity<Message<UserDetailResponseDTO>> getUserDetail(@RequestHeader("User-Id") @Valid int userId) {
         UserDetailResponseDTO userDetailResponse = userService.getUserDetail(userId);
