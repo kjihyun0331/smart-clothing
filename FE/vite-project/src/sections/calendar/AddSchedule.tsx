@@ -3,15 +3,19 @@ import IconClose from "@/assets/ui/IconClose";
 import { situation } from "./config-schedule";
 import { useState } from "react";
 import { theme } from "@/styles/theme";
-import { outfitSelectionOptions } from "./config-schedule";
 import { useNavigate } from "react-router-dom";
 
 interface propType {
+  isWithinNextFiveDays: boolean;
   selected: string | null;
   setPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const AddSchedule = ({ selected, setPopup }: propType) => {
+export const AddSchedule = ({
+  selected,
+  setPopup,
+  isWithinNextFiveDays,
+}: propType) => {
   const navigator = useNavigate();
   const close = () => {
     setPopup(false);
@@ -65,13 +69,17 @@ export const AddSchedule = ({ selected, setPopup }: propType) => {
           onChange={handleInputChange}
           value={title}
         />
-        {outfitSelectionOptions.map(({ name, path }) => {
-          return (
-            <GreenButton key={name} onClick={() => navigator(path)}>
-              {name}
-            </GreenButton>
-          );
-        })}
+        <GreenButton onClick={() => navigator("makeoutfit")}>
+          옷장에서 고르기
+        </GreenButton>
+        <GreenButton onClick={() => navigator("past")}>
+          과거 코디에서 고르기
+        </GreenButton>
+        {isWithinNextFiveDays && (
+          <GreenButton onClick={() => navigator("recommend")}>
+            코디 추천 받기
+          </GreenButton>
+        )}
       </Container>
     </AddSKEDPopUp>
   );

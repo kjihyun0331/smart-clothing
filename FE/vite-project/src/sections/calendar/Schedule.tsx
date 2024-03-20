@@ -11,11 +11,13 @@ type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface SchedulePropType {
-  date: Value;
+  date: Date | Value | null;
+  attendDay: string[];
 }
 
-const Schedule = ({ date }: SchedulePropType) => {
+const Schedule = ({ date, attendDay }: SchedulePropType) => {
   moment.locale("ko");
+
   const selected: string | null = moment(date as MomentInput).format(
     "M월 DD일 (dd)"
   );
@@ -26,7 +28,11 @@ const Schedule = ({ date }: SchedulePropType) => {
   return (
     <ScheduleWrapper>
       <p>{selected}</p>
-      {isLoading ? <NoSchedule selected={selected} /> : <p>일정 있음</p>}
+      {isLoading ? (
+        <NoSchedule date={date} attendDay={attendDay} selected={selected} />
+      ) : (
+        <p>일정 있음</p>
+      )}
     </ScheduleWrapper>
   );
 };
@@ -44,29 +50,66 @@ const ScheduleWrapper = styled.div`
 
 type popupType = boolean;
 type NoSchedulePropType = {
-  selected: string;
+  date: Date | Value | null;
+  attendDay: string[];
+  selected: string | null;
 };
 
-const NoSchedule = ({ selected }: NoSchedulePropType) => {
+const NoSchedule = ({ date, attendDay, selected }: NoSchedulePropType) => {
   const [popup, setPopup] = useState<popupType>(false);
   const { setSelectedDate } = useSelectedDateStore();
   const { clearItems } = useSelectedItemsStore();
 
+  const isSelectedDatePast = moment(date as MomentInput).isBefore(
+    moment(),
+    "day"
+  );
+
+  // attendDay 배열에 selected 날짜가 있는지 확인
+  const selectedDate: string | null = moment(date as MomentInput).format(
+    "yyyy-MM-DD"
+  );
+
+  const isDateInAttendDay = attendDay.includes(selectedDate);
+
+  const isWithinNextFiveDays = moment(date as MomentInput).isBetween(
+    moment(),
+    moment().add(4, "days"),
+    "day",
+    "[]"
+  );
+
   return (
     <ContentWrapper>
-      <p className="description">아직 등록된 일정이 없습니다.</p>
-      <GreenButton
-        onClick={() => {
-          setPopup(true);
-          clearItems();
-          if (selected) {
-            setSelectedDate(selected);
-          }
-        }}
-      >
-        일정 등록하기
-      </GreenButton>
-      {popup ? <AddSchedule setPopup={setPopup} selected={selected} /> : <></>}
+      {isSelectedDatePast ? (
+        isDateInAttendDay ? (
+          <p>그 일정에 입은 옷</p>
+        ) : (
+          <p>이 날 등록된 일정 없음</p>
+        )
+      ) : (
+        <>
+          <p className="description">아직 등록된 일정이 없습니다.</p>
+          <GreenButton
+            onClick={() => {
+              setPopup(true);
+              clearItems();
+              if (selected) {
+                setSelectedDate(selected);
+              }
+            }}
+          >
+            일정 등록하기
+          </GreenButton>
+        </>
+      )}
+      {popup ? (
+        <AddSchedule
+          setPopup={setPopup}
+          selected={selected}
+          isWithinNextFiveDays={isWithinNextFiveDays}
+        />
+      ) : null}
     </ContentWrapper>
   );
 };
