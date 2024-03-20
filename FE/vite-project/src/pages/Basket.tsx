@@ -1,10 +1,11 @@
 import Layout from "@/components/Layout";
+import { Header } from "@/sections/closet/ClosetStyle";
 import BasketState from "@/sections/basket/BasketState";
 
 function Basket() {
   return (
     <Layout>
-      <div style={{ height: "7dvh" }}>(뒤) 여기에 헤더 들어갈 자리 (알림)</div>
+      <Header style={{ textAlign: "center" }}>모아보기</Header>
       <BasketState />
     </Layout>
   );
