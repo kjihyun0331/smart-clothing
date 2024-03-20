@@ -52,3 +52,51 @@ export const outfitSelectionOptions = [
     path: "recommend",
   },
 ];
+
+export const hashtagOptions = [
+  {
+    name: "아메카지",
+  },
+  {
+    name: "캐주얼",
+  },
+  {
+    name: "시크",
+  },
+  {
+    name: "댄디",
+  },
+  {
+    name: "걸리시",
+  },
+  {
+    name: "스포티",
+  },
+  {
+    name: "레트로",
+  },
+  {
+    name: "로맨틱",
+  },
+  {
+    name: "스트릿",
+  },
+  {
+    name: "고프코어",
+  },
+  {
+    name: "프레피",
+  },
+  {
+    name: "봄",
+  },
+  {
+    name: "여름",
+  },
+  {
+    name: "가을",
+  },
+  {
+    name: "겨울",
+  },
+];

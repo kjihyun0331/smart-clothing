@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sueprtizen.smartclothing.global.entity.BaseEntity;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "user")
 @Getter
@@ -31,8 +29,4 @@ public class User extends BaseEntity {
     private String gender;
     @Column(nullable = false)
     private String profileImgPath;
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 }

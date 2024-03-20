@@ -122,8 +122,7 @@ export const StyledCalendarWrapper = styled.div`
   .react-calendar__tile:enabled:hover,
   .react-calendar__tile:enabled:focus,
   .react-calendar__tile--active {
-    background-color: ${(props) => props.theme.colors.lightgrey};
-    opacity: 0.7;
+    background-color: #ececec;
     border-radius: 0.5rem;
   }
 `;

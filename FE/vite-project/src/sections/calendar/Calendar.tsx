@@ -35,6 +35,7 @@ const MyCalendar = () => {
 
   return (
     <>
+      <div style={{ height: "7dvh" }}></div>
       <StyledCalendarWrapper>
         <StyledCalendar
           value={date}
@@ -78,7 +79,7 @@ const MyCalendar = () => {
         />
         <StyledDate onClick={handleTodayClick}>오늘</StyledDate>
       </StyledCalendarWrapper>
-      <Schedule date={date} />
+      <Schedule date={date ? date : today} />
     </>
   );
 };
