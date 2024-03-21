@@ -28,6 +28,9 @@ public class Clothing {
     @OneToMany(mappedBy = "clothing")
     private List<ClothingStyle> clothingStyles;
 
+    @OneToMany(mappedBy = "clothing")
+    private List<ClothingSeason> clothingSeasons;
+
     @Column
     private String nowAt;
 

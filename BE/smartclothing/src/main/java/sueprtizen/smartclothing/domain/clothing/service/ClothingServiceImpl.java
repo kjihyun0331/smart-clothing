@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.entity.ClothingSeason;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
 import sueprtizen.smartclothing.domain.clothing.repository.ClothingRepository;
@@ -40,8 +41,6 @@ public class ClothingServiceImpl implements ClothingService {
         //옷 주인과 사용자 id 비교
         if (clothing.getUser().getUserId() != userId) throw new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND);
 
-
-        //TODO: style, season 추가
         return ClothingConfirmResponseDTO.builder()
                 .clothingId(clothing.getClothingId())
                 .nowAt(clothing.getNowAt())
@@ -50,7 +49,7 @@ public class ClothingServiceImpl implements ClothingService {
                 .polluted(clothing.getPolluted())
                 .category(clothing.getCategory())
                 .washedAt(clothing.getWashedAt())
-                .season(null)
+                .season(clothing.getClothingSeasons().stream().map(ClothingSeason::getMonth).toList())
                 .textureList(clothing.getClothingDetail().getClothingTextures()
                         .stream().map(t -> t.getTexture().getTextureName()).toList())
                 .clothingImgPath(clothing.getClothingDetail().getClothingImgPath())
