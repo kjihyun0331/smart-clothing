@@ -23,7 +23,19 @@
     "swiper": "^11.0.7",
     "use-image": "^1.1.1",
     "vite-tsconfig-paths": "^4.3.1",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "workbox-background-sync": "^6.6.0",
+    "workbox-broadcast-update": "^6.6.0",
+    "workbox-cacheable-response": "^6.6.0",
+    "workbox-core": "^6.6.0",
+    "workbox-expiration": "^6.6.0",
+    "workbox-google-analytics": "^6.6.1",
+    "workbox-navigation-preload": "^6.6.0",
+    "workbox-precaching": "^6.6.0",
+    "workbox-range-requests": "^6.6.0",
+    "workbox-routing": "^6.6.0",
+    "workbox-strategies": "^6.6.0",
+    "workbox-streams": "^6.6.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",
