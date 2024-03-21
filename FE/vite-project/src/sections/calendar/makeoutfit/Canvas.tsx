@@ -87,6 +87,7 @@ const IMG: React.FC<{
           x={shapeProps.x + shapeProps.width}
           y={shapeProps.y - 10}
           onClick={onDelete}
+          onTap={onDelete}
           draggable={false}
           fill="red"
           fontSize={20}
