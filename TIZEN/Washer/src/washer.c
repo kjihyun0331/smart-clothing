@@ -3,7 +3,6 @@
 typedef struct appdata {
 	Evas_Object *win;
 	Evas_Object *conform;
-	Evas_Object *label;
 } appdata_s;
 
 static void
@@ -20,27 +19,176 @@ win_back_cb(void *data, Evas_Object *obj, void *event_info)
 	elm_win_lower(ad->win);
 }
 
-struct temp {
+struct PathData {
 	Evas_Object *nf;
 	char *edj_path;
-	Evas_Object *laundry_layout;
-	Evas_Object *course_box;
-} obj_temp;
+} path_obj;
+
+typedef struct _Laundry {
+	char texture[20];
+	char polluted[10];
+	char date[10];
+	char user_name[20];
+} Laundry;
+
+Laundry laundry_test_list[2];
+
+void collapse_cb(void *data, Evas_Object *obj, void *event_info) {
+	elm_naviframe_item_pop(path_obj.nf);
+}
 
 void clicked_cb(void *data, Evas_Object *obj, void *event_info) {
 	/*
 	 *	laundry expand view
 	 */
-	obj_temp.laundry_layout = elm_layout_add(obj_temp.nf);
-	elm_layout_file_set(obj_temp.laundry_layout, obj_temp.edj_path, "main_layout");
-	elm_naviframe_item_push(obj_temp.nf, "laundry", NULL, NULL, obj_temp.laundry_layout, NULL);
-	evas_object_size_hint_align_set(obj_temp.laundry_layout, 0.5, 0.5);
+	Evas_Object *laundry_layout = elm_layout_add(path_obj.nf);
+	elm_layout_file_set(laundry_layout, path_obj.edj_path, "main_layout");
+	elm_naviframe_item_push(path_obj.nf, "laundry", NULL, NULL, laundry_layout, NULL);
+	Elm_Object_Item *main_item = elm_naviframe_top_item_get(path_obj.nf);
+	elm_naviframe_item_title_enabled_set(main_item, EINA_FALSE, EINA_FALSE);
+	elm_box_align_set(laundry_layout, 0.5, 0.5);
 
-	obj_temp.course_box = elm_layout_add(obj_temp.laundry_layout);
-	elm_layout_file_set(obj_temp.course_box, obj_temp.edj_path, "box_wrapper");
-	evas_object_size_hint_min_set(obj_temp.course_box, 750, 750);
-	elm_layout_content_set(obj_temp.laundry_layout, "elm.swallow.content", obj_temp.course_box);
-	evas_object_show(obj_temp.course_box);
+	Evas_Object *laundry_box_wrapper = elm_layout_add(laundry_layout);
+	elm_layout_file_set(laundry_box_wrapper, path_obj.edj_path, "box_wrapper");
+	evas_object_size_hint_min_set(laundry_box_wrapper, 1500, 759);
+	evas_object_size_hint_max_set(laundry_box_wrapper, 1500, 759);
+	elm_layout_content_set(laundry_layout, "elm.swallow.content", laundry_box_wrapper);
+	evas_object_show(laundry_box_wrapper);
+
+	Evas_Object *laundry_box = elm_box_add(laundry_box_wrapper);
+	elm_layout_content_set(laundry_box_wrapper, "elm.swallow.content", laundry_box);
+	elm_box_padding_set(laundry_box, 0, 25);
+	evas_object_size_hint_weight_set(laundry_box, 0, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(laundry_box, 0, EVAS_HINT_FILL);
+	elm_box_align_set(laundry_box, 0.5, 0);
+	evas_object_show(laundry_box);
+
+	Evas_Object *laundry_menu_box = elm_box_add(laundry_box);
+	evas_object_size_hint_align_set(laundry_menu_box, EVAS_HINT_FILL, 0);
+	elm_box_horizontal_set(laundry_menu_box, EINA_TRUE);
+	elm_box_pack_end(laundry_box, laundry_menu_box);
+	evas_object_show(laundry_menu_box);
+
+	Evas_Object *laundry_menu_label = elm_label_add(laundry_menu_box);
+	elm_object_text_set(laundry_menu_label, "<color=#ABABABFF font_size=55 font_weight=BOLD>세탁물 확인</color>");
+	elm_box_pack_end(laundry_menu_box, laundry_menu_label);
+	evas_object_show(laundry_menu_label);
+
+	Evas_Object *laundry_menu_empty = elm_layout_add(laundry_menu_box);
+	evas_object_size_hint_weight_set(laundry_menu_empty, EVAS_HINT_EXPAND, 0);
+	elm_box_pack_end(laundry_menu_box, laundry_menu_empty);
+	evas_object_show(laundry_menu_empty);
+
+	Evas_Object *laundry_collapse_btn = elm_button_add(laundry_menu_box);
+	elm_object_style_set(laundry_collapse_btn, "expand_button");
+	evas_object_size_hint_min_set(laundry_collapse_btn, 100, 50);
+	Evas_Object *laundry_collapse_btn_img = elm_image_add(laundry_collapse_btn);
+	char *collapse_path = NULL;
+	app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, "collapse.png", &collapse_path);
+	elm_image_file_set(laundry_collapse_btn_img, collapse_path, NULL);
+	elm_object_part_content_set(laundry_collapse_btn, "icon", laundry_collapse_btn_img);
+	elm_box_pack_end(laundry_menu_box, laundry_collapse_btn);
+	evas_object_show(laundry_collapse_btn);
+	evas_object_smart_callback_add(laundry_collapse_btn, "clicked", collapse_cb, NULL);
+
+	Evas_Object *bg_layout = elm_layout_add(laundry_box);
+	evas_object_size_hint_weight_set(bg_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(bg_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	elm_layout_file_set(bg_layout, path_obj.edj_path, "scrollbar");
+	elm_box_pack_end(laundry_box, bg_layout);
+	evas_object_show(bg_layout);
+
+	Evas_Object *laundry_scroller = elm_scroller_add(bg_layout);
+	evas_object_size_hint_weight_set(laundry_scroller, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(laundry_scroller, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	elm_scroller_policy_set(laundry_scroller, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_ON);
+	elm_layout_content_set(bg_layout, "elm.swallow.content", laundry_scroller);
+	evas_object_show(laundry_scroller);
+
+	Evas_Object *laundry_list_table = elm_table_add(laundry_scroller);
+	elm_table_padding_set(laundry_list_table, 50, 20);
+	elm_layout_content_set(laundry_scroller, "elm.swallow.content", laundry_list_table);
+	evas_object_show(laundry_list_table);
+	elm_table_align_set(laundry_list_table, 0, 0.5);
+
+	char laundry_details[6][3][2][100] = {
+			{
+					{"재질", "코튼"},
+					{"오염도", "2회 착용"},
+					{"일정", "4/21"}
+			},
+			{
+					{"재질", "코튼"},
+					{"오염도", "1회 착용"},
+					{"일정", "4/22"}
+			},
+			{
+					{"재질", "코튼"},
+					{"오염도", "1회 착용"},
+					{"일정", "4/22"}
+			},
+			{
+					{"재질", "코튼"},
+					{"오염도", "1회 착용"},
+					{"일정", "4/22"}
+			},
+			{
+					{"재질", "코튼"},
+					{"오염도", "1회 착용"},
+					{"일정", "4/22"}
+			},
+			{
+					{"재질", "코튼"},
+					{"오염도", "1회 착용"},
+					{"일정", "4/22"}
+			}
+	};
+	char laundry_detail_css[2][100] = {
+			"<color=#A5A5A5FF font_size=27>%s</color>",
+			"<color=#EFEFEFFF font_size=32>%s</color>"
+	};
+
+	for(int i = 0; i < 6; i++){
+		Evas_Object *laundry_wrapper = elm_layout_add(laundry_list_table);
+		evas_object_size_hint_min_set(laundry_wrapper, 300, 600);
+		elm_layout_file_set(laundry_wrapper, path_obj.edj_path, "laundry_wrapper");
+		elm_table_pack(laundry_list_table, laundry_wrapper, i % 4, i / 4, 1, 1);
+		evas_object_show(laundry_wrapper);
+
+		Evas_Object *laundry = elm_box_add(laundry_wrapper);
+		elm_box_align_set(laundry, 0.5, 0);
+		elm_box_padding_set(laundry, 0, 30);
+		elm_layout_content_set(laundry_wrapper, "elm.swallow.content", laundry);
+		evas_object_show(laundry);
+
+		char *laundry_img_path = NULL;
+		app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, "clothes_example.png", &laundry_img_path);
+		Evas_Object *laundry_img = elm_image_add(laundry);
+		evas_object_size_hint_min_set(laundry_img, 150, 230);
+		evas_object_size_hint_max_set(laundry_img, 150, 230);
+		elm_image_file_set(laundry_img, laundry_img_path, NULL);
+		elm_box_pack_end(laundry, laundry_img);
+		evas_object_show(laundry_img);
+
+		Evas_Object *laundry_detail_table = elm_table_add(laundry);
+		evas_object_size_hint_weight_set(laundry_detail_table, EVAS_HINT_EXPAND, 0);
+		evas_object_size_hint_align_set(laundry_detail_table, 0, 0);
+		elm_table_padding_set(laundry_detail_table, 15, 0);
+		elm_box_pack_end(laundry, laundry_detail_table);
+		evas_object_show(laundry_detail_table);
+
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 2; col++) {
+				Evas_Object *laundry_detail_label = elm_label_add(laundry_detail_table);
+				evas_object_size_hint_align_set(laundry_detail_label, 0, 0.5);
+				char content[200];
+				snprintf(content, 200, laundry_detail_css[col], laundry_details[i][row][col]);
+				elm_object_text_set(laundry_detail_label, content);
+				elm_table_pack(laundry_detail_table, laundry_detail_label, col, row, 1, 1);
+				evas_object_show(laundry_detail_label);
+			}
+		}
+	}
 }
 
 static void
@@ -65,40 +213,10 @@ create_base_gui(appdata_s *ad)
 	   elm_conformant is mandatory for base gui to have proper size
 	   when indicator or virtual keypad is visible. */
 	ad->conform = elm_conformant_add(ad->win);
-	elm_win_indicator_mode_set(ad->win, ELM_WIN_INDICATOR_SHOW);
-	elm_win_indicator_opacity_set(ad->win, ELM_WIN_INDICATOR_OPAQUE);
+	elm_win_indicator_mode_set(ad->win, ELM_WIN_INDICATOR_HIDE);
 	evas_object_size_hint_weight_set(ad->conform, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_win_resize_object_add(ad->win, ad->conform);
 	evas_object_show(ad->conform);
-
-//	/* Label */
-//	/* Create an actual view of the base gui.
-//	   Modify this part to change the view. */
-//	ad->label = elm_label_add(ad->conform);
-//	elm_object_text_set(ad->label, "<align=center>Hello Tizen</align>");
-//	evas_object_size_hint_weight_set(ad->label, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-//	elm_object_content_set(ad->conform, ad->label);
-
-
-//	app_resource_manager_init();
-//
-//	Evas_Object *img;
-//	char *img_path = NULL;
-//
-//	app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, "test.jpg", &img_path);
-//
-//	Evas* canvas = evas_object_evas_get(ad->conform);
-//	img = evas_object_image_filled_add(canvas);
-//
-//	if (img_path != NULL) {
-//		dlog_print(DLOG_INFO, LOG_TAG, "img");
-//	    evas_object_image_file_set(img, img_path, NULL);
-//
-//	    evas_object_move(img, 50, 50);
-//	    evas_object_resize(img, 300, 200);
-//	    evas_object_show(img);
-//	    free(img_path);
-//	}
 
 	char *edj_path = NULL;
 	app_resource_manager_get(APP_RESOURCE_TYPE_LAYOUT, "edje_res/sample.edj", &edj_path);
@@ -107,12 +225,15 @@ create_base_gui(appdata_s *ad)
 	char *expand_path = NULL;
 	app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, "expand.png", &expand_path);
 
+	/*
+	 * 	naviframe
+	 */
 	Evas_Object *nf = elm_naviframe_add(ad->conform);
 	elm_object_content_set(ad->conform, nf);
 	evas_object_show(nf);
 
-	obj_temp.nf = nf;
-	obj_temp.edj_path = edj_path;
+	path_obj.nf = nf;
+	path_obj.edj_path = edj_path;
 
 	/*
 	 *	main view
@@ -120,10 +241,13 @@ create_base_gui(appdata_s *ad)
 	Evas_Object *main_layout = elm_layout_add(nf);
 	elm_layout_file_set(main_layout, edj_path, "main_layout");
 	elm_naviframe_item_push(nf, NULL, NULL, NULL, main_layout, NULL);
+	Elm_Object_Item *main_item = elm_naviframe_top_item_get(nf);
+	elm_naviframe_item_title_enabled_set(main_item, EINA_FALSE, EINA_FALSE);
 	elm_box_align_set(main_layout, 0.5, 0.5);
 
 	Evas_Object *menu_scroller = elm_scroller_add(main_layout);
 	elm_object_style_set(menu_scroller, "menu_scroller");
+	evas_object_size_hint_max_set(menu_scroller, 0, 759);
 	elm_layout_content_set(main_layout, "elm.swallow.content", menu_scroller);
 	evas_object_show(menu_scroller);
 
@@ -131,6 +255,7 @@ create_base_gui(appdata_s *ad)
 	elm_box_horizontal_set(menu_box, EINA_TRUE);
 	elm_box_padding_set(menu_box, 100, 0);
 	elm_layout_content_set(menu_scroller, "elm.swallow.content", menu_box);
+	evas_object_size_hint_align_set(menu_box, 0, 0.5);
 	evas_object_show(menu_box);
 
 	/*
@@ -138,7 +263,7 @@ create_base_gui(appdata_s *ad)
 	 */
 	Evas_Object *course_box_wrapper = elm_layout_add(menu_box);
 	elm_layout_file_set(course_box_wrapper, edj_path, "box_wrapper");
-	evas_object_size_hint_min_set(course_box_wrapper, 750, 750);
+	evas_object_size_hint_min_set(course_box_wrapper, 750, 759);
 	elm_box_pack_end(menu_box, course_box_wrapper);
 	evas_object_show(course_box_wrapper);
 
@@ -224,7 +349,7 @@ create_base_gui(appdata_s *ad)
 	 */
 	Evas_Object *laundry_box_wrapper = elm_layout_add(menu_box);
 	elm_layout_file_set(laundry_box_wrapper, edj_path, "box_wrapper");
-	evas_object_size_hint_min_set(laundry_box_wrapper, 750, 750);
+	evas_object_size_hint_min_set(laundry_box_wrapper, 750, 759);
 	elm_box_pack_end(menu_box, laundry_box_wrapper);
 	evas_object_show(laundry_box_wrapper);
 
@@ -265,18 +390,7 @@ create_base_gui(appdata_s *ad)
 	elm_box_pack_end(laundry_box, laundry_list_box);
 	evas_object_show(laundry_list_box);
 
-	char laundry_details[2][3][2][100] = {
-			{
-					{"재질", "코튼"},
-					{"오염도", "2회 착용"},
-					{"일정", "4/21"}
-			},
-			{
-					{"재질", "코튼"},
-					{"오염도", "1회 착용"},
-					{"일정", "4/22"}
-			}
-	};
+	char laundry_detail_name[3][100] = { "소재", "오염도", "일정" };
 	char laundry_detail_css[2][100] = {
 			"<color=#A5A5A5FF font_size=27>%s</color>",
 			"<color=#EFEFEFFF font_size=32>%s</color>"
@@ -316,7 +430,22 @@ create_base_gui(appdata_s *ad)
 				Evas_Object *laundry_detail_label = elm_label_add(laundry_detail_table);
 				evas_object_size_hint_align_set(laundry_detail_label, 0, 0.5);
 				char content[200];
-				snprintf(content, 200, laundry_detail_css[col], laundry_details[i][row][col]);
+				if(col == 0){
+					snprintf(content, 200, laundry_detail_css[col], laundry_detail_name[row]);
+				}
+				else{
+					switch(row){
+					case 0:
+						snprintf(content, 200, laundry_detail_css[col], laundry_test_list[i].texture);
+						break;
+					case 1:
+						snprintf(content, 200, laundry_detail_css[col], laundry_test_list[i].polluted);
+						break;
+					case 2:
+						snprintf(content, 200, laundry_detail_css[col], laundry_test_list[i].date);
+						break;
+					}	// end switch-case
+				}
 				elm_object_text_set(laundry_detail_label, content);
 				elm_table_pack(laundry_detail_table, laundry_detail_label, col, row, 1, 1);
 				evas_object_show(laundry_detail_label);
@@ -329,7 +458,7 @@ create_base_gui(appdata_s *ad)
 	 */
 	Evas_Object *notification_box_wrapper = elm_layout_add(menu_box);
 	elm_layout_file_set(notification_box_wrapper, edj_path, "box_wrapper");
-	evas_object_size_hint_min_set(notification_box_wrapper, 750, 750);
+	evas_object_size_hint_min_set(notification_box_wrapper, 750, 759);
 	elm_box_pack_end(menu_box, notification_box_wrapper);
 	evas_object_show(notification_box_wrapper);
 
@@ -338,7 +467,6 @@ create_base_gui(appdata_s *ad)
 	elm_layout_content_set(notification_box_wrapper, "elm.swallow.content", notification_menu_label);
 	evas_object_size_hint_align_set(notification_menu_label, 0.5, 0);
 	evas_object_show(notification_menu_label);
-
 
 	/* Show window after base gui is set up */
 	evas_object_show(ad->win);
@@ -493,7 +621,8 @@ void set_socket() {
 	hints.ai_protocol = IPPROTO_TCP;
 
 	dlog_print(DLOG_INFO, LOG_TAG, "hints : %d", hints.ai_flags);
-	if (getaddrinfo("192.168.137.1", "12346", &hints, &result) != 0) {
+	if (getaddrinfo("10.0.2.2", "12346", &hints, &result) != 0) {	// emulator host ip
+//	if (getaddrinfo("192.168.137.1", "12346", &hints, &result) != 0) {	// server ip
 		dlog_print(DLOG_INFO, LOG_TAG, "getaddrinfo() error\n");
 		connection_profile_destroy(profile_h);
 		connection_destroy(connection);
@@ -537,27 +666,31 @@ void set_socket() {
 	if (sockfd >= 0) {
 		// write
 		int count;
-		char user_msg[200] = { 0, };
-		if ((count = write(sockfd, user_msg, 200)) < 0) {
-			dlog_print(DLOG_INFO, LOG_TAG, "write() error: %s\n", strerror(errno));
-
-			freeaddrinfo(result);
-			close(sockfd);
-		}
-		dlog_print(DLOG_INFO, LOG_TAG, "Sent count: %d, msg: %s\n", count, user_msg);
+//		char user_msg[200] = { 0, };
+//		if ((count = write(sockfd, user_msg, 200)) < 0) {
+//			dlog_print(DLOG_INFO, LOG_TAG, "write() error: %s\n", strerror(errno));
+//
+//			freeaddrinfo(result);
+//			close(sockfd);
+//		}
+//		dlog_print(DLOG_INFO, LOG_TAG, "Sent count: %d, msg: %s\n", count, user_msg);
 
 		// read
-		char buf[257];
-		memset(buf, 0x00, 257);
+//		char buf[257];
+//		memset(buf, 0x00, 257);
 
-		if ((count = read(sockfd, buf, 256)) < 0) {
-			dlog_print(DLOG_INFO, LOG_TAG, "read() error: %s\n", strerror(errno));
+		for(int i = 0; i < 2; i++){
+			memset(&laundry_test_list[i], sizeof(laundry_test_list[i]), 0);
+			if ((count = read(sockfd, (char*)(&laundry_test_list[i]), sizeof(laundry_test_list[i]))) < 0) {
+				dlog_print(DLOG_INFO, LOG_TAG, "read() error: %s\n", strerror(errno));
 
-			freeaddrinfo(result);
-			close(sockfd);
+				freeaddrinfo(result);
+				close(sockfd);
+			}
 		}
-		buf[count] = '\0';
-		dlog_print(DLOG_INFO, LOG_TAG, "\nRead: %s\n", buf);
+
+//		buf[count] = '\0';
+//		dlog_print(DLOG_INFO, LOG_TAG, "\nRead: %s\n", buf);
 
 		close(sockfd);
 	}
