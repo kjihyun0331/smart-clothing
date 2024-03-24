@@ -8,6 +8,8 @@ WORKDIR /app
 COPY . /app
 
 # 필요한 라이브러리 설치
+RUN python -m pip install --upgrade pip
+
 RUN pip install -r requirements.txt
 
 # 데이터베이스 마이그레이션
