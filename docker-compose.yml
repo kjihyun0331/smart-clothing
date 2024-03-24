@@ -26,5 +26,16 @@ services:
     networks:
       - supertizen_net
 
+  supertizen_machine_learning:
+    container_name: supertizen_machine_learning
+    build:
+      context: ./ML/machinelearning
+      dockerfile: Dockerfile
+    image: supertizen_machine_learning_img
+    ports:
+      - "8000:8000"
+    networks:
+      - supertizen_net
+
 networks:
   supertizen_net:
