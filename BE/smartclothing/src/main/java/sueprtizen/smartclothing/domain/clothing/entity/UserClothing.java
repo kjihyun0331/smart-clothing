@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import sueprtizen.smartclothing.domain.users.entity.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Entity
@@ -23,6 +26,9 @@ public class UserClothing {
     @ManyToOne
     @JoinColumn(name = "clothing_id", nullable = false)
     private Clothing clothing;
+
+    @OneToMany(mappedBy = "userClothing")
+    private List<ClothingSeason> clothingSeasonList = new ArrayList<>();
 
     @Column(nullable = false)
     private String clothingName;

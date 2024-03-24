@@ -8,13 +8,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 public class ClothingSeason {
-    @ManyToOne
-    @JoinColumn(name = "clothing_id", nullable = false)
-    Clothing clothing;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private int season_connection_id;
+    private int seasonId;
+
+    @ManyToOne
+    @JoinColumn(name = "clothing_connection_id", nullable = false)
+    UserClothing userClothing;
+
     @Column(nullable = false)
     private int month;
+
+
 }

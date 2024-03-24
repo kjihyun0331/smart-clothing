@@ -1,6 +1,7 @@
 package sueprtizen.smartclothing.domain.clothing.dto;
 
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.entity.ClothingSeason;
 import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public record ClothingConfirmResponseDTO(
                 clothing.getPolluted(),
                 clothing.getCategory(),
                 clothing.getClothingStyles().stream().map(clothingStyle -> clothingStyle.getStyle().getStyleName()).toList(),
-                null,
+                userClothing.getClothingSeasonList().stream().map(ClothingSeason::getMonth).toList(),
                 clothing.getClothingDetail().getClothingImgPath(),
                 clothing.getClothingDetail().getClothingTextures().stream().map(clothingTexture -> clothingTexture.getTexture().getTextureName()).toList()
         );
