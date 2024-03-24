@@ -10,14 +10,14 @@
   "theme_color": "#668fba",
   "screenshots": [
     {
-      "src": "./src/assets/screenshots/desktop-screenshot.png",
+      "src": "./screenshots/desktop-screenshot.png",
       "sizes": "1280x720",
       "type": "image/png",
       "purpose": "any",
       "form_factor": "wide"
     },
     {
-      "src": "./src/assets/screenshots/mobile-screenshot.png",
+      "src": "./screenshots/mobile-screenshot.png",
       "sizes": "320x568",
       "type": "image/png",
       "purpose": "any",
