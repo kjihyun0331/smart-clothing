@@ -27,7 +27,7 @@ public record ClothingConfirmResponseDTO(
                 clothing.getWashedAt(),
                 clothing.getPolluted(),
                 clothing.getCategory(),
-                clothing.getClothingStyles().stream().map(clothingStyle -> clothingStyle.getStyle().getStyleName()).toList(),
+                clothing.getClothingStyleList().stream().map(clothingStyle -> clothingStyle.getStyle().getStyleName()).toList(),
                 userClothing.getClothingSeasonList().stream().map(ClothingSeason::getMonth).toList(),
                 clothing.getClothingDetail().getClothingImgPath(),
                 clothing.getClothingDetail().getClothingTextures().stream().map(clothingTexture -> clothingTexture.getTexture().getTextureName()).toList()

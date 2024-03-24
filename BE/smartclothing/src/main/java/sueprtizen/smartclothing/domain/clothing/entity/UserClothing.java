@@ -35,4 +35,12 @@ public class UserClothing {
 
     @Column(nullable = false)
     private String accrueWornCount;
+
+
+    public void UpdateClothing(String clothingName, Clothing clothing, List<ClothingSeason> clothingSeasonList) {
+        this.clothingName = clothingName;
+        this.clothing = clothing;
+        this.clothingSeasonList = clothingSeasonList;
+    }
+
 }

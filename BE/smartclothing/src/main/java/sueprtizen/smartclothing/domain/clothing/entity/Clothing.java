@@ -24,7 +24,7 @@ public class Clothing {
     private ClothingDetail clothingDetail;
 
     @OneToMany(mappedBy = "clothing")
-    private List<ClothingStyle> clothingStyles;
+    private List<ClothingStyle> clothingStyleList;
 
     @Column
     private String nowAt;
@@ -39,8 +39,13 @@ public class Clothing {
     private int polluted;
 
     @Column
-    private String wornCount;
+    private int wornCount;
 
     @Column
     private String category;
+
+    public void updateClothing(List<ClothingStyle> clothingStyleList, String category) {
+        this.clothingStyleList = clothingStyleList;
+        this.category = category;
+    }
 }

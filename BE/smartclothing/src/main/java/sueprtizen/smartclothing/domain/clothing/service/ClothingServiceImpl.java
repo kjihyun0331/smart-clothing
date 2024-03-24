@@ -1,9 +1,11 @@
 package sueprtizen.smartclothing.domain.clothing.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
 import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
@@ -65,6 +67,22 @@ public class ClothingServiceImpl implements ClothingService {
         userClothingRepository.delete(userClothing);
 
         return true;
+    }
+
+    @Override
+    @Transactional
+    public Boolean updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO) {
+        User currentUser = getUser(userId);
+
+        Clothing clothing = clothingRepository.findById(clothingUpdateRequestDTO.clothingId())
+                .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
+
+
+        Clothing newClothing = new Clothing();
+
+        UserClothing newUserClothing = new UserClothing();
+
+        return null;
     }
 
 

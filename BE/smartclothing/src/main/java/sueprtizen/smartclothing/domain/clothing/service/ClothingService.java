@@ -2,6 +2,7 @@ package sueprtizen.smartclothing.domain.clothing.service;
 
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
 
 import java.util.List;
 
@@ -11,4 +12,6 @@ public interface ClothingService {
     ClothingConfirmResponseDTO clothingConfirmation(int userId, int clothingId);
 
     Boolean removeClothing(int userId, int clothingId);
+
+    Boolean updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO);
 }
