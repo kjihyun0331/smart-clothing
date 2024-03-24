@@ -42,7 +42,8 @@ export function register(config?: Config) {
     }
 
     window.addEventListener("load", () => {
-      const swUrl = `${import.meta.env.VITE_BASE_URL}/service-worker.js`;
+      // const swUrl = `${import.meta.env.VITE_BASE_URL}/service-worker.js`;
+      const swUrl = `${publicUrl.origin}/service-worker.js`;
       console.log("swUrl===================================");
       console.log(swUrl);
       if (isLocalhost) {
