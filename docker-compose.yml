@@ -7,8 +7,11 @@ services:
       context: ./FE/vite-project
       dockerfile: Dockerfile
     image: supertizen_frontend_img
+    volumes:
+      - /etc/letsencrypt/:/etc/nginx/ssl/
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - supertizen_net  
 
