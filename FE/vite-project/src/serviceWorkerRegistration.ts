@@ -32,6 +32,8 @@ export function register(config?: Config) {
       import.meta.env.VITE_BASE_URL,
       window.location.href
     );
+    console.log("publicUrl===================================");
+    console.log(publicUrl);
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
@@ -41,7 +43,8 @@ export function register(config?: Config) {
 
     window.addEventListener("load", () => {
       const swUrl = `${import.meta.env.VITE_BASE_URL}/service-worker.js`;
-
+      console.log("swUrl===================================");
+      console.log(swUrl);
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
