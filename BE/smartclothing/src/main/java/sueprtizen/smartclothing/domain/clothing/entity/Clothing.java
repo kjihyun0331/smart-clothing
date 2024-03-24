@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import sueprtizen.smartclothing.domain.users.entity.User;
 
 import java.util.List;
 
@@ -17,9 +16,8 @@ public class Clothing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int clothingId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @OneToMany(mappedBy = "clothing")
+    private List<UserClothing> userClothing;
 
     @ManyToOne
     @JoinColumn(name = "clothing_detail_id")
@@ -28,17 +26,11 @@ public class Clothing {
     @OneToMany(mappedBy = "clothing")
     private List<ClothingStyle> clothingStyles;
 
-    @OneToMany(mappedBy = "clothing")
-    private List<ClothingSeason> clothingSeasons;
-
     @Column
     private String nowAt;
 
     @Column(name = "RFID_uid")
-    private String RFIDUid;
-
-    @Column
-    private String clothingName;
+    private String rfidUid;
 
     @Column
     private String washedAt;

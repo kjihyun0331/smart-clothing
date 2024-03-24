@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
 import sueprtizen.smartclothing.global.dto.Message;
 
@@ -34,13 +36,13 @@ public class ClothingController {
         return ResponseEntity.ok(Message.success(clothingList));
     }
 
-    @GetMapping("/{clothingId}")
-    public ResponseEntity<Message<ClothingConfirmResponseDTO>> clothingConfirm(
-            @RequestHeader("User-ID") int userId,
-            @PathVariable int clothingId
-    ) {
-        ClothingConfirmResponseDTO clothingConfirmResponseDTO = clothingService.clothingConfirm(userId, clothingId);
-        return ResponseEntity.ok(Message.success(clothingConfirmResponseDTO));
-    }
+//    @GetMapping("/{clothingId}")
+//    public ResponseEntity<Message<ClothingConfirmResponseDTO>> clothingConfirm(
+//            @RequestHeader("User-ID") int userId,
+//            @PathVariable int clothingId
+//    ) {
+//        ClothingConfirmResponseDTO clothingConfirmResponseDTO = clothingService.clothingConfirm(userId, clothingId);
+//        return ResponseEntity.ok(Message.success(clothingConfirmResponseDTO));
+//    }
 
 }
