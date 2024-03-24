@@ -38,9 +38,14 @@ export function register(config?: Config) {
       // serve assets; see https://github.com/facebook/create-react-app/issues/2374
       return;
     }
+    console.log("publicURL");
+    console.log(publicUrl);
 
     window.addEventListener("load", () => {
-      const swUrl = `${import.meta.env.VITE_BASE_URL}/service-worker.js`;
+      // const swUrl = `${import.meta.env.VITE_BASE_URL}/service-worker.js`;
+      const swUrl = `${publicUrl.origin}/service-worker.js`;
+      console.log("swUrl");
+      console.log(swUrl);
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
