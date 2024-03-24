@@ -52,6 +52,21 @@ public class ClothingServiceImpl implements ClothingService {
         return ClothingConfirmResponseDTO.createFromClothingUserClothingUser(clothing, userClothing);
     }
 
+    @Override
+    public Boolean removeClothing(int userId, int clothingId) {
+        User currentUser = getUser(userId);
+
+        Clothing clothing = clothingRepository.findById(clothingId)
+                .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
+
+        UserClothing userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing)
+                .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
+
+        userClothingRepository.delete(userClothing);
+
+        return true;
+    }
+
 
     private User getUser(int userId) {
         return userRepository.findByUserId(userId)

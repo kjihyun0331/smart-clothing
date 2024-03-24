@@ -43,4 +43,14 @@ public class ClothingController {
         return ResponseEntity.ok(Message.success(clothingConfirmResponseDTO));
     }
 
+    @DeleteMapping("/{clothingId}")
+    public ResponseEntity<Message<Boolean>> removeClothing(
+            @RequestHeader("User-ID") int userId,
+            @PathVariable int clothingId
+    ) {
+        Boolean result = clothingService.removeClothing(userId, clothingId);
+        return ResponseEntity.ok(Message.success(result));
+    }
+
+
 }
