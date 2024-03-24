@@ -52,7 +52,7 @@ registerRoute(
   },
   /////////////////////////// Cannot find name 'process'. Do you need to install type definitions for node? 이런 오류 나옴
   // createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
-  createHandlerBoundToURL(import.meta.env.BASE_URL + "/index.html")
+  createHandlerBoundToURL(import.meta.env.VITE_BASE_URL + "/index.html")
 );
 
 // An example runtime caching route for requests that aren't handled by the
