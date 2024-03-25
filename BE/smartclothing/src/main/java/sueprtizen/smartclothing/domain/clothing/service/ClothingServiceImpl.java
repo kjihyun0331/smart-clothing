@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.SharedUserDTO;
 import sueprtizen.smartclothing.domain.clothing.entity.*;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
@@ -52,7 +53,13 @@ public class ClothingServiceImpl implements ClothingService {
         UserClothing userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing)
                 .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
 
-        return new ClothingConfirmResponseDTO(clothing, userClothing, currentUser.getUserId() == clothing.getOwnerId());
+        List<SharedUserDTO> sharedUserDTOList = clothing.getUserClothing().stream().map(
+                nowUserClothing -> new SharedUserDTO(nowUserClothing.getUser())
+        ).toList();
+
+        boolean isMyClothing = currentUser.getUserId() == clothing.getOwnerId();
+
+        return new ClothingConfirmResponseDTO(clothing, userClothing, sharedUserDTOList, isMyClothing);
     }
 
     @Override

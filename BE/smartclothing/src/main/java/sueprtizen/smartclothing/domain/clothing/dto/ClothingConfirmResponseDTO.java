@@ -1,6 +1,5 @@
 package sueprtizen.smartclothing.domain.clothing.dto;
 
-import lombok.Builder;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
 import sueprtizen.smartclothing.domain.clothing.entity.ClothingSeason;
 import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
@@ -15,11 +14,12 @@ public record ClothingConfirmResponseDTO(
         List<Integer> season,
         String clothingImgPath,
         List<String> textureList,
+        List<SharedUserDTO> sharedUserDTOList,
 
         boolean isMyClothing
 
 ) {
-    public ClothingConfirmResponseDTO(Clothing clothing, UserClothing userClothing, boolean isMyClothing) {
+    public ClothingConfirmResponseDTO(Clothing clothing, UserClothing userClothing, List<SharedUserDTO> sharedUserDTOList, boolean isMyClothing) {
         this(clothing.getClothingId(),
                 userClothing.getClothingName(),
                 clothing.getCategory(),
@@ -27,6 +27,7 @@ public record ClothingConfirmResponseDTO(
                 userClothing.getClothingSeasonList().stream().map(ClothingSeason::getMonth).toList(),
                 clothing.getClothingDetail().getClothingImgPath(),
                 clothing.getClothingDetail().getClothingTextures().stream().map(clothingTexture -> clothingTexture.getTexture().getTextureName()).toList(),
+                sharedUserDTOList,
                 isMyClothing
         );
     }
