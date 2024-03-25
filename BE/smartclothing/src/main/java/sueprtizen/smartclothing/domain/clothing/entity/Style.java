@@ -10,16 +10,16 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Texture {
+public class Style {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private int textureId;
+    private int styleId;
 
     @Column(nullable = false)
-    private String textureName;
+    private String styleName;
 
-    @OneToMany(mappedBy = "texture")
-    private List<ClothingTexture> clothingTextures = new ArrayList<>();
+    @OneToMany(mappedBy = "style")
+    private List<ClothingStyle> clothingStyles = new ArrayList<>();
 
 }
