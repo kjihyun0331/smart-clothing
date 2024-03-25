@@ -1,8 +1,13 @@
 package sueprtizen.smartclothing.socket;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SocketServer {
 
@@ -34,6 +39,12 @@ public class SocketServer {
     // 클라이언트 처리를 위한 별도의 스레드 클래스
     private static class ClientHandler extends Thread {
         private Socket socket;
+        private static final Map<String, RequestStrategy> strategyMap = new HashMap<>();
+
+        static {
+            strategyMap.put("getMainLaundryList", new GetMainLaundryListStrategy());
+            strategyMap.put("getAllLaundryList", new GetAllLaundryListStrategy());
+        }
 
         public ClientHandler(Socket socket) {
             this.socket = socket;
@@ -41,6 +52,9 @@ public class SocketServer {
 
         @Override
         public void run() {
+
+            JSONParser parser = new JSONParser();
+
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
@@ -53,9 +67,17 @@ public class SocketServer {
                         break;
                     }
 
-                    // 클라이언트 메시지에 "hello"를 붙여서 응답합니다.
-                    String response = "hello " + clientMessage;
-                    writer.println(response);
+                    JSONObject request = (JSONObject) parser.parse(clientMessage);
+                    String requestName = (String) request.get("requestName");
+                    Long requestNumber = (Long) request.get("requestNumber");
+
+                    RequestStrategy strategy = strategyMap.get(requestName);
+                    if (strategy != null) {
+                        strategy.execute(requestNumber);
+                    } else {
+                        System.out.println("No strategy found for requestName: " + requestName);
+                    }
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
