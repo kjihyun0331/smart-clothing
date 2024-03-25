@@ -37,7 +37,7 @@ public class UserClothing {
     private String accrueWornCount;
 
 
-    public void UpdateClothing(String clothingName, Clothing clothing, List<ClothingSeason> clothingSeasonList) {
+    public void updateUserClothing(String clothingName, Clothing clothing, List<ClothingSeason> clothingSeasonList) {
         this.clothingName = clothingName;
         this.clothing = clothing;
         this.clothingSeasonList = clothingSeasonList;

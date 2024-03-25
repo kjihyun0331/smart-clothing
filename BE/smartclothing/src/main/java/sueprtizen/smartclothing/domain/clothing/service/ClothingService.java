@@ -11,7 +11,7 @@ public interface ClothingService {
 
     ClothingConfirmResponseDTO clothingConfirmation(int userId, int clothingId);
 
-    Boolean removeClothing(int userId, int clothingId);
+    void removeClothing(int userId, int clothingId);
 
-    Boolean updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO);
+    void updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO);
 }

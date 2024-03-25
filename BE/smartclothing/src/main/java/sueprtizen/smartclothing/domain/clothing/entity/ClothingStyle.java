@@ -1,8 +1,8 @@
 package sueprtizen.smartclothing.domain.clothing.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 @NoArgsConstructor
 @Getter
@@ -20,5 +20,11 @@ public class ClothingStyle {
     @ManyToOne
     @JoinColumn(name = "clothing_id")
     private Clothing clothing;
+
+    @Builder
+    public ClothingStyle(Style style, Clothing clothing) {
+        this.style = style;
+        this.clothing = clothing;
+    }
 
 }

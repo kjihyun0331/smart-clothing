@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
 import sueprtizen.smartclothing.global.dto.Message;
 
@@ -44,12 +45,21 @@ public class ClothingController {
     }
 
     @DeleteMapping("/{clothingId}")
-    public ResponseEntity<Message<Boolean>> removeClothing(
+    public ResponseEntity<Message<Void>> removeClothing(
             @RequestHeader("User-ID") int userId,
             @PathVariable int clothingId
     ) {
-        Boolean result = clothingService.removeClothing(userId, clothingId);
-        return ResponseEntity.ok(Message.success(result));
+        clothingService.removeClothing(userId, clothingId);
+        return ResponseEntity.ok(Message.success());
+    }
+
+    @PutMapping("/{clothingId}")
+    public ResponseEntity<Message<Void>> updateClothing(
+            @RequestHeader("User-ID") int userId,
+            @RequestBody ClothingUpdateRequestDTO clothingUpdateRequestDTO
+    ) {
+        clothingService.updateClothing(userId, clothingUpdateRequestDTO);
+        return ResponseEntity.ok(Message.success());
     }
 
 

@@ -1,6 +1,7 @@
 package sueprtizen.smartclothing.domain.clothing.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,12 @@ public class ClothingSeason {
 
     @Column(nullable = false)
     private int month;
+
+    @Builder
+    public ClothingSeason(UserClothing userClothing, int month) {
+        this.userClothing = userClothing;
+        this.month = month;
+    }
 
 
 }

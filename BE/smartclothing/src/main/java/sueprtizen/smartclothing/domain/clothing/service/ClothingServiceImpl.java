@@ -6,12 +6,10 @@ import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
-import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
-import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
+import sueprtizen.smartclothing.domain.clothing.entity.*;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
-import sueprtizen.smartclothing.domain.clothing.repository.ClothingRepository;
-import sueprtizen.smartclothing.domain.clothing.repository.UserClothingRepository;
+import sueprtizen.smartclothing.domain.clothing.repository.*;
 import sueprtizen.smartclothing.domain.users.entity.User;
 import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
@@ -27,6 +25,9 @@ public class ClothingServiceImpl implements ClothingService {
     private final UserRepository userRepository;
     private final UserClothingRepository userClothingRepository;
     private final ClothingRepository clothingRepository;
+    private final ClothingStyleRepository clothingStyleRepository;
+    private final StyleRepository styleRepository;
+    private final ClothingSeasonRepository clothingSeasonRepository;
 
     @Override
     public List<ClosetConfirmResponseDTO> closetConfirmation(int userId) {
@@ -55,7 +56,7 @@ public class ClothingServiceImpl implements ClothingService {
     }
 
     @Override
-    public Boolean removeClothing(int userId, int clothingId) {
+    public void removeClothing(int userId, int clothingId) {
         User currentUser = getUser(userId);
 
         Clothing clothing = clothingRepository.findById(clothingId)
@@ -65,24 +66,57 @@ public class ClothingServiceImpl implements ClothingService {
                 .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
 
         userClothingRepository.delete(userClothing);
-
-        return true;
     }
 
     @Override
     @Transactional
-    public Boolean updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO) {
+    public void updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO) {
         User currentUser = getUser(userId);
+
 
         Clothing clothing = clothingRepository.findById(clothingUpdateRequestDTO.clothingId())
                 .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
 
+        UserClothing userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing)
+                .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
 
-        Clothing newClothing = new Clothing();
 
-        UserClothing newUserClothing = new UserClothing();
+        // 스타일 모두 삭제
+        clothingStyleRepository.deleteAllByClothing(clothing);
 
-        return null;
+        List<Style> newStyleList = styleRepository.findAllByStyleNameIn(clothingUpdateRequestDTO.styleList())
+                .orElseThrow(() -> new ClothingException(ClothingErrorCode.STYLE_NOT_FOUND));
+
+        List<ClothingStyle> newClothingStyleList = newStyleList.stream().map(style ->
+                ClothingStyle.builder()
+                        .clothing(clothing)
+                        .style(style)
+                        .build()
+        ).toList();
+
+        //새로운 스타일 연결
+        clothingStyleRepository.saveAll(newClothingStyleList);
+
+
+        // 계절 모두 삭제
+        clothingSeasonRepository.deleteAllByUserClothing(userClothing);
+
+        List<ClothingSeason> newSeasonList = clothingUpdateRequestDTO.seasonList().stream().map(month ->
+                ClothingSeason.builder()
+                        .userClothing(userClothing)
+                        .month(month)
+                        .build()
+        ).toList();
+
+        //새로운 계절 연결
+        clothingSeasonRepository.saveAll(newSeasonList);
+
+        //옷 정보 업데이트
+        clothing.updateClothing(newClothingStyleList, clothingUpdateRequestDTO.category());
+
+        //사용자 옷 연결 업데이트
+        userClothing.updateUserClothing(clothingUpdateRequestDTO.clothingName(), clothing, newSeasonList);
+
     }
 
 
