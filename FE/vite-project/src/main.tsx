@@ -6,7 +6,7 @@ import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
 import { GlobalStyles } from "@/styles/reset";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import * as serviceWorkerRegistration from "./../public/serviceWorkerRestration"
+// import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 // serviceWorkerRegistration.register();
 
 const queryClient = new QueryClient(); //2번

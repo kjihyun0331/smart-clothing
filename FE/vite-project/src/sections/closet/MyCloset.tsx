@@ -1,6 +1,8 @@
 import { testclothesarr } from "../calendar/testclothesarr";
 import { Header, ClosetContent, Item, Filter } from "./ClosetStyle";
 import { useNavigate } from "react-router-dom";
+import { useApi } from "@/hooks/useApi";
+import { Loader } from "@/components/Loader";
 
 const CATEGORY = ["전체", "상의", "바지", "스커트", "원피스"];
 
@@ -13,6 +15,15 @@ const MyCloset = () => {
     navigate(`/closet/${id}`);
   };
 
+  console.log("render");
+
+  // const { isLoading, isError, isSuccess, data } = useApi("get", "clothing");
+
+  // console.log("------------------------------------------");
+  // console.log(isError);
+  // console.log(isLoading);
+  // console.log(isSuccess);
+  // console.log(data);
   return (
     <>
       <Header>
@@ -44,15 +55,32 @@ const MyCloset = () => {
           </select>
         </Filter>
       </Header>
+      {/* {data ? (
+        <ClosetContent>
+          {data.map((item) => {
+            return (
+              <Item
+                key={item.clothingId}
+                onClick={() => handleDetailClick(item.id)}
+              >
+                <div className="imgarea">
+                  <img src={item.clothingImagePath} alt={item.clothingId} />
+                </div>
+              </Item>
+            );
+          })}
+        </ClosetContent>
+      ) : (
+        <Loader />
+      )} */}
 
       <ClosetContent>
         {testclothesarr.map((item) => {
           return (
             <Item key={item.id} onClick={() => handleDetailClick(item.id)}>
               <div className="imgarea">
-                <img src={item.url} alt={item.keyword} />
+                <img src={item.url} alt={item.url} />
               </div>
-              <div className="keyword">{item.keyword}</div>
             </Item>
           );
         })}
