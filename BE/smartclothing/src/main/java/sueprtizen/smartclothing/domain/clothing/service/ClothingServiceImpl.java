@@ -52,7 +52,7 @@ public class ClothingServiceImpl implements ClothingService {
         UserClothing userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing)
                 .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
 
-        return ClothingConfirmResponseDTO.createFromClothingUserClothingUser(clothing, userClothing);
+        return new ClothingConfirmResponseDTO(clothing, userClothing, currentUser.getUserId() == clothing.getOwnerId());
     }
 
     @Override

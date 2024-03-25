@@ -27,6 +27,9 @@ public class Clothing {
     private List<ClothingStyle> clothingStyleList;
 
     @Column
+    private int ownerId;
+
+    @Column
     private String nowAt;
 
     @Column(name = "RFID_uid")
