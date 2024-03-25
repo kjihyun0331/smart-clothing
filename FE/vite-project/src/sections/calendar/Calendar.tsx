@@ -79,7 +79,7 @@ const MyCalendar = () => {
         />
         <StyledDate onClick={handleTodayClick}>오늘</StyledDate>
       </StyledCalendarWrapper>
-      <Schedule date={date ? date : today} />
+      <Schedule date={date || new Date()} attendDay={attendDay} />
     </>
   );
 };

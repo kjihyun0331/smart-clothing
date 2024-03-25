@@ -88,3 +88,16 @@ export const Plus = styled.div`
   right: 5%;
   transform: translate(-50%, -50%);
 `;
+
+export const ClothingCare = styled.div`
+  width: 90%;
+  position: absolute;
+  top: 30%;
+  background-color: white;
+  padding: 1rem 1rem;
+  border-radius: 20px;
+
+  img {
+    width: 100%;
+  }
+`;

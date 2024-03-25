@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Login from "@/pages/SmartThings/Login";
 import SmartThings from "@/pages/SmartThings/SmartThings";
-import PageNotFound from "@/pages/PageNotFound";
+// import PageNotFound from "@/pages/PageNotFound";
 import AddDevice from "@/pages/SmartThings/Device";
 import Agreement from "@/pages/SmartThings/Agreement";
 ///////////메인
@@ -98,10 +98,10 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "*",
-    element: <PageNotFound />,
-  },
+  // {
+  //   path: "*",
+  //   element: <PageNotFound />,
+  // },
 ]);
 
 export default router;

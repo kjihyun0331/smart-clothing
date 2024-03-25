@@ -38,29 +38,60 @@ const MakeOutfit = () => {
 
 export default MakeOutfit;
 
+const CATEGORY = ["전체", "상의", "바지", "스커트", "원피스"];
+const SORT = ["최근 등록 순", "오래된 순", "많이 입은 순"];
+
 const ChooseClothes = () => {
   // const { selectedItems, toggleItem } = useSelectedItemsStore();
   const { selectedItems, toggleItem } = useSelectedItemsStore();
 
   return (
-    <ChooseClothesWrapper>
-      {imgarr.map((item) => {
-        const isSelected = selectedItems.some(
-          (selectedItem: { id: string }) => selectedItem.id === item.id
-        );
+    <>
+      <Filter>
+        <select className="category" name="category">
+          <option disabled selected style={{ textAlign: "center" }} hidden>
+            카테고리
+          </option>
+          {CATEGORY.map((item) => {
+            return (
+              <option value={item} key={item}>
+                {item}
+              </option>
+            );
+          })}
+        </select>
+        <select className="category">
+          <option disabled selected style={{ textAlign: "center" }} hidden>
+            정렬
+          </option>
+          {SORT.map((item) => {
+            return (
+              <option value={item} key={item}>
+                {item}
+              </option>
+            );
+          })}
+        </select>
+      </Filter>
+      <ChooseClothesWrapper>
+        {imgarr.map((item) => {
+          const isSelected = selectedItems.some(
+            (selectedItem: { id: string }) => selectedItem.id === item.id
+          );
 
-        return (
-          <div
-            className={`imgarea ${isSelected ? "selected" : ""}`}
-            key={item.id}
-            onClick={() => toggleItem(item)}
-          >
-            <img className="clothesimg" src={item.url} alt={item.id} />
-            {isSelected && <div className="itemId">{item.id}</div>}
-          </div>
-        );
-      })}
-    </ChooseClothesWrapper>
+          return (
+            <div
+              className={`imgarea ${isSelected ? "selected" : ""}`}
+              key={item.id}
+              onClick={() => toggleItem(item)}
+            >
+              <img className="clothesimg" src={item.url} alt={item.id} />
+              {isSelected && <div className="itemId">{item.id}</div>}
+            </div>
+          );
+        })}
+      </ChooseClothesWrapper>
+    </>
   );
 };
 
@@ -124,5 +155,22 @@ const Header = styled.div`
     font-weight: bold;
     margin-left: auto;
     margin-right: auto;
+  }
+`;
+
+const Filter = styled.div`
+  select {
+    margin: 5px 5px;
+    padding: 5px 5px;
+    border-radius: 4px;
+    outline: 0 none;
+  }
+
+  select option {
+    background: ${(props) => props.theme.colors.backgroundcolor};
+    color: grey;
+    padding: 3px 0px;
+    font-size: 12px;
+    border: 1px solid grey;
   }
 `;

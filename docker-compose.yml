@@ -7,8 +7,11 @@ services:
       context: ./FE/vite-project
       dockerfile: Dockerfile
     image: supertizen_frontend_img
+    volumes:
+      - /etc/letsencrypt/:/etc/nginx/ssl/
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - supertizen_net  
 
@@ -20,6 +23,18 @@ services:
     image: supertizen_backend_img
     ports:
       - "8080:8080"
+      - "5555:5555"
+    networks:
+      - supertizen_net
+
+  supertizen_machine_learning:
+    container_name: supertizen_machine_learning
+    build:
+      context: ./ML/machinelearning
+      dockerfile: Dockerfile
+    image: supertizen_machine_learning_img
+    ports:
+      - "8000:8000"
     networks:
       - supertizen_net
 

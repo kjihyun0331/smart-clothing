@@ -2,12 +2,24 @@
 import styled from "styled-components";
 
 export const Filter = styled.div`
-  width: 50%;
-  border: 1px solid black;
   position: absolute;
   top: 6dvh;
   left: 0;
-  background-color: grey;
+
+  select {
+    margin: 5px 5px;
+    padding: 5px 5px;
+    border-radius: 4px;
+    outline: 0 none;
+  }
+
+  select option {
+    background: ${(props) => props.theme.colors.backgroundcolor};
+    color: grey;
+    padding: 3px 0px;
+    font-size: 12px;
+    border: 1px solid grey;
+  }
 `;
 
 export const ClosetContent = styled.div`

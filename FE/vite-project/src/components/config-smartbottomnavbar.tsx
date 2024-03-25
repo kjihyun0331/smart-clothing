@@ -19,7 +19,7 @@ const smartNavConfig = [
   },
   {
     title: "/smarthome",
-    path: "/agreement",
+    path: "/smarthome",
     Icon: Life,
     name: "라이프",
   },
