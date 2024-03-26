@@ -1,9 +1,9 @@
 package sueprtizen.smartclothing.domain.clothing.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import sueprtizen.smartclothing.domain.users.entity.User;
 
 import java.util.ArrayList;
@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
-@ToString
 public class UserClothing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,13 +33,21 @@ public class UserClothing {
     private String clothingName;
 
     @Column(nullable = false)
-    private String accrueWornCount;
+    private int accrueWornCount;
 
 
     public void updateUserClothing(String clothingName, Clothing clothing, List<ClothingSeason> clothingSeasonList) {
         this.clothingName = clothingName;
         this.clothing = clothing;
         this.clothingSeasonList = clothingSeasonList;
+    }
+
+    @Builder
+    public UserClothing(User user, Clothing clothing, String clothingName) {
+        this.user = user;
+        this.clothing = clothing;
+        this.clothingName = clothingName;
+        this.accrueWornCount = 0;
     }
 
 }
