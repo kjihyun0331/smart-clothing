@@ -14,8 +14,8 @@ collections {
 				name: "elm.swallow.content";
 				type: SWALLOW;
 				description {
-					align: 0.5 0.5;
 					state: "default" 0.0;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -24,19 +24,89 @@ collections {
 		name: "elm/scroller/base/menu_scroller";
 		parts {
 			part {
+				name: "padding";
+				type: SPACER;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						offset: 100 0;
+					}
+					rel2 {
+						offset: -100 0;
+					}
+				}
+			}
+			part {
+				name: "elm.swallow.content";
+				type: SWALLOW;
+				description {
+					state: "default" 0.0;
+					rel1.to: "padding";
+					rel2.to: "padding";
+				}
+			}
+		}
+	}
+	group {
+		name: "scrollbar";
+		parts {
+			part {
+				name: "bg";
+				type: RECT;
+				description {
+					state: "default" 0.0;
+					color: 255 255 255 127;
+					rel1 {
+						relative: 1.0 0.0;
+						offset: -15 0;
+					}
+					rel2 {
+						relative: 1.0 1.0;
+						offset: -5 0;
+					}
+				}
+			}
+			part {
 				name: "elm.swallow.content";
 				type: SWALLOW;
 				description {
 					state: "default" 0.0;
 					rel1 {
-						relative: 0.0 0.05;
-						offset: 100 0;
+						relative: 0.0 0.0;
 					}
 					rel2 {
 						relative: 1.0 1.0;
-						offset: -100 0;
 					}
-					align: 0.5 0.5;
+				}
+			}
+		}
+	}
+	group {
+		name: "elm/scroller/base/laundry_scroller";
+		parts {
+			part {
+				name: "base";
+				type: RECT;
+				description {
+					state: "default" 0.0;
+					color: 0 0 0 255;
+				}
+			}
+			part {
+				name: "elm.bar";
+				type: RECT;
+				scale: 1;
+				description {
+					state: "default" 0.0;
+					color: 255 0 0 255;
+					rel1 {
+						relative: 1.0 0.0;
+						offset: -4 0;
+					}
+					rel2 {
+						relative: 1.0 1.0;
+						offset: 0 -4;
+					}
 				}
 			}
 		}
