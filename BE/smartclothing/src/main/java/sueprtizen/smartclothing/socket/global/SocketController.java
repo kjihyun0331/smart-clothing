@@ -1,29 +1,16 @@
 package sueprtizen.smartclothing.socket.global;
 
+import io.swagger.v3.core.util.Json;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.stereotype.Service;
-import sueprtizen.smartclothing.socket.washer.service.AllLaundryList;
-import sueprtizen.smartclothing.socket.washer.service.MainLaundryList;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 public class SocketController {
 
     private ServerSocket serverSocket;
-    private static final Map<String, SocketService> serviceMap = new HashMap<>();
-
-    static {
-        serviceMap.put("getMainLaundryList", new MainLaundryList());
-        serviceMap.put("getAllLaundryList", new AllLaundryList());
-    }
-
-
     public void start(int port) {
         try {
             serverSocket = new ServerSocket(port);
@@ -74,13 +61,15 @@ public class SocketController {
 
                     JSONObject requestDTO = (JSONObject) parser.parse(clientMessage);
                     String requestName = (String) requestDTO.get("requestName");
+                    Long requestNumber = (Long) requestDTO.get("requestNumber");
 
-                    SocketService requestService = serviceMap.get(requestName);
-                    if (requestService != null) {
-                        ResponseDTO<Optional> responseDTO = requestService.execute(requestDTO);
-                        writer.println(responseDTO);
-                    } else {
-                        System.out.println("No strategy found for requestName: " + requestName);
+                    JSONObject responseJson = new JSONObject();
+                    responseJson.put("requestNumber",requestNumber);
+                    System.out.println(requestNumber);
+
+                    switch (requestName){
+                        case "getAllLaundryList":
+                            writer.println(responseJson);
                     }
 
 
