@@ -29,4 +29,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/clothing/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi calendarApi() {
+        return GroupedOpenApi.builder()
+                .group("calendar-api")
+                .pathsToMatch("/calendar/**")
+                .build();
+    }
 }
