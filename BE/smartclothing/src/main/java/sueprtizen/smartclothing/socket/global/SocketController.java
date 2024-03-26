@@ -1,17 +1,28 @@
-package sueprtizen.smartclothing.socket;
+package sueprtizen.smartclothing.socket.global;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.stereotype.Service;
+import sueprtizen.smartclothing.socket.washer.service.AllLaundryList;
+import sueprtizen.smartclothing.socket.washer.service.MainLaundryList;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-public class SocketServer {
+public class SocketController {
 
     private ServerSocket serverSocket;
+    private static final Map<String, SocketService> serviceMap = new HashMap<>();
+
+    static {
+        serviceMap.put("getMainLaundryList", new MainLaundryList());
+        serviceMap.put("getAllLaundryList", new AllLaundryList());
+    }
+
 
     public void start(int port) {
         try {
@@ -39,12 +50,6 @@ public class SocketServer {
     // 클라이언트 처리를 위한 별도의 스레드 클래스
     private static class ClientHandler extends Thread {
         private Socket socket;
-        private static final Map<String, RequestStrategy> strategyMap = new HashMap<>();
-
-        static {
-            strategyMap.put("getMainLaundryList", new GetMainLaundryListStrategy());
-            strategyMap.put("getAllLaundryList", new GetAllLaundryListStrategy());
-        }
 
         public ClientHandler(Socket socket) {
             this.socket = socket;
@@ -67,16 +72,17 @@ public class SocketServer {
                         break;
                     }
 
-                    JSONObject request = (JSONObject) parser.parse(clientMessage);
-                    String requestName = (String) request.get("requestName");
-                    Long requestNumber = (Long) request.get("requestNumber");
+                    JSONObject requestDTO = (JSONObject) parser.parse(clientMessage);
+                    String requestName = (String) requestDTO.get("requestName");
 
-                    RequestStrategy strategy = strategyMap.get(requestName);
-                    if (strategy != null) {
-                        strategy.execute(requestNumber);
+                    SocketService requestService = serviceMap.get(requestName);
+                    if (requestService != null) {
+                        ResponseDTO<Optional> responseDTO = requestService.execute(requestDTO);
+                        writer.println(responseDTO);
                     } else {
                         System.out.println("No strategy found for requestName: " + requestName);
                     }
+
 
                 }
             } catch (Exception e) {

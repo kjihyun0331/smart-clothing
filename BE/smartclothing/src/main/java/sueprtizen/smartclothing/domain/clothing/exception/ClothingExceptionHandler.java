@@ -13,7 +13,7 @@ public class ClothingExceptionHandler {
 
     @ExceptionHandler(ClothingException.class)
     public ResponseEntity<Message<Void>> userException(ClothingException e) {
-        log.error("회원 관련 오류: {}", e.getMessage());
+        log.error("옷 관련 오류: {}", e.getMessage());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(Message.fail(e.getErrorCode().getHttpStatus(), e.getErrorCode().getErrorMessage()));
     }
 }

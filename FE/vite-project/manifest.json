@@ -8,6 +8,7 @@
   "short_name": "SmartThings",
   "start_url": "/",
   "theme_color": "#668fba",
+  "description": "SmartThings Clothing Care+",
   "screenshots": [
     {
       "src": "./screenshots/desktop-screenshot.png",
