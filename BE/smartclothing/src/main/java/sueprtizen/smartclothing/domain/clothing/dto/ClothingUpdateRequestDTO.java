@@ -7,6 +7,7 @@ public record ClothingUpdateRequestDTO(
         String clothingName,
         String category,
         List<String> styleList,
-        List<Integer> seasonList
+        List<Integer> seasonList,
+        List<Integer> sharedUserIdList
 ) {
 }

@@ -8,29 +8,27 @@ import java.util.List;
 
 public record ClothingConfirmResponseDTO(
         int clothingId,
-        String nowAt,
         String clothingName,
-        String washedAt,
-        int polluted,
         String category,
         List<String> styleList,
         List<Integer> season,
         String clothingImgPath,
-        List<String> textureList
+        List<String> textureList,
+        List<SharedUserDTO> sharedUserDTOList,
+
+        boolean isMyClothing
 
 ) {
-    public static ClothingConfirmResponseDTO createFromClothingUserClothingUser(Clothing clothing, UserClothing userClothing) {
-        return new ClothingConfirmResponseDTO(
-                clothing.getClothingId(),
-                clothing.getNowAt(),
+    public ClothingConfirmResponseDTO(Clothing clothing, UserClothing userClothing, List<SharedUserDTO> sharedUserDTOList, boolean isMyClothing) {
+        this(clothing.getClothingId(),
                 userClothing.getClothingName(),
-                clothing.getWashedAt(),
-                clothing.getPolluted(),
                 clothing.getCategory(),
                 clothing.getClothingStyleList().stream().map(clothingStyle -> clothingStyle.getStyle().getStyleName()).toList(),
                 userClothing.getClothingSeasonList().stream().map(ClothingSeason::getMonth).toList(),
                 clothing.getClothingDetail().getClothingImgPath(),
-                clothing.getClothingDetail().getClothingTextures().stream().map(clothingTexture -> clothingTexture.getTexture().getTextureName()).toList()
+                clothing.getClothingDetail().getClothingTextures().stream().map(clothingTexture -> clothingTexture.getTexture().getTextureName()).toList(),
+                sharedUserDTOList,
+                isMyClothing
         );
     }
 }
