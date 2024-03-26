@@ -1,4 +1,3 @@
-import { testclothesarr } from "../calendar/testclothesarr";
 import { Header, ClosetContent, Item, Filter } from "./ClosetStyle";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
@@ -15,15 +14,8 @@ const MyCloset = () => {
     navigate(`/closet/${id}`);
   };
 
-  console.log("render");
+  const { isLoading, data } = useApi("get", "clothing");
 
-  // const { isLoading, isError, isSuccess, data } = useApi("get", "clothing");
-
-  // console.log("------------------------------------------");
-  // console.log(isError);
-  // console.log(isLoading);
-  // console.log(isSuccess);
-  // console.log(data);
   return (
     <>
       <Header>
@@ -55,13 +47,14 @@ const MyCloset = () => {
           </select>
         </Filter>
       </Header>
-      {/* {data ? (
+
+      {!isLoading ? (
         <ClosetContent>
           {data.map((item) => {
             return (
               <Item
                 key={item.clothingId}
-                onClick={() => handleDetailClick(item.id)}
+                onClick={() => handleDetailClick(item.clothingId)}
               >
                 <div className="imgarea">
                   <img src={item.clothingImagePath} alt={item.clothingId} />
@@ -72,19 +65,7 @@ const MyCloset = () => {
         </ClosetContent>
       ) : (
         <Loader />
-      )} */}
-
-      <ClosetContent>
-        {testclothesarr.map((item) => {
-          return (
-            <Item key={item.id} onClick={() => handleDetailClick(item.id)}>
-              <div className="imgarea">
-                <img src={item.url} alt={item.url} />
-              </div>
-            </Item>
-          );
-        })}
-      </ClosetContent>
+      )}
     </>
   );
 };

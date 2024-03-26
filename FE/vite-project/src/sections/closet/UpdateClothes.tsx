@@ -1,15 +1,81 @@
 import { Header, UpdateContent } from "./ClosetStyle";
 import IconBack from "@/assets/ui/IconBack";
 import IconCloseSmall from "@/assets/ui/IconCloseSmall";
-import { useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { theme } from "@/styles/theme";
 import { useNavigate, useParams } from "react-router-dom";
+import { useApi } from "@/hooks/useApi";
+import { Loader } from "@/components/Loader";
+
+type DetailClothesResponseDataType = {
+  clothingId: 0;
+  nowAt: "string";
+  clothingName: "string";
+  washedAt: "string";
+  polluted: 0;
+  category: "string";
+  styleList: ["string"];
+  season: [0];
+  clothingImgPath: "string";
+  textureList: ["string"];
+};
+
+interface DetailClothesResponseType {
+  isLoading: boolean;
+  data: DetailClothesResponseDataType;
+}
 
 const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
+const ACTION_TYPES = {
+  set: "set",
+  add: "add",
+  delete: "delete",
+  updateClothingName: "updateClothingName", // clothingName 업데이트를 위한 액션 타입 추가
+};
+
+// 리듀서 함수
+const reducer = (state, action) => {
+  console.log("reducer가 일을 하는 중", state, action);
+  switch (action.type) {
+    case ACTION_TYPES.set:
+      return { ...state, ...action.payload };
+    case ACTION_TYPES.add:
+      return state + action.payload;
+    case ACTION_TYPES.delete:
+      return state - action.payload;
+    case ACTION_TYPES.updateClothingName: // clothingName 업데이트 케이스 처리
+      return { ...state, clothingName: action.payload };
+    default:
+      return state;
+  }
+};
+
+// 초기 상태
+const initialState = {
+  clothingId: 0,
+  nowAt: "",
+  clothingName: "",
+  washedAt: "",
+  polluted: 0,
+  category: "",
+  styleList: [""],
+  season: [],
+  clothingImgPath: "",
+  textureList: [""],
+};
+
 const UpdateClothes = () => {
   const { id } = useParams();
-  console.log(`${id} 이용해서 요청보내기`);
+  const [value, dispatch] = useReducer(reducer, initialState);
+  const { isLoading, data } = useApi("get", `clothing/${id}`);
+
+  // data 변경 시 상태 업데이트
+  useEffect(() => {
+    if (data) {
+      dispatch({ type: ACTION_TYPES.set, payload: data });
+    }
+  }, [data]);
 
   const navigate = useNavigate();
 
@@ -17,18 +83,22 @@ const UpdateClothes = () => {
     window.history.back();
   };
 
-  const [clothestype, setclothestype] = useState(["스웨터", "니트", "가디건"]);
-  const [selectedMonth, setSelectedMonth] = useState([]);
-
   const toggleMonthClick = (item: number) => {
-    const isSelected = selectedMonth.some((m) => item === m);
-    if (isSelected) {
-      setSelectedMonth(selectedMonth.filter((element) => element !== item));
-    } else {
-      setSelectedMonth((prev: number[]) => [...prev, item]);
-    }
+    console.log(item);
   };
-
+  // const toggleMonthClick = (item: number) => {
+  //   const isSelected = selectedMonth.some((m) => item === m);
+  //   if (isSelected) {
+  //     setSelectedMonth(selectedMonth.filter((element) => element !== item));
+  //   } else {
+  //     setSelectedMonth((prev: number[]) => [...prev, item]);
+  //   }
+  // };
+  const handleChange = (event) => {
+    const { value } = event.target;
+    dispatch({ type: ACTION_TYPES.updateClothingName, payload: value });
+  };
+  if (isLoading) return <Loader />;
   return (
     <>
       <Header>
@@ -37,21 +107,25 @@ const UpdateClothes = () => {
       </Header>
       <UpdateContent>
         <div className="titlearea">
-          <span className="title">타입</span>{" "}
-          {clothestype.map((item) => {
+          <span className="title">별칭</span>
+        </div>
+        <input type="text" value={value.clothingName} onChange={handleChange} />
+        <div className="titlearea">
+          <span className="title">카테고리</span>
+          {/* {clothestype.map((item) => {
             return (
               <span key={item} className="tag">
                 {item}
                 <IconCloseSmall />
               </span>
             );
-          })}
+          })} */}
         </div>
-        <input type="text" />
+        <input type="text" value={value.category} />
 
         <div className="titlearea">
-          <span className="title">소재</span>{" "}
-          {clothestype.map((item) => {
+          <span className="title">소재</span>
+          {value.textureList.map((item) => {
             return (
               <span key={item} className="tag">
                 {item}
@@ -67,7 +141,7 @@ const UpdateClothes = () => {
         </div>
         <div className="month">
           {MONTH.map((item) => {
-            const isSelected = selectedMonth.some((m) => {
+            const isSelected = value.season.some((m) => {
               return item === m;
             });
             return (
@@ -90,7 +164,7 @@ const UpdateClothes = () => {
 
         <div className="titlearea">
           <span className="title">키워드</span>{" "}
-          {clothestype.map((item) => {
+          {value.styleList.map((item) => {
             return (
               <span key={item} className="tag">
                 {item}
@@ -103,7 +177,7 @@ const UpdateClothes = () => {
 
         <div className="titlearea">
           <span className="title">같이 입는 사람</span>{" "}
-          {clothestype.map((item) => {
+          {["김싸피", "김싸피1"].map((item) => {
             return (
               <span key={item} className="tag">
                 {item}

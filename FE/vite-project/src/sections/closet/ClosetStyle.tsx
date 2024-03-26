@@ -165,16 +165,16 @@ export const UpdateContent = styled.div`
   .titlearea {
     width: 100%;
     border-bottom: 1px solid black;
-    padding-bottom: 2px;
+    padding-bottom: 4px;
     font-weight: bold;
   }
 
   .tag {
     font-size: 0.8rem;
-    margin: 0px 3px;
+    margin: 0px 0px 8px 10px;
     position: relative;
     font-weight: 400;
-    padding: 3px 5px;
+    padding: 4px 6px;
     opacity: 0.6;
     border-radius: 8px;
     line-height: 1.5rem;
