@@ -2,7 +2,7 @@ package sueprtizen.smartclothing.domain.location.dto;
 
 import java.util.List;
 
-public record SiGunGUResponseDTO(
+public record SiGunGuResponseDTO(
         List<SiGunGuDTO> siGunGu
 ) {
 }

@@ -4,5 +4,4 @@ public record SiGunGuDTO(
         int siGunGuId,
         String siGunGuName
 ) {
-
 }
