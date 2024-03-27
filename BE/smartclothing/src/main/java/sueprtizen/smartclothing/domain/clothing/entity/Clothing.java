@@ -10,20 +10,20 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
-@ToString
+
 public class Clothing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int clothingId;
 
-    @OneToMany(mappedBy = "clothing")
+    @OneToMany(mappedBy = "clothing",fetch = FetchType.EAGER)
     private List<UserClothing> userClothing;
 
     @ManyToOne
     @JoinColumn(name = "clothing_detail_id")
     private ClothingDetail clothingDetail;
 
-    @OneToMany(mappedBy = "clothing")
+    @OneToMany(mappedBy = "clothing",fetch = FetchType.EAGER)
     private List<ClothingStyle> clothingStyleList;
 
     @Column
