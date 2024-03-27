@@ -3,7 +3,6 @@ package sueprtizen.smartclothing.domain.weather.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sueprtizen.smartclothing.domain.users.entity.User;
 
 @NoArgsConstructor
 @Getter
@@ -11,14 +10,34 @@ import sueprtizen.smartclothing.domain.users.entity.User;
 public class Weather {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int scheduleId;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private int WeatherId;
 
     @Column(nullable = false)
-    private String scheduleName;
+    private int locationKey;
+
+    @Column(nullable = false)
+    private int icon;
+
+    @Column(nullable = false)
+    private int lowestTemperature;
+
+    @Column(nullable = false)
+    private int highestTemperature;
+
+    @Column(nullable = false)
+    private int highestRealFeelingTemperature;
+
+    @Column(nullable = false)
+    private int snowCover;
+
+    @Column(nullable = false)
+    private int humidity;
+
+    @Column(nullable = false)
+    private int windSpeed;
+
+    @Column(nullable = false)
+    private int solar_Irradiance;
 
     @Column(nullable = false)
     private String date;
