@@ -39,8 +39,8 @@ public class ClothingServiceImpl implements ClothingService {
 
         List<UserClothing> allClothing = userClothingRepository.findAllByUser(currentUser);
 
-        return allClothing.stream().map(userClothing ->
-                ClosetConfirmResponseDTO.createFromUserClothing(userClothing.getClothing())
+        return allClothing.stream().map(
+                ClosetConfirmResponseDTO::createFromUserClothing
         ).toList();
     }
 
