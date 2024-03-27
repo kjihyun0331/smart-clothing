@@ -2,7 +2,6 @@ package sueprtizen.smartclothing.socket.washer.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
