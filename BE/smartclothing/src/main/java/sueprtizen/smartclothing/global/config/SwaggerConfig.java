@@ -45,4 +45,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/weather/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi locationApi() {
+        return GroupedOpenApi.builder()
+                .group("location-api")
+                .pathsToMatch("/location/**")
+                .build();
+    }
 }

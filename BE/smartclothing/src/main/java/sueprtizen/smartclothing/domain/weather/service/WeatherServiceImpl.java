@@ -8,8 +8,6 @@ import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class WeatherServiceImpl implements WeatherService {
