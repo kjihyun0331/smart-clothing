@@ -7,14 +7,13 @@
   "scope": "/",
   "short_name": "SmartThings",
   "start_url": "/",
-  "theme_color": "#668fba",
+  "theme_color": "#ffffff",
   "description": "SmartThings Clothing Care+",
   "screenshots": [
     {
       "src": "./screenshots/desktop-screenshot.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "purpose": "any",
       "form_factor": "wide"
     },
     {
@@ -60,8 +59,7 @@
     {
       "src": "./icons/apple-touch-icon-144x144.png",
       "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "./icons/apple-touch-icon-152x152.png",

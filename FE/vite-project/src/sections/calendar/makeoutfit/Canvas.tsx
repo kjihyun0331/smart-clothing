@@ -44,19 +44,19 @@ const IMG: React.FC<{
         ref={shapeRef}
         {...shapeProps}
         draggable
-        onDragEnd={(e) => {
+        onDragMove={(e) => {
+          // 드래그 중 이미지 위치 업데이트
           onChange({
             ...shapeProps,
             x: e.target.x(),
             y: e.target.y(),
           });
         }}
-        onTransformEnd={() => {
+        onTransform={() => {
           const node = shapeRef.current;
           if (node) {
             const scaleX = node.scaleX();
             const scaleY = node.scaleY();
-
             node.scaleX(1);
             node.scaleY(1);
             onChange({
@@ -88,7 +88,6 @@ const IMG: React.FC<{
           y={shapeProps.y - 10}
           onClick={onDelete}
           onTap={onDelete}
-          draggable={false}
           fill="red"
           fontSize={20}
           padding={5}
