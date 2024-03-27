@@ -43,9 +43,11 @@ body {
 	-ms-overflow-style: none;
 
 }
+
 ::-webkit-scrollbar {
-  display: none;
+  	display: none;
 }
+
 
 ol, ul {
 	list-style: none;

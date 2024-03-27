@@ -15,7 +15,7 @@ const MyCloset = () => {
   };
 
   const { isLoading, data } = useApi("get", "clothing");
-
+  if (isLoading) return <Loader />;
   return (
     <>
       <Header>
@@ -48,24 +48,20 @@ const MyCloset = () => {
         </Filter>
       </Header>
 
-      {!isLoading ? (
-        <ClosetContent>
-          {data.map((item) => {
-            return (
-              <Item
-                key={item.clothingId}
-                onClick={() => handleDetailClick(item.clothingId)}
-              >
-                <div className="imgarea">
-                  <img src={item.clothingImagePath} alt={item.clothingId} />
-                </div>
-              </Item>
-            );
-          })}
-        </ClosetContent>
-      ) : (
-        <Loader />
-      )}
+      <ClosetContent>
+        {data.map((item) => {
+          return (
+            <Item
+              key={item.clothingId}
+              onClick={() => handleDetailClick(item.clothingId)}
+            >
+              <div className="imgarea">
+                <img src={item.clothingImagePath} alt={item.clothingId} />
+              </div>
+            </Item>
+          );
+        })}
+      </ClosetContent>
     </>
   );
 };

@@ -44,19 +44,19 @@ const IMG: React.FC<{
         ref={shapeRef}
         {...shapeProps}
         draggable
-        onDragMove={(e) => {
-          // 드래그 중 이미지 위치 업데이트
+        onDragEnd={(e) => {
           onChange({
             ...shapeProps,
             x: e.target.x(),
             y: e.target.y(),
           });
         }}
-        onTransform={() => {
+        onTransformEnd={() => {
           const node = shapeRef.current;
           if (node) {
             const scaleX = node.scaleX();
             const scaleY = node.scaleY();
+
             node.scaleX(1);
             node.scaleY(1);
             onChange({
@@ -88,6 +88,7 @@ const IMG: React.FC<{
           y={shapeProps.y - 10}
           onClick={onDelete}
           onTap={onDelete}
+          draggable={false}
           fill="red"
           fontSize={20}
           padding={5}
@@ -115,7 +116,7 @@ function Canvas() {
   const loadImages = async () => {
     const imagesToLoad = selectedItems.map(async (item) => {
       const img = new window.Image();
-      img.crossOrigin = "anonymous";
+      img.crossOrigin = "anonymous"; // CORS 정책 준수를 위해 crossOrigin 설정
       img.src = item.url;
       await img.decode();
       return { id: item.id, image: img };
@@ -127,7 +128,7 @@ function Canvas() {
     }>((acc, { id, image }) => {
       acc[id] = image;
       return acc;
-    }, {}); // 여기서 {}의 타입을 명시적으로 선언합니다.
+    }, {});
     setLoadedImages(newLoadedImages);
   };
 
