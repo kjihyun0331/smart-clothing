@@ -1,5 +1,6 @@
 import { Container, Title, Form, Button } from "@/pages/SmartThings/smartStyle";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Login() {
   const navigate = useNavigate();
@@ -9,6 +10,20 @@ function Login() {
     localStorage.setItem("token", "1");
     navigate("/smarthome");
   };
+
+  useEffect(() => {
+    // 페이지나 컴포넌트가 마운트될 때 색상을 변경
+    document
+      .querySelector('meta[name="theme-color"]')
+      .setAttribute("content", "#648FBA");
+
+    // 컴포넌트가 언마운트될 때 원래 색상으로 복원(선택적)
+    return () => {
+      document
+        .querySelector('meta[name="theme-color"]')
+        .setAttribute("content", "#ffffff");
+    };
+  }, []);
 
   return (
     <Container>
