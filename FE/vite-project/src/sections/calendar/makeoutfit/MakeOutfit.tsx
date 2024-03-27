@@ -1,27 +1,15 @@
-import { imgarr } from "../testimgarr";
 import styled from "styled-components";
 import { useSelectedItemsStore } from "@/store/ClothesStore";
 import Canvas from "./Canvas";
 // import { useState, useEffect } from "react";
-// import { Loader } from "@/components/Loader";
+import { Loader } from "@/components/Loader";
 import IconBack from "@/assets/ui/IconBack";
 import { useNavigate } from "react-router-dom";
+import { useApi } from "@/hooks/useApi";
 
 const MakeOutfit = () => {
   // const [showCanvas, setShowCanvas] = useState(false);
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   // 컴포넌트가 마운트된 후 2초 뒤에 showCanvas 상태를 true로 설정
-  //   const timer = setTimeout(() => {
-  //     setShowCanvas(true);
-  //   }, 500);
-
-  //   // 컴포넌트가 언마운트되거나 업데이트되기 전에 타이머를 정리
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, []); // 빈 의존성 배열을 전달하여 컴포넌트 마운트 시에만 useEffect가 실행되도록 함
 
   return (
     <>
@@ -44,12 +32,14 @@ const SORT = ["최근 등록 순", "오래된 순", "많이 입은 순"];
 const ChooseClothes = () => {
   // const { selectedItems, toggleItem } = useSelectedItemsStore();
   const { selectedItems, toggleItem } = useSelectedItemsStore();
+  const { isLoading, data } = useApi("get", "clothing");
 
+  if (isLoading) return <Loader />;
   return (
     <>
       <Filter>
         <select className="category" name="category">
-          <option disabled selected style={{ textAlign: "center" }} hidden>
+          <option style={{ textAlign: "center" }} hidden>
             카테고리
           </option>
           {CATEGORY.map((item) => {
@@ -61,7 +51,7 @@ const ChooseClothes = () => {
           })}
         </select>
         <select className="category">
-          <option disabled selected style={{ textAlign: "center" }} hidden>
+          <option style={{ textAlign: "center" }} hidden>
             정렬
           </option>
           {SORT.map((item) => {
@@ -74,19 +64,25 @@ const ChooseClothes = () => {
         </select>
       </Filter>
       <ChooseClothesWrapper>
-        {imgarr.map((item) => {
+        {data.map((item) => {
           const isSelected = selectedItems.some(
-            (selectedItem: { id: string }) => selectedItem.id === item.id
+            (selectedItem: { id: string }) =>
+              Number(selectedItem.id) === item.clothingId
           );
 
           return (
             <div
               className={`imgarea ${isSelected ? "selected" : ""}`}
-              key={item.id}
+              key={item.clothingId}
               onClick={() => toggleItem(item)}
             >
-              <img className="clothesimg" src={item.url} alt={item.id} />
-              {isSelected && <div className="itemId">{item.id}</div>}
+              <img
+                className="clothesimg"
+                src={item.clothingImagePath}
+                alt={item.clothingId}
+              />
+
+              {isSelected && <div className="itemId">{item.clothingName}</div>}
             </div>
           );
         })}
@@ -118,7 +114,10 @@ const ChooseClothesWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
+    background-color: ${(props) =>
+      `${props.theme.colors.pointcolor
+        .replace("rgb", "rgba")
+        .replace(")", ", 0.2)")}`};
     border-radius: 10px;
     position: relative;
   }
@@ -134,12 +133,13 @@ const ChooseClothesWrapper = styled.div`
   .itemId {
     /* id 스타일링 */
     position: absolute;
-    bottom: 50%; /* 중간에 위치 */
+    top: 50%; /* 중간에 위치 */
     left: 50%;
     transform: translate(-50%, -50%); /* 정확한 중앙 정렬을 위해 */
     color: black; /* 글자색 */
-    font-size: 20px; /* 글자 크기 */
+    font-size: 0.8rem; /* 글자 크기 */
     z-index: 10; /* 이미지 위에 표시 */
+    text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;
   }
 `;
 

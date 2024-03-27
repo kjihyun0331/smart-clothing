@@ -116,7 +116,7 @@ function Canvas() {
   const loadImages = async () => {
     const imagesToLoad = selectedItems.map(async (item) => {
       const img = new window.Image();
-      img.crossOrigin = "anonymous";
+      img.crossOrigin = "anonymous"; // CORS 정책 준수를 위해 crossOrigin 설정
       img.src = item.url;
       await img.decode();
       return { id: item.id, image: img };
@@ -128,7 +128,7 @@ function Canvas() {
     }>((acc, { id, image }) => {
       acc[id] = image;
       return acc;
-    }, {}); // 여기서 {}의 타입을 명시적으로 선언합니다.
+    }, {});
     setLoadedImages(newLoadedImages);
   };
 

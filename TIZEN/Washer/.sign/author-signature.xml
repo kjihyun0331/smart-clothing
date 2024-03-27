@@ -4,18 +4,23 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"></SignatureMethod>
 <Reference URI="author-signature-default.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>oQZibIR5D+abrwRy59AsEQ/wsfUsbSrKmYVzozoAYIkbeqHf3C7FhnOoNG/U5+sf9zseLfgUrt3l
-SxzUVuldXg==</DigestValue>
+<DigestValue>NGlrjujdzsVqZIUmlbo3nVP0lq6+VnQdBHYpxj+gf9f7HmsWl72AY+/oN7gBB5A13Dr1gCeV3IpE
+Ow+JiGGfqw==</DigestValue>
 </Reference>
 <Reference URI="bin%2Fwasher">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>lLBTbnZMEsRBSnBRpm2en+UQE1luwqMvO8QIq6TkVGRUinj3nZ+kp/g31P3prTFGhuEGc2HZ4acz
-nbMa0qP0Jg==</DigestValue>
+<DigestValue>/iUdgwM8yI/3WxQjoIdRgwyAp25CgFRaK6U1Ve+eV/UM8zS6sscqKlYLSd6eVF35n0RjEuivc4yJ
+KlxyS3BT8A==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fclothes_example.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
 <DigestValue>NCPTVC8G69cmR7HMAWg9NgIABTorHM/q+yBq4KM1Tzu/xejYF8g24RhDK6AbqVgi4s6eBKFGMydN
 h1Qal+GikQ==</DigestValue>
+</Reference>
+<Reference URI="res%2Fcontents%2Fcollapse.png">
+<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
+<DigestValue>Fr3Abtr+hc81yRUUOGcvnAhFHmeE2oBQxvgNAh6ge4N/JVWfRxrTEENRDPPVW+oaUaRPXNYRs+rs
+o3LrbMTWew==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fcourse_ai.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -29,8 +34,8 @@ AktI9349Cw==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fedje_res%2Fsample.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>+0Ll4/RXVJO4zwZBU/Mgy4MQu2RViP1+zq5SDlT2B38hI6i+Bwq7ZEVGYvu46fsI6A7poYRBPNvK
-gloIaw9wgA==</DigestValue>
+<DigestValue>25B03v/FoOaySNYi1HIMlA4B0aWLhCXqtr0oqX1H0pmVJbSWmVA170Z7ZTsWPXQaEW89oUSK5LXY
+dXixV5XsPg==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fexpand.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -67,9 +72,9 @@ QY10fG1EWQ==</DigestValue>
 </Reference>
 </SignedInfo>
 <SignatureValue>
-BAF/L7SBXs2D10DFYCAPSGN5v0gXk3o7AuAb2tPTYdNO6hMl6b6pq4y8Gi9v7LR23JUx0ydwNP7a
-eUoPE7Ybox/ve5Q89HJyF8AZRx0E7ixziNGoaYrEzGm5EkGlQPa7TrlFZD04y6R0n+0le1cJiKnB
-j94Y4kxs5GzuwL7DtYM=
+mpa/8Dk2d/xTBTj5y/EZ8bmbUehyaUXbMi/mS+jYv5WhyOVjpfj9sAjM3K+WZwdbvNo1HMXIFEKm
+O7mXmYdTCXuHZMQYk+nDKQ+6mvM8TBwmrMD42JQpaxnMknjov1UEILUDXnkYYU237LbJv6po8UML
+Dh9MFj7PLhLp77S6rzA=
 </SignatureValue>
 <KeyInfo>
 <X509Data>

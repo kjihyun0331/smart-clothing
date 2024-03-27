@@ -1,21 +1,34 @@
 package sueprtizen.smartclothing.domain.clothing.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.entity.ClothingSeason;
+import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
 
 import java.util.List;
 
-@Data
-@Builder
-public class ClothingConfirmResponseDTO {
-    private int clothingId;
-    private String nowAt;
-    private String clothingName;
-    private String washedAt;
-    private int polluted;
-    private String category;
-    private String style;
-    private List<Integer> season;
-    private String clothingImgPath;
-    private List<String> textureList;
+public record ClothingConfirmResponseDTO(
+        int clothingId,
+        String clothingName,
+        String category,
+        List<String> styles,
+        List<Integer> seasons,
+        String clothingImgPath,
+        List<String> textures,
+        List<SharedUserDTO> sharedUsers,
+
+        boolean isMyClothing
+
+) {
+    public ClothingConfirmResponseDTO(Clothing clothing, UserClothing userClothing, List<SharedUserDTO> sharedUserDTOList, boolean isMyClothing) {
+        this(clothing.getClothingId(),
+                userClothing.getClothingName(),
+                clothing.getCategory(),
+                clothing.getClothingStyleList().stream().map(clothingStyle -> clothingStyle.getStyle().getStyleName()).toList(),
+                userClothing.getClothingSeasonList().stream().map(ClothingSeason::getMonth).toList(),
+                clothing.getClothingDetail().getClothingImgPath(),
+                clothing.getClothingDetail().getClothingTextures().stream().map(clothingTexture -> clothingTexture.getTexture().getTextureName()).toList(),
+                sharedUserDTOList,
+                isMyClothing
+        );
+    }
 }

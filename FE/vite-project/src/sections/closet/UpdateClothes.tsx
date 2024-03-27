@@ -1,15 +1,47 @@
 import { Header, UpdateContent } from "./ClosetStyle";
 import IconBack from "@/assets/ui/IconBack";
 import IconCloseSmall from "@/assets/ui/IconCloseSmall";
-import { useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { theme } from "@/styles/theme";
 import { useNavigate, useParams } from "react-router-dom";
+import { useApi } from "@/hooks/useApi";
+import { Loader } from "@/components/Loader";
+import CategoryDropDown from "./CategoryDropDown";
+import { DetailClothesResponseDataType } from "@/types/ClothesTypes";
+import {
+  ACTION_TYPES,
+  initialState,
+  clothesreducer,
+} from "@/reducers/updateClothesReducer";
+interface DetailClothesResponseType {
+  isLoading: boolean;
+  data: DetailClothesResponseDataType;
+}
 
 const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const UpdateClothes = () => {
   const { id } = useParams();
-  console.log(`${id} 이용해서 요청보내기`);
+  const [value, dispatch] = useReducer(clothesreducer, initialState);
+  const { isLoading, data }: DetailClothesResponseType = useApi(
+    "get",
+    `clothing/${id}`
+  );
+
+  useEffect(() => {
+    if (data) {
+      dispatch({ type: ACTION_TYPES.set, payload: data });
+    }
+  }, [data]);
+
+  const [viewCategory, setViewCategory] = useState(false);
+  const [viewTexture, setViewTexture] = useState(false);
+  const [inputTexture, setInputTexture] = useState("");
+
+  const handleTextureInput = (e) => {
+    const value = e.target.value;
+    setInputTexture(value);
+  };
 
   const navigate = useNavigate();
 
@@ -17,17 +49,26 @@ const UpdateClothes = () => {
     window.history.back();
   };
 
-  const [clothestype, setclothestype] = useState(["스웨터", "니트", "가디건"]);
-  const [selectedMonth, setSelectedMonth] = useState([]);
-
-  const toggleMonthClick = (item: number) => {
-    const isSelected = selectedMonth.some((m) => item === m);
-    if (isSelected) {
-      setSelectedMonth(selectedMonth.filter((element) => element !== item));
-    } else {
-      setSelectedMonth((prev: number[]) => [...prev, item]);
+  const handleKeyUp = (event) => {
+    const { value } = event.target;
+    const key = event.key;
+    switch (key) {
+      case "Enter":
+        dispatch({ type: ACTION_TYPES.updateClothingName, payload: value });
+        break;
+      default:
     }
   };
+
+  const handleDispatch = (actionType, value) => {
+    dispatch({ type: actionType, payload: value });
+  };
+
+  const handleFinish = () => {
+    console.log(value);
+    navigate(`/closet/${id}`);
+  };
+  if (isLoading) return <Loader />;
 
   return (
     <>
@@ -37,43 +78,67 @@ const UpdateClothes = () => {
       </Header>
       <UpdateContent>
         <div className="titlearea">
-          <span className="title">타입</span>{" "}
-          {clothestype.map((item) => {
+          <span className="title">별칭</span>
+        </div>
+        <input
+          type="text"
+          defaultValue={value.clothingName}
+          onKeyUp={handleKeyUp}
+        />
+        <div className="titlearea">
+          <span className="title">카테고리</span>
+        </div>
+        <div
+          className="input"
+          onClick={() => {
+            setViewCategory(!viewCategory);
+          }}
+        >
+          {value.category} <span>{viewCategory ? "▲" : "▼"}</span>
+          {viewCategory && (
+            <CategoryDropDown type="category" handleDispatch={handleDispatch} />
+          )}
+        </div>
+
+        <div className="titlearea">
+          <span className="title">소재</span>
+          {value.textures.map((item) => {
             return (
-              <span key={item} className="tag">
+              <span
+                key={item}
+                className="tag"
+                onClick={() => handleDispatch(ACTION_TYPES.deleteTexture, item)}
+              >
                 {item}
                 <IconCloseSmall />
               </span>
             );
           })}
         </div>
-        <input type="text" />
+        <input
+          value={inputTexture}
+          onChange={(e) => handleTextureInput(e)}
+          onFocus={() => setViewTexture(true)}
+          onBlur={() => setViewTexture(false)}
+        ></input>
 
+        {viewTexture && (
+          <div style={{ position: "relative", width: "100%", padding: "0" }}>
+            <CategoryDropDown type="texture" handleDispatch={handleDispatch} />
+          </div>
+        )}
         <div className="titlearea">
-          <span className="title">소재</span>{" "}
-          {clothestype.map((item) => {
-            return (
-              <span key={item} className="tag">
-                {item}
-                <IconCloseSmall />
-              </span>
-            );
-          })}
-        </div>
-        <input type="text" />
-
-        <div className="titlearea">
-          <span className="title">월</span>{" "}
+          <span className="title">월</span>
         </div>
         <div className="month">
           {MONTH.map((item) => {
-            const isSelected = selectedMonth.some((m) => {
+            const isSelected = value.seasons.some((m) => {
               return item === m;
             });
             return (
               <button
                 key={item}
-                onClick={() => toggleMonthClick(item)}
+                onClick={() => handleDispatch(ACTION_TYPES.toggleMonth, item)}
                 className="month-tag"
                 style={{
                   backgroundColor: isSelected
@@ -89,10 +154,14 @@ const UpdateClothes = () => {
         </div>
 
         <div className="titlearea">
-          <span className="title">키워드</span>{" "}
-          {clothestype.map((item) => {
+          <span className="title">스타일</span>{" "}
+          {value.styles.map((item) => {
             return (
-              <span key={item} className="tag">
+              <span
+                key={item}
+                className="tag"
+                onClick={() => handleDispatch(ACTION_TYPES.deleteStyle, item)}
+              >
                 {item}
                 <IconCloseSmall />
               </span>
@@ -103,10 +172,10 @@ const UpdateClothes = () => {
 
         <div className="titlearea">
           <span className="title">같이 입는 사람</span>{" "}
-          {clothestype.map((item) => {
+          {value.sharedUsers.map((item) => {
             return (
-              <span key={item} className="tag">
-                {item}
+              <span key={item.userId} className="tag">
+                {item.userName}
                 <IconCloseSmall />
               </span>
             );
@@ -114,7 +183,10 @@ const UpdateClothes = () => {
         </div>
         <input type="text" />
 
-        <button className="finish"> 완료 </button>
+        <button className="finish" onClick={handleFinish}>
+          {" "}
+          완료{" "}
+        </button>
       </UpdateContent>
     </>
   );

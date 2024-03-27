@@ -41,7 +41,10 @@ export const Item = styled.div`
     aspect-ratio: 1/1;
     height: auto;
     border-radius: 10px;
-    background-color: #9db49d;
+    background-color: ${(props) =>
+      `${props.theme.colors.pointcolor
+        .replace("rgb", "rgba")
+        .replace(")", ", 0.2)")}`};
 
     img {
       width: 100%;
@@ -139,6 +142,7 @@ export const DetailContent = styled.div`
   .btn {
     border: none;
     width: 40%;
+    height: 3rem;
     color: white;
     padding: 0.7rem 1rem;
     border-radius: 40px;
@@ -158,23 +162,24 @@ export const UpdateContent = styled.div`
   overflow-y: scroll;
   padding: 1rem 1rem 13dvh 1rem;
   margin: 1rem auto;
-  width: 95%;
+  width: 98%;
   border-radius: 10px;
   ${({ theme }) => theme.common.flexCenterColumn};
 
   .titlearea {
     width: 100%;
     border-bottom: 1px solid black;
-    padding-bottom: 2px;
+    padding-bottom: 9px;
     font-weight: bold;
   }
 
   .tag {
-    font-size: 0.8rem;
-    margin: 0px 3px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    margin-left: 10px;
     position: relative;
     font-weight: 400;
-    padding: 3px 5px;
+    padding: 7px 10px;
     opacity: 0.6;
     border-radius: 8px;
     line-height: 1.5rem;
@@ -186,11 +191,50 @@ export const UpdateContent = styled.div`
     border: none;
     background-color: ${(props) => props.theme.colors.backgroundcolor};
     font-size: large;
-    margin-top: 8px;
-    margin-bottom: 1.6rem;
-    width: 95%;
-    height: 2rem;
+    margin: 8px 0px 1.8rem 0px;
+    box-sizing: border-box;
+    padding: 0px 10px 0px 10px;
+    width: 100%;
+    height: 3rem;
     border-radius: 15px;
+    font-size: 1.1rem;
+    position: relative;
+  }
+
+  .input {
+    outline: none;
+    border: none;
+    background-color: ${(props) => props.theme.colors.backgroundcolor};
+    font-size: large;
+    margin: 8px 0px 1.6rem 0px;
+    box-sizing: border-box;
+    padding: 0px 10px 0px 10px;
+    width: 100%;
+    height: 3rem;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .category-dropdown {
+    position: absolute; /* Dropdown을 absolute로 설정 */
+    top: 100%; /* ul 요소 바로 아래에 위치하도록 설정 */
+    left: 0; /* 왼쪽 정렬을 위해 설정 */
+    width: 95%; /* 너비를 부모 컨테이너와 동일하게 설정 */
+    background: white; /* 배경색 설정, 필요에 따라 수정 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 드롭다운에 그림자 효과 추가 */
+    z-index: 1000; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+    border-radius: 10px;
+
+    li {
+      height: 45px;
+      font-size: 1rem;
+      padding: 10px 0px 10px 15px;
+      border-bottom: 1px solid lightgray;
+    }
   }
 
   input:focus {
@@ -207,14 +251,15 @@ export const UpdateContent = styled.div`
   .month-tag {
     border: none;
     background-color: aliceblue;
-    padding: 8px 10px;
-    margin: 2px 2px;
+    padding: 13px 10px;
+    margin: 4px 4px;
     border-radius: 5px;
+    font-size: 1rem;
   }
 
   .finish {
     width: 80%;
-    height: 2rem;
+    height: 3rem;
     ${({ theme }) => theme.common.PointButton};
   }
 `;

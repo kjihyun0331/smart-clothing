@@ -19,4 +19,12 @@ const Container = styled.div`
   height: 100dvh;
   position: relative;
   box-sizing: border-box;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  main::-webkit-scrollbar {
+    display: none;
+  }
 `;

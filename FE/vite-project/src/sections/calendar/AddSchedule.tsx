@@ -4,7 +4,7 @@ import { situation } from "./config-schedule";
 import { useState } from "react";
 import { theme } from "@/styles/theme";
 import { useNavigate } from "react-router-dom";
-
+import { useSelectedDateStore } from "@/store/DateStore";
 interface propType {
   isWithinNextFiveDays: boolean;
   selected: string | null;
@@ -20,22 +20,24 @@ export const AddSchedule = ({
   const close = () => {
     setPopup(false);
   };
-  const [selectedSituations, setSelectedSituations] = useState<string[]>([]);
+
+  const { title, setTitle, selectedKeyword, setSelectedKeyword } =
+    useSelectedDateStore();
+  const [selectedSituation, setSelectedSituation] =
+    useState<string>(selectedKeyword);
 
   const handleButtonClick = (itemName: string) => {
-    if (selectedSituations.includes(itemName)) {
-      setSelectedSituations(
-        selectedSituations.filter((item) => item !== itemName)
-      );
+    if (selectedSituation === itemName) {
+      setSelectedSituation(""); // 이미 선택된 상황을 다시 클릭하면 선택을 취소
     } else {
-      setSelectedSituations([...selectedSituations, itemName]);
+      setSelectedSituation(itemName); // 새로운 상황 선택
+      setSelectedKeyword(itemName);
     }
   };
 
-  const [title, setTitle] = useState("");
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
+    console.log(e.target.value);
   };
 
   return (
@@ -50,12 +52,10 @@ export const AddSchedule = ({
               key={item.name}
               onClick={() => handleButtonClick(item.name)}
               style={{
-                backgroundColor: selectedSituations.includes(item.name)
-                  ? theme.colors.grey
-                  : "white",
-                color: selectedSituations.includes(item.name)
-                  ? "white"
-                  : theme.colors.grey,
+                backgroundColor:
+                  selectedSituation === item.name ? theme.colors.grey : "white",
+                color:
+                  selectedSituation === item.name ? "white" : theme.colors.grey,
               }}
             >
               {item.name}
@@ -67,7 +67,7 @@ export const AddSchedule = ({
           type="text"
           placeholder="일정 제목(선택)"
           onChange={handleInputChange}
-          value={title}
+          defaultValue={title}
         />
         <GreenButton onClick={() => navigator("makeoutfit")}>
           옷장에서 고르기
@@ -122,12 +122,13 @@ const Container = styled.div`
   }
 
   .situation {
-    border: 2px solid ${theme.colors.grey};
+    border: 1px solid ${theme.colors.grey};
     border-radius: 1rem;
     margin: 3px 5px;
     box-sizing: border-box;
     padding: 5px 10px;
     border-radius: 10px;
+    font-size: 0.9rem;
   }
 
   input {
@@ -147,6 +148,7 @@ const Container = styled.div`
 const GreenButton = styled.button`
   ${({ theme }) => theme.common.PointButton};
   width: 70%;
-  height: 2.1rem;
+  height: 2.5rem;
   margin-top: 0.5rem;
+  font-size: 0.9rem;
 `;

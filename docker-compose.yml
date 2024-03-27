@@ -24,6 +24,7 @@ services:
     image: supertizen_backend_img
     ports:
       - "8080:8080"
+      - "65432:65432"
     networks:
       - supertizen_net
 
