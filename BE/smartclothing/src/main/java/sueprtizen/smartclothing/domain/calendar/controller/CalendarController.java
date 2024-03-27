@@ -14,11 +14,11 @@ public class CalendarController {
 
     final CalendarService calendarService;
 
-    @GetMapping("/{startDate}/{endDate}")
+    @GetMapping()
     public ResponseEntity<Message<CalendarMonthlyScheduleResponseDTO>> clothingConfirm(
             @RequestHeader("User-ID") int userId,
-            @PathVariable String startDate,
-            @PathVariable String endDate
+            @RequestParam String startDate,
+            @RequestParam String endDate
     ) {
         CalendarMonthlyScheduleResponseDTO calendarMonthlyScheduleResponseDTO = calendarService.calendarMonthlySchedules(userId, startDate, endDate);
         return ResponseEntity.ok(Message.success(calendarMonthlyScheduleResponseDTO));
