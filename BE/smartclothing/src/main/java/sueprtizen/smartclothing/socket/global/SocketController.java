@@ -1,6 +1,5 @@
 package sueprtizen.smartclothing.socket.global;
 
-import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,8 @@ public class SocketController {
     private final ApplicationContext applicationContext;
 
     @Autowired
-    public SocketController(ApplicationContext applicationContext){
-        this.applicationContext=applicationContext;
+    public SocketController(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     public void start(int port) {
@@ -31,7 +30,7 @@ public class SocketController {
             while (!serverSocket.isClosed()) {
                 Socket socket = serverSocket.accept();
                 // 새로운 클라이언트 연결 처리
-                new ClientHandler(socket,applicationContext).start();
+                new ClientHandler(socket, applicationContext).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,9 +52,9 @@ public class SocketController {
         private final Socket socket;
         private final ApplicationContext applicationContext;
 
-        public ClientHandler(Socket socket,ApplicationContext applicationContext) {
+        public ClientHandler(Socket socket, ApplicationContext applicationContext) {
             this.socket = socket;
-            this.applicationContext=applicationContext;
+            this.applicationContext = applicationContext;
         }
 
         @Override
@@ -81,13 +80,13 @@ public class SocketController {
                     Long requestNumber = (Long) requestDTO.get("requestNumber");
 
                     JSONObject responseJson = new JSONObject();
-                    responseJson.put("requestNumber",requestNumber);
+                    responseJson.put("requestNumber", requestNumber);
 
-                    switch (requestName){
+                    switch (requestName) {
                         case "getAllLaundryList":
                             List<Clothing> laundry = washerService.getAllLaundryList();
-                            responseJson.put("count",laundry.size());
-                            responseJson.put("result",laundry);
+                            responseJson.put("count", laundry.size());
+                            //responseJson.put("result", laundry);
 
                             writer.println(responseJson);
                     }
