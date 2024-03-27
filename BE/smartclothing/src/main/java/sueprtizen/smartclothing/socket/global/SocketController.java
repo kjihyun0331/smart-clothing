@@ -88,7 +88,7 @@ public class SocketController {
                             responseJson.put("count", laundry.size());
                             //responseJson.put("result", laundry);
 
-                            writer.println(responseJson);
+                            writer.println("hello Sungjae");
                     }
 
 
