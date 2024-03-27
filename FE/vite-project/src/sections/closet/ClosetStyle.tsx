@@ -158,23 +158,24 @@ export const UpdateContent = styled.div`
   overflow-y: scroll;
   padding: 1rem 1rem 13dvh 1rem;
   margin: 1rem auto;
-  width: 95%;
+  width: 98%;
   border-radius: 10px;
   ${({ theme }) => theme.common.flexCenterColumn};
 
   .titlearea {
     width: 100%;
     border-bottom: 1px solid black;
-    padding-bottom: 4px;
+    padding-bottom: 9px;
     font-weight: bold;
   }
 
   .tag {
-    font-size: 0.8rem;
-    margin: 0px 0px 8px 10px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    margin-left: 10px;
     position: relative;
     font-weight: 400;
-    padding: 4px 6px;
+    padding: 7px 10px;
     opacity: 0.6;
     border-radius: 8px;
     line-height: 1.5rem;
@@ -186,13 +187,13 @@ export const UpdateContent = styled.div`
     border: none;
     background-color: ${(props) => props.theme.colors.backgroundcolor};
     font-size: large;
-    margin: 8px 0px 1.6rem 0px;
+    margin: 8px 0px 1.8rem 0px;
     box-sizing: border-box;
     padding: 0px 10px 0px 10px;
     width: 100%;
-    height: 2rem;
+    height: 3rem;
     border-radius: 15px;
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 
   .input {
@@ -204,9 +205,9 @@ export const UpdateContent = styled.div`
     box-sizing: border-box;
     padding: 0px 10px 0px 10px;
     width: 100%;
-    height: 2rem;
+    height: 3rem;
     border-radius: 15px;
-    font-size: 1rem;
+    font-size: 1.3rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -224,7 +225,7 @@ export const UpdateContent = styled.div`
     border-radius: 5px;
 
     li {
-      padding: 5px 0px 5px 10px;
+      padding: 7px 0px 7px 10px;
       border-bottom: 1px solid lightgray;
     }
   }
@@ -243,14 +244,15 @@ export const UpdateContent = styled.div`
   .month-tag {
     border: none;
     background-color: aliceblue;
-    padding: 8px 10px;
-    margin: 2px 2px;
+    padding: 13px 10px;
+    margin: 4px 4px;
     border-radius: 5px;
+    font-size: 1rem;
   }
 
   .finish {
     width: 80%;
-    height: 2rem;
+    height: 3rem;
     ${({ theme }) => theme.common.PointButton};
   }
 `;

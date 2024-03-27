@@ -4,7 +4,7 @@ export type DetailClothesResponseDataType = {
   category: string;
   styles: string[];
   seasons: number[];
-  clothingImgPath: string;
+  clothingImagePath: string;
   textures: string[];
   sharedUsers: [
     {

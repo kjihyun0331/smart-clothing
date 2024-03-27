@@ -58,6 +58,9 @@ const Wrapper = styled.div`
   margin-left: auto;
   margin-right: auto;
   overflow-y: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   .date {
     font-size: 1rem;
