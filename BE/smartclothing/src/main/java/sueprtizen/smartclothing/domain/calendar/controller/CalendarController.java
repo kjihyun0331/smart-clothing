@@ -34,4 +34,13 @@ public class CalendarController {
         calendarService.scheduleSave(userId, scheduleSaveRequestDTO);
         return ResponseEntity.ok(Message.success());
     }
+
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Message<Void>> scheduleDelete(
+            @RequestHeader("User-ID") int userId,
+            @PathVariable int scheduleId
+    ) {
+        calendarService.scheduleDelete(userId, scheduleId);
+        return ResponseEntity.ok(Message.success());
+    }
 }

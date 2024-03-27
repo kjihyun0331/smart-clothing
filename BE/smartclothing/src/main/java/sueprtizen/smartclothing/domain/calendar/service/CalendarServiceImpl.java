@@ -6,6 +6,8 @@ import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleRespo
 import sueprtizen.smartclothing.domain.calendar.dto.ScheduleDTO;
 import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
+import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
+import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
 import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
 import sueprtizen.smartclothing.domain.users.entity.User;
 import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
@@ -72,6 +74,16 @@ public class CalendarServiceImpl implements CalendarService {
                 .build();
 
         calendarRepository.save(newScheDule);
+    }
+
+    @Override
+    public void scheduleDelete(int userId, int scheduleId) {
+        User currentUser = getUser(userId);
+
+        Schedule schedule = calendarRepository.findScheduleByUserAndScheduleId(currentUser, scheduleId)
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
+
+        calendarRepository.delete(schedule);
     }
 
     private User getUser(int userId) {
