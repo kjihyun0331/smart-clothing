@@ -49,7 +49,7 @@ const ChooseClothes = () => {
     <>
       <Filter>
         <select className="category" name="category">
-          <option disabled selected style={{ textAlign: "center" }} hidden>
+          <option style={{ textAlign: "center" }} hidden>
             카테고리
           </option>
           {CATEGORY.map((item) => {
@@ -61,7 +61,7 @@ const ChooseClothes = () => {
           })}
         </select>
         <select className="category">
-          <option disabled selected style={{ textAlign: "center" }} hidden>
+          <option style={{ textAlign: "center" }} hidden>
             정렬
           </option>
           {SORT.map((item) => {
