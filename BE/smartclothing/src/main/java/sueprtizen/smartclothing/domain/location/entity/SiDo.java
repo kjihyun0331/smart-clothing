@@ -3,7 +3,6 @@ package sueprtizen.smartclothing.domain.location.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sueprtizen.smartclothing.domain.clothing.entity.ClothingTexture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,6 @@ public class SiDo {
     @Column(nullable = false)
     private String siDoName;
 
-    @OneToMany(mappedBy = "si_do")
-    private List<ClothingTexture> clothingTextures = new ArrayList<>();
+    @OneToMany(mappedBy = "siDo")
+    private List<SiGunGu> siGunGus = new ArrayList<>();
 }

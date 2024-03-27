@@ -17,7 +17,8 @@ public class SiGunGu {
     private String siGunGuName;
 
     @ManyToOne
-    @JoinColumn(name = "si_do_id")
+    @JoinColumn(name = "si_do_id", nullable = false)
     private SiDo siDo;
+
 }
 
