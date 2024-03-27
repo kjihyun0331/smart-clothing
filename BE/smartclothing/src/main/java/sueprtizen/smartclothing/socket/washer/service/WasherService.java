@@ -1,11 +1,13 @@
 package sueprtizen.smartclothing.socket.washer.service;
 
 import org.json.simple.JSONObject;
-import sueprtizen.smartclothing.socket.global.ResponseDTO;
+import org.springframework.transaction.annotation.Transactional;
+import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
 
-import java.util.Optional;
+import java.util.List;
+
+
 
 public interface WasherService {
-
-    ResponseDTO getAllLaundryList(JSONObject requestJson);
+    List<Clothing> getAllLaundryList();
 }
