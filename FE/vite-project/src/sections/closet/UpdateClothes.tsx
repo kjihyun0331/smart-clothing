@@ -1,7 +1,7 @@
 import { Header, UpdateContent } from "./ClosetStyle";
 import IconBack from "@/assets/ui/IconBack";
 import IconCloseSmall from "@/assets/ui/IconCloseSmall";
-import { useEffect, useState, useReducer, useRef } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { theme } from "@/styles/theme";
 import { useNavigate, useParams } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
@@ -35,6 +35,13 @@ const UpdateClothes = () => {
   }, [data]);
 
   const [viewCategory, setViewCategory] = useState(false);
+  const [viewTexture, setViewTexture] = useState(false);
+  const [inputTexture, setInputTexture] = useState("");
+
+  const handleTextureInput = (e) => {
+    const value = e.target.value;
+    setInputTexture(value);
+  };
 
   const navigate = useNavigate();
 
@@ -88,7 +95,9 @@ const UpdateClothes = () => {
           }}
         >
           {value.category} <span>{viewCategory ? "▲" : "▼"}</span>
-          {viewCategory && <CategoryDropDown handleDispatch={handleDispatch} />}
+          {viewCategory && (
+            <CategoryDropDown type="category" handleDispatch={handleDispatch} />
+          )}
         </div>
 
         <div className="titlearea">
@@ -106,8 +115,18 @@ const UpdateClothes = () => {
             );
           })}
         </div>
-        <input type="text" />
+        <input
+          value={inputTexture}
+          onChange={(e) => handleTextureInput(e)}
+          onFocus={() => setViewTexture(true)}
+          onBlur={() => setViewTexture(false)}
+        ></input>
 
+        {viewTexture && (
+          <div style={{ position: "relative", width: "100%", padding: "0" }}>
+            <CategoryDropDown type="texture" handleDispatch={handleDispatch} />
+          </div>
+        )}
         <div className="titlearea">
           <span className="title">월</span>
         </div>

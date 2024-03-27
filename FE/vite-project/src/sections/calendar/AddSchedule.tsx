@@ -122,12 +122,13 @@ const Container = styled.div`
   }
 
   .situation {
-    border: 2px solid ${theme.colors.grey};
+    border: 1px solid ${theme.colors.grey};
     border-radius: 1rem;
     margin: 3px 5px;
     box-sizing: border-box;
     padding: 5px 10px;
     border-radius: 10px;
+    font-size: 0.9rem;
   }
 
   input {
@@ -147,6 +148,7 @@ const Container = styled.div`
 const GreenButton = styled.button`
   ${({ theme }) => theme.common.PointButton};
   width: 70%;
-  height: 2.4rem;
+  height: 2.5rem;
   margin-top: 0.5rem;
+  font-size: 0.9rem;
 `;
