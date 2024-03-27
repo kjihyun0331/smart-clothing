@@ -14,7 +14,7 @@ public class WeatherController {
 
     final WeatherService weatherService;
 
-    @GetMapping("/weather")
+    @GetMapping()
     public ResponseEntity<Message<WeatherResponseDTO>> weatherFromLocationAndDate(
             @RequestParam int locationKey,
             @RequestParam String date) {
