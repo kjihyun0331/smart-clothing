@@ -94,7 +94,7 @@ public class ClothingServiceImpl implements ClothingService {
         // 스타일 모두 삭제
         clothingStyleRepository.deleteAllByClothing(clothing);
 
-        List<Style> newStyleList = styleRepository.findAllByStyleNameIn(clothingUpdateRequestDTO.styleList())
+        List<Style> newStyleList = styleRepository.findAllByStyleNameIn(clothingUpdateRequestDTO.styles())
                 .orElseThrow(() -> new ClothingException(ClothingErrorCode.STYLE_NOT_FOUND));
 
         List<ClothingStyle> newClothingStyleList = newStyleList.stream().map(style ->
@@ -112,7 +112,7 @@ public class ClothingServiceImpl implements ClothingService {
         // 계절 모두 삭제
         clothingSeasonRepository.deleteAllByUserClothing(userClothing);
 
-        List<ClothingSeason> newSeasonList = clothingUpdateRequestDTO.seasonList().stream().map(month ->
+        List<ClothingSeason> newSeasonList = clothingUpdateRequestDTO.seasons().stream().map(month ->
                 ClothingSeason.builder()
                         .userClothing(userClothing)
                         .month(month)
@@ -131,7 +131,7 @@ public class ClothingServiceImpl implements ClothingService {
             );
 
             //새로운 옷 사용자 연결
-            Set<Integer> sharedUserIdSet = clothingUpdateRequestDTO.sharedUserIdList().stream()
+            Set<Integer> sharedUserIdSet = clothingUpdateRequestDTO.sharedUserIds().stream()
                     .filter(id -> id != currentUser.getUserId())
                     .collect(Collectors.toSet());
 

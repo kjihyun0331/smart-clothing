@@ -10,11 +10,11 @@ public record ClothingConfirmResponseDTO(
         int clothingId,
         String clothingName,
         String category,
-        List<String> styleList,
-        List<Integer> season,
+        List<String> styles,
+        List<Integer> seasons,
         String clothingImgPath,
-        List<String> textureList,
-        List<SharedUserDTO> sharedUserDTOList,
+        List<String> textures,
+        List<SharedUserDTO> sharedUsers,
 
         boolean isMyClothing
 
