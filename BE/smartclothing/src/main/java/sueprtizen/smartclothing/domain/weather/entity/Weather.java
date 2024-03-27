@@ -28,6 +28,12 @@ public class Weather {
     private int highestRealFeelingTemperature;
 
     @Column(nullable = false)
+    private int lowestRealFeelingTemperature;
+
+    @Column(nullable = false)
+    private int precipitation;
+
+    @Column(nullable = false)
     private int snowCover;
 
     @Column(nullable = false)
@@ -37,8 +43,14 @@ public class Weather {
     private int windSpeed;
 
     @Column(nullable = false)
-    private int solar_Irradiance;
+    private int solarIrradiance;
 
     @Column(nullable = false)
     private String date;
+
+    @Column(nullable = false)
+    private int uv;
+
+    @Column(nullable = false, name = "uv_message")
+    private String UVMessage;
 }

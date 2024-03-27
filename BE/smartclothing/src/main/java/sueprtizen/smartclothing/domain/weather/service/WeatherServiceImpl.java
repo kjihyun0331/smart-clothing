@@ -2,20 +2,36 @@ package sueprtizen.smartclothing.domain.weather.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import sueprtizen.smartclothing.domain.users.entity.User;
-import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
-import sueprtizen.smartclothing.domain.users.exception.UserException;
-import sueprtizen.smartclothing.domain.users.repository.UserRepository;
+import sueprtizen.smartclothing.domain.weather.dto.WeatherResponseDTO;
+import sueprtizen.smartclothing.domain.weather.entity.Weather;
+import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
+import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
 @Service
 @RequiredArgsConstructor
 public class WeatherServiceImpl implements WeatherService {
-    final UserRepository userRepository;
+
     final WeatherRepository weatherRepository;
 
-    private User getUser(int userId) {
-        return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_MEMBER));
+    @Override
+    public WeatherResponseDTO weatherFromLocationAndDate(int locationKey, String date) {
+        Weather weather = weatherRepository.findByLocationKeyAndDate(locationKey, date)
+                .orElseThrow(() -> new WeatherException(WeatherErrorCode.WEATHER_NOT_FOUND));
+        return new WeatherResponseDTO(
+                weather.getIcon(),
+                weather.getLowestTemperature(),
+                weather.getHighestTemperature(),
+                weather.getLowestRealFeelingTemperature(),
+                weather.getHighestRealFeelingTemperature(),
+                weather.getPrecipitation(),
+                weather.getSnowCover(),
+                weather.getHumidity(),
+                weather.getWindSpeed(),
+                weather.getSolarIrradiance(),
+                weather.getUv(),
+                weather.getUVMessage()
+
+        );
     }
 }
