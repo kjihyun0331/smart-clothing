@@ -1,7 +1,5 @@
 package sueprtizen.smartclothing.socket.global;
 
-import org.springframework.beans.BeansException;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
