@@ -14,4 +14,9 @@ public interface CalendarService {
             int userId,
             ScheduleSaveRequestDTO scheduleSaveRequestDTO
     );
+
+//    void scheduleDelete(
+//            int userId,
+//            int scheduleId
+//    );
 }

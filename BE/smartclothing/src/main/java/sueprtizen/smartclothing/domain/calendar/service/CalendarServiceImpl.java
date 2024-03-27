@@ -40,6 +40,8 @@ public class CalendarServiceImpl implements CalendarService {
         ).stream().map(schedule ->
                 new ScheduleDTO(
                         schedule.getScheduleId(),
+                        schedule.getScheduleName(),
+                        schedule.getScheduleCategory(),
                         schedule.getDate(),
                         schedule.getScheduleName()
                 )
@@ -62,6 +64,7 @@ public class CalendarServiceImpl implements CalendarService {
 
         Schedule newScheDule = Schedule.builder()
                 .scheduleName(scheduleSaveRequestDTO.title())
+                .scheduleCategory(scheduleSaveRequestDTO.category())
                 .user(currentUser)
                 .weather(weather)
                 .date(scheduleSaveRequestDTO.date())
