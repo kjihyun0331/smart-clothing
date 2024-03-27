@@ -74,6 +74,7 @@ public class SocketController {
                     if ("exit".equalsIgnoreCase(clientMessage)) {
                         break;
                     }
+                    writer.println("hello Sungjae");
 
                     JSONObject requestDTO = (JSONObject) parser.parse(clientMessage);
                     String requestName = (String) requestDTO.get("requestName");
