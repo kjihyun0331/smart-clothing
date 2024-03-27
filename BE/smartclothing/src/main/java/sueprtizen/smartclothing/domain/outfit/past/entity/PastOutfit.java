@@ -14,12 +14,12 @@ public class PastOutfit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pastOutfitId;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
     @ManyToOne
     @JoinColumn(name = "clothing_id", nullable = false)
-    private Clothing clothing;
+    private Clothing clothingList;
 
 }
