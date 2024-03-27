@@ -114,7 +114,10 @@ const ChooseClothesWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
+    background-color: ${(props) =>
+      `${props.theme.colors.pointcolor
+        .replace("rgb", "rgba")
+        .replace(")", ", 0.2)")}`};
     border-radius: 10px;
     position: relative;
   }
@@ -130,12 +133,13 @@ const ChooseClothesWrapper = styled.div`
   .itemId {
     /* id 스타일링 */
     position: absolute;
-    bottom: 50%; /* 중간에 위치 */
+    top: 50%; /* 중간에 위치 */
     left: 50%;
     transform: translate(-50%, -50%); /* 정확한 중앙 정렬을 위해 */
     color: black; /* 글자색 */
-    font-size: 20px; /* 글자 크기 */
+    font-size: 0.8rem; /* 글자 크기 */
     z-index: 10; /* 이미지 위에 표시 */
+    text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;
   }
 `;
 

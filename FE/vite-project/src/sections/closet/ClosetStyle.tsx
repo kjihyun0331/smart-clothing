@@ -41,7 +41,10 @@ export const Item = styled.div`
     aspect-ratio: 1/1;
     height: auto;
     border-radius: 10px;
-    background-color: #9db49d;
+    background-color: ${(props) =>
+      `${props.theme.colors.pointcolor
+        .replace("rgb", "rgba")
+        .replace(")", ", 0.2)")}`};
 
     img {
       width: 100%;
@@ -139,6 +142,7 @@ export const DetailContent = styled.div`
   .btn {
     border: none;
     width: 40%;
+    height: 3rem;
     color: white;
     padding: 0.7rem 1rem;
     border-radius: 40px;
@@ -193,7 +197,8 @@ export const UpdateContent = styled.div`
     width: 100%;
     height: 3rem;
     border-radius: 15px;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
+    position: relative;
   }
 
   .input {
@@ -207,7 +212,7 @@ export const UpdateContent = styled.div`
     width: 100%;
     height: 3rem;
     border-radius: 15px;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -222,10 +227,12 @@ export const UpdateContent = styled.div`
     background: white; /* 배경색 설정, 필요에 따라 수정 */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 드롭다운에 그림자 효과 추가 */
     z-index: 1000; /* 다른 요소들 위에 표시되도록 z-index 설정 */
-    border-radius: 5px;
+    border-radius: 10px;
 
     li {
-      padding: 7px 0px 7px 10px;
+      height: 45px;
+      font-size: 1rem;
+      padding: 10px 0px 10px 15px;
       border-bottom: 1px solid lightgray;
     }
   }

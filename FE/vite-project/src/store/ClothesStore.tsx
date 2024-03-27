@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { DetailClothesResponseDataType } from "@/types/ClothesTypes";
+import { SimpleClothesResponseDataType } from "@/types/ClothesTypes";
 
 interface SelectedItem {
   id: string;
@@ -13,7 +13,7 @@ interface SelectedItem {
 
 interface SelectedItemsState {
   selectedItems: SelectedItem[];
-  toggleItem: (item: DetailClothesResponseDataType) => void;
+  toggleItem: (item: SimpleClothesResponseDataType) => void;
   clearItems: () => void;
   confirmOutfit: string;
   setConfirmOutfit: (item: string) => void;
@@ -44,12 +44,11 @@ export const useSelectedItemsStore = create<SelectedItemsState>((set) => ({
           y: 10,
         };
 
-        // category가 하의인 경우 x, y 값을 조정
-        if (item.category === "하의") {
-          newItem.x = 300;
-          newItem.y = 100;
-        }
-
+        // // category가 하의인 경우 x, y 값을 조정
+        // if (item.category === "하의") {
+        //   newItem.x = 300;
+        //   newItem.y = 100;
+        // }
         // 아이템 추가
         return {
           selectedItems: [...state.selectedItems, newItem],

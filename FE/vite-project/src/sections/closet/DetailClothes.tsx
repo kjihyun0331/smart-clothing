@@ -38,7 +38,7 @@ const DetailClothes = () => {
 
       <DetailContent>
         <div className="imgarea">
-          <img src={data.clothingImagePath} alt="" />
+          <img src={data.clothingImgPath} alt="" />
         </div>
         <div className="textarea">
           <div className="line">
