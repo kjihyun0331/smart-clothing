@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleResponseDTO;
+import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
 import sueprtizen.smartclothing.domain.calendar.service.CalendarService;
 import sueprtizen.smartclothing.global.dto.Message;
 
@@ -22,5 +23,15 @@ public class CalendarController {
     ) {
         CalendarMonthlyScheduleResponseDTO calendarMonthlyScheduleResponseDTO = calendarService.calendarMonthlySchedules(userId, startDate, endDate);
         return ResponseEntity.ok(Message.success(calendarMonthlyScheduleResponseDTO));
+    }
+
+    @PostMapping()
+    public ResponseEntity<Message<Void>> scheduleSave(
+            @RequestHeader("User-ID") int userId,
+            @RequestBody ScheduleSaveRequestDTO scheduleSaveRequestDTO
+
+    ) {
+        calendarService.scheduleSave(userId, scheduleSaveRequestDTO);
+        return ResponseEntity.ok(Message.success());
     }
 }
