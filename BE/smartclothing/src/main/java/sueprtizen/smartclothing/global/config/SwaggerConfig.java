@@ -37,4 +37,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/calendar/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi weatherApi() {
+        return GroupedOpenApi.builder()
+                .group("weather-api")
+                .pathsToMatch("/weather/**")
+                .build();
+    }
 }
