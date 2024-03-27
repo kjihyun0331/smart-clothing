@@ -186,11 +186,47 @@ export const UpdateContent = styled.div`
     border: none;
     background-color: ${(props) => props.theme.colors.backgroundcolor};
     font-size: large;
-    margin-top: 8px;
-    margin-bottom: 1.6rem;
-    width: 95%;
+    margin: 8px 0px 1.6rem 0px;
+    box-sizing: border-box;
+    padding: 0px 10px 0px 10px;
+    width: 100%;
     height: 2rem;
     border-radius: 15px;
+    font-size: 1rem;
+  }
+
+  .input {
+    outline: none;
+    border: none;
+    background-color: ${(props) => props.theme.colors.backgroundcolor};
+    font-size: large;
+    margin: 8px 0px 1.6rem 0px;
+    box-sizing: border-box;
+    padding: 0px 10px 0px 10px;
+    width: 100%;
+    height: 2rem;
+    border-radius: 15px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .category-dropdown {
+    position: absolute; /* Dropdown을 absolute로 설정 */
+    top: 100%; /* ul 요소 바로 아래에 위치하도록 설정 */
+    left: 0; /* 왼쪽 정렬을 위해 설정 */
+    width: 95%; /* 너비를 부모 컨테이너와 동일하게 설정 */
+    background: white; /* 배경색 설정, 필요에 따라 수정 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 드롭다운에 그림자 효과 추가 */
+    z-index: 1000; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+    border-radius: 5px;
+
+    li {
+      padding: 5px 0px 5px 10px;
+      border-bottom: 1px solid lightgray;
+    }
   }
 
   input:focus {
