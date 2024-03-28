@@ -44,8 +44,7 @@ public class CalendarServiceImpl implements CalendarService {
                         schedule.getScheduleId(),
                         schedule.getScheduleName(),
                         schedule.getScheduleCategory(),
-                        schedule.getDate(),
-                        schedule.getScheduleName()
+                        schedule.getDate()
                 )
         ).toList();
 
