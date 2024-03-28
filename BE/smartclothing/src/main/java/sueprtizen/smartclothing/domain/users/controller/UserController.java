@@ -10,6 +10,7 @@ import sueprtizen.smartclothing.domain.users.dto.UserRequestDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserResponseDTO;
 import sueprtizen.smartclothing.domain.users.service.UserService;
 import sueprtizen.smartclothing.global.dto.Message;
+import sueprtizen.smartclothing.global.fcm.FCMService;
 
 @RequestMapping("/users")
 @RestController
@@ -17,11 +18,13 @@ import sueprtizen.smartclothing.global.dto.Message;
 public class UserController {
 
     private final UserService userService;
+    private final FCMService fcmService;
 
     @Operation(summary = "로그인", description = "로그인을 처리하고, 로그인 응답 데이터를 반환합니다.")
     @PostMapping("")
-    public ResponseEntity<Message<UserResponseDTO>> signIn(@RequestBody @Valid UserRequestDTO userRequestDTO) {
+    public ResponseEntity<Message<UserResponseDTO>> signIn(@RequestBody @Valid UserRequestDTO userRequestDTO,@RequestHeader("fcmToken") @Valid String token) {
         UserResponseDTO signInResponse = userService.signIn(userRequestDTO);
+        fcmService.saveFCMToken(signInResponse.userId(),token);
         return ResponseEntity.ok(Message.success(signInResponse));
     }
 
