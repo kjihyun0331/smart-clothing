@@ -22,7 +22,7 @@ public class ClothingDetail {
     @Column(nullable = false)
     private String color;
 
-    @OneToMany(mappedBy = "clothingDetail")
+    @OneToMany(mappedBy = "clothingDetail" ,fetch = FetchType.EAGER)
     @Column(nullable = false)
     private List<ClothingTexture> clothingTextures = new ArrayList<>();
 
