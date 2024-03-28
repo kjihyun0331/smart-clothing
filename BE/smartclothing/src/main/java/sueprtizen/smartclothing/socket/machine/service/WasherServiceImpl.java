@@ -1,12 +1,12 @@
-package sueprtizen.smartclothing.socket.washer.service;
+package sueprtizen.smartclothing.socket.machine.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
-import sueprtizen.smartclothing.socket.washer.dto.WasherResponseDTO;
-import sueprtizen.smartclothing.socket.washer.repository.WasherRepository;
+import sueprtizen.smartclothing.socket.machine.dto.WasherResponseDTO;
+import sueprtizen.smartclothing.socket.machine.repository.WasherRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
