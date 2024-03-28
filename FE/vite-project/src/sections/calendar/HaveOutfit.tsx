@@ -40,6 +40,14 @@ const HaveOutfit = ({ date }) => {
   return (
     <HaveOutfitContainer>
       <span className="tag">{data.schedule.scheduleCategory}</span>
+
+      {data.clothingList.map((item) => {
+        return (
+          <div className="item" key={item.clothingId}>
+            <img src={item.clothingImage} alt={item.clothingImage} />
+          </div>
+        );
+      })}
     </HaveOutfitContainer>
   );
 };
@@ -54,6 +62,13 @@ const HaveOutfitContainer = styled.div`
   flex-direction: column;
 
   .tag {
+    width: 18%;
     background-color: aqua;
+    border-radius: 10px;
+  }
+
+  .item {
+    width: 200px;
+    height: 200px;
   }
 `;

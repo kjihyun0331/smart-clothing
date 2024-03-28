@@ -138,38 +138,7 @@ function Canvas() {
 
   const exportAndSaveImage = () => {
     if (stageRef.current) {
-      // 배경색을 설정하는 Rect 생성
-      // const background = new Konva.Rect({
-      //   x: 0,
-      //   y: 0,
-      //   width: window.innerWidth, // 또는 stageRef.current.width()
-      //   height: window.innerHeight * 0.49, // 또는 stageRef.current.height()
-      //   fill: "lightpink", // 앞서 계산한 어두운 색상
-      // });
-
-      // // 임시 레이어 생성 및 배경 추가
-      // const tempLayer = new Konva.Layer();
-      // tempLayer.add(background);
-      // stageRef.current.add(tempLayer);
-
-      // // 배경을 레이어의 맨 뒤로 보냄
-      // background.moveToTop();
-
       const uri = stageRef.current.toDataURL();
-      console.log(
-        "완성된 코디 이미지-----------------------------------------------------------"
-      );
-      console.log(uri);
-      // 임시 레이어 제거
-      // tempLayer.destroy();
-
-      const date = new Date();
-      const fileName = `CanvasImage_${date.getFullYear()}-${
-        date.getMonth() + 1
-      }-${date.getDate()}_${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}.png`;
-      console.log(fileName);
-      // console.log(uri);
-      // console.log(typeof uri);
       setConfirmOutfit(uri);
       navigate("/calendar/confirmoutfit");
     }
