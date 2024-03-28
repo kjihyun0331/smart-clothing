@@ -106,7 +106,7 @@ public class SocketController {
                                 responseJson.put("result", users);
                                 break;
                             case "getClothesInfo":
-                                SocketClothingInfoDTO info = clothingService.getClothingInfo((String) requestDTO.get("rfidUid"));
+                                SocketClothingInfoDTO info = clothingService.getClothingInfo((String)requestDTO.get("rfidUid"));
                                 responseJson.put("result", objectMapper.writeValueAsString(info));
                                 break;
                             case "getClothesImage":
