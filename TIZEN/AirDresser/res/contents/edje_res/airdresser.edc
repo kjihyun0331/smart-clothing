@@ -141,6 +141,106 @@ collections {
 		}
 	}
 	group {
+		name: "elm/button/base/text_button";
+		parts {
+			part {
+				name: "bg";
+				type: RECT;
+				description {
+					state: "default" 0.0;
+					color: 54 59 63 255;
+				}
+			}
+			part {
+				name: "left_top_padding";
+				type: SPACER;
+				description {
+					state: "default" 0.0;
+					align: 0 0;
+				}
+			}
+			part {
+				name: "right_bottom_padding";
+				type: SPACER;
+				description {
+					state: "default" 0.0;
+					align: 1 1;
+				}
+			}
+			part {
+				name: "elm.text";
+				type: TEXT;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						to: "left_top_padding";
+					}
+					rel2 {
+						to: "right_bottom_padding";
+					}
+					align: 0.5 0.5;
+					text {
+						size: 30;
+					}
+				}
+			}
+		}
+		programs {
+			program {
+				name: "clicked";
+				signal: "mouse,clicked,*";
+				source: "*";
+				action: SIGNAL_EMIT "elm,action,click" "";
+			}
+		}
+	}
+	group {
+		inherit: "elm/button/base/text_button";
+		name: "elm/button/base/text_green_button";
+		parts {
+			part {
+				name: "bg";
+				type: RECT;
+				description {
+					state: "default" 0.0;
+					color: 57 156 125 255;
+				}
+			}
+		}
+	}
+	group {
+		inherit: "elm/button/base/text_button";
+		name: "elm/button/base/text_gray_button";
+		parts {
+			part {
+				name: "bg";
+				type: RECT;
+				description {
+					state: "default" 0.0;
+					color: 219 219 219 255;
+				}
+			}
+			part {
+				name: "elm.text";
+				type: TEXT;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						to: "left_top_padding";
+					}
+					rel2 {
+						to: "right_bottom_padding";
+					}
+					align: 0.5 0.5;
+					text {
+						size: 30;
+					}
+					color: 0 0 0 255;
+				}
+			}
+		}
+	}
+	group {
 		name: "course_wrapper";
 		parts {
 			part {
@@ -404,11 +504,11 @@ collections {
 					state: "default" 0.0;
 					rel1 {
 						to: "left_top_padding";
-						offset: 20 20;
+						offset: 10 15;
 					}
 					rel2 {
 						to: "right_bottom_padding";
-						offset: -20 -20;
+						offset: -10 -15;
 					}
 				}
 			}
