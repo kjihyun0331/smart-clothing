@@ -53,4 +53,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/location/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi pastOutfitApi() {
+        return GroupedOpenApi.builder()
+                .group("pastOutfit-api")
+                .pathsToMatch("/outfit/past/**")
+                .build();
+    }
 }
