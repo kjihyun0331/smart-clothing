@@ -37,7 +37,8 @@ public class LocationServiceImpl implements LocationService {
         return new SiGunGuResponseDTO(
                 siDo.getSiGunGus().stream().map(s -> new SiGunGuDTO(
                         s.getSiGunGuId(),
-                        s.getSiGunGuName()
+                        s.getSiGunGuName(),
+                        s.getLocationKey()
                 )).toList()
         );
     }
