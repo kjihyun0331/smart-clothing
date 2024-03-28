@@ -1,10 +1,8 @@
-package sueprtizen.smartclothing.socket.washer.repository;
+package sueprtizen.smartclothing.socket.machine.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
-import sueprtizen.smartclothing.socket.washer.dto.WasherResponseDTO;
 
 import java.util.List;
 

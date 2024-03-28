@@ -1,8 +1,6 @@
 package sueprtizen.smartclothing.domain.clothing.service;
 
-import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.*;
 
 import java.util.List;
 
@@ -14,4 +12,8 @@ public interface ClothingService {
     void removeClothing(int userId, int clothingId);
 
     void updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO);
+
+    SocketClothingInfoDTO getClothingInfo(String rfidUid);
+
+    SocketClothingImageDTO getClothingImage(String rfidUid);
 }
