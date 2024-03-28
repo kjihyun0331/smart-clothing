@@ -6,7 +6,7 @@ import { theme } from "@/styles/theme";
 import { useNavigate, useParams } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
-import CategoryDropDown from "./CategoryDropDown";
+import DropDown from "./DropDown";
 import { DetailClothesResponseDataType } from "@/types/ClothesTypes";
 import {
   ACTION_TYPES,
@@ -36,12 +36,7 @@ const UpdateClothes = () => {
 
   const [viewCategory, setViewCategory] = useState(false);
   const [viewTexture, setViewTexture] = useState(false);
-  const [inputTexture, setInputTexture] = useState("");
-
-  const handleTextureInput = (e) => {
-    const value = e.target.value;
-    setInputTexture(value);
-  };
+  const [viewStyle, setViewStyle] = useState(false);
 
   const navigate = useNavigate();
 
@@ -96,7 +91,7 @@ const UpdateClothes = () => {
         >
           {value.category} <span>{viewCategory ? "▲" : "▼"}</span>
           {viewCategory && (
-            <CategoryDropDown type="category" handleDispatch={handleDispatch} />
+            <DropDown type="category" handleDispatch={handleDispatch} />
           )}
         </div>
 
@@ -115,18 +110,26 @@ const UpdateClothes = () => {
             );
           })}
         </div>
-        <input
+        <div
+          className="input"
+          onClick={() => {
+            setViewTexture(!viewTexture);
+          }}
+        >
+          선택해주세요 <span>{viewTexture ? "▲" : "▼"}</span>
+          {viewTexture && (
+            <DropDown type="texture" handleDispatch={handleDispatch} />
+          )}
+        </div>
+
+        {/* <input
+          className="texture"
           value={inputTexture}
           onChange={(e) => handleTextureInput(e)}
           onFocus={() => setViewTexture(true)}
           onBlur={() => setViewTexture(false)}
-        ></input>
+        ></input> */}
 
-        {viewTexture && (
-          <div style={{ position: "relative", width: "100%", padding: "0" }}>
-            <CategoryDropDown type="texture" handleDispatch={handleDispatch} />
-          </div>
-        )}
         <div className="titlearea">
           <span className="title">월</span>
         </div>
@@ -168,7 +171,17 @@ const UpdateClothes = () => {
             );
           })}
         </div>
-        <input type="text" />
+        <div
+          className="input"
+          onClick={() => {
+            setViewStyle(!viewStyle);
+          }}
+        >
+          선택해주세요 <span>{viewStyle ? "▲" : "▼"}</span>
+          {viewStyle && (
+            <DropDown type="style" handleDispatch={handleDispatch} />
+          )}
+        </div>
 
         <div className="titlearea">
           <span className="title">같이 입는 사람</span>{" "}

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { MomentInput } from "moment";
 import { useSelectedDateStore } from "@/store/DateStore";
 import { useSelectedItemsStore } from "@/store/ClothesStore";
+import HaveOutfit from "./HaveOutfit";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -18,20 +19,23 @@ interface SchedulePropType {
 const Schedule = ({ date, attendDay }: SchedulePropType) => {
   moment.locale("ko");
 
-  const selected: string | null = moment(date as MomentInput).format(
+  const selectedformat: string | null = moment(date as MomentInput).format(
     "M월 DD일 (dd)"
   );
 
-  const isLoading: boolean = true;
+  const selected = moment(date as MomentInput).format("YYYY-MM-DD");
 
-  // const { isCommentLoading, isCommentError, commentState } = useCommentQuery(shopId);
   return (
     <ScheduleWrapper>
-      <p>{selected}</p>
-      {isLoading ? (
-        <NoSchedule date={date} attendDay={attendDay} selected={selected} />
+      <p>{selectedformat}</p>
+      {attendDay.includes(selected) ? (
+        <HaveOutfit />
       ) : (
-        <p>일정 있음</p>
+        <NoSchedule
+          date={date}
+          attendDay={attendDay}
+          selected={selectedformat}
+        />
       )}
     </ScheduleWrapper>
   );
@@ -90,7 +94,7 @@ const NoSchedule = ({ date, attendDay, selected }: NoSchedulePropType) => {
     <ContentWrapper>
       {isSelectedDatePast ? (
         isDateInAttendDay ? (
-          <p>그 일정에 입은 옷</p>
+          <HaveOutfit />
         ) : (
           <p>이 날 등록된 일정 없음</p>
         )

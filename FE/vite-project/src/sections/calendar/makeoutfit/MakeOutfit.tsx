@@ -26,7 +26,7 @@ const MakeOutfit = () => {
 
 export default MakeOutfit;
 
-const CATEGORY = ["전체", "상의", "바지", "스커트", "원피스"];
+const CATEGORY = ["전체", "상의", "하의", "치마", "아우터", "아우터"];
 const SORT = ["최근 등록 순", "오래된 순", "많이 입은 순"];
 
 const ChooseClothes = () => {

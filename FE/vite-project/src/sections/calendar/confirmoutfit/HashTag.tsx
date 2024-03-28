@@ -19,7 +19,12 @@ const HashTag = () => {
 
   return (
     <Wrapper>
-      <p className="title">선택된 태그</p>
+      {selectedHashtag.length ? (
+        <p className="title">선택된 태그</p>
+      ) : (
+        <p className="title">태그를 선택해주세요</p>
+      )}
+
       {selectedHashtag.map((item) => {
         return (
           <button

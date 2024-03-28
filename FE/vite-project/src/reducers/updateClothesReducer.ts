@@ -16,7 +16,7 @@ export const initialState = {
   styles: ["string"],
   seasons: [0],
   clothingImgPath: "string",
-  textures: ["string"],
+  textures: [""],
   sharedUsers: [
     {
       userId: 0,
@@ -27,7 +27,6 @@ export const initialState = {
 };
 
 export const clothesreducer = (state, action) => {
-  console.log("reducer 작동");
   switch (action.type) {
     case ACTION_TYPES.set:
       return { ...action.payload };
@@ -35,8 +34,13 @@ export const clothesreducer = (state, action) => {
       return { ...state, clothingName: action.payload };
     case ACTION_TYPES.updateCategory:
       return { ...state, category: action.payload };
-    case ACTION_TYPES.updateTexture:
-      return { ...state, textures: action.payload };
+    case ACTION_TYPES.updateTexture: {
+      const isTextureExists = state.textures.includes(action.payload);
+      const updatedTextures = isTextureExists
+        ? [...state.textures]
+        : [...state.textures, action.payload];
+      return { ...state, textures: updatedTextures };
+    }
     case ACTION_TYPES.deleteTexture: {
       const updatedTextures = state.textures.filter(
         (texture) => texture !== action.payload
@@ -51,8 +55,13 @@ export const clothesreducer = (state, action) => {
       return { ...state, seasons: updatedSeasons };
     }
 
-    case ACTION_TYPES.updateStyle:
-      return { ...state, styles: action.payload };
+    case ACTION_TYPES.updateStyle: {
+      const isStyleExists = state.styles.includes(action.payload);
+      const updatedStyles = isStyleExists
+        ? [...state.styles]
+        : [...state.styles, action.payload];
+      return { ...state, styles: updatedStyles };
+    }
     case ACTION_TYPES.deleteStyle: {
       const updatedStyles = state.styles.filter(
         (style) => style !== action.payload
