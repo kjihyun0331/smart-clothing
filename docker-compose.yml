@@ -9,6 +9,7 @@ services:
     image: supertizen_frontend_img
     volumes:
       - /etc/letsencrypt/:/etc/nginx/ssl/
+      - /home/ubuntu/clothes_images/:/usr/share/nginx/images/
     ports:
       - "80:80"
       - "443:443"
