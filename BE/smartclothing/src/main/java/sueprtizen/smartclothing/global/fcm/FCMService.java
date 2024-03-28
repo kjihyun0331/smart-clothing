@@ -6,9 +6,11 @@ import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @Slf4j
+@Service
+@Transactional
 @RequiredArgsConstructor
 public class FCMService {
     public static String sendNotification(FCMRequest fcmRequest) {
