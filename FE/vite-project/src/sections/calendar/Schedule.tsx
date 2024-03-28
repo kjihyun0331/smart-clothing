@@ -29,7 +29,7 @@ const Schedule = ({ date, attendDay }: SchedulePropType) => {
     <ScheduleWrapper>
       <p>{selectedformat}</p>
       {attendDay.includes(selected) ? (
-        <HaveOutfit />
+        <HaveOutfit date={date} />
       ) : (
         <NoSchedule
           date={date}
@@ -94,9 +94,9 @@ const NoSchedule = ({ date, attendDay, selected }: NoSchedulePropType) => {
     <ContentWrapper>
       {isSelectedDatePast ? (
         isDateInAttendDay ? (
-          <HaveOutfit />
+          <HaveOutfit date={date} />
         ) : (
-          <p>이 날 등록된 일정 없음</p>
+          <p className="description">이 날 등록된 일정이 없습니다.</p>
         )
       ) : (
         <>
