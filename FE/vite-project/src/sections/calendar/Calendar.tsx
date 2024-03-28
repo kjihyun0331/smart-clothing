@@ -17,7 +17,10 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const MyCalendar = () => {
   const today = new Date();
-  const { isLoading, data } = useApi("get", `calendar/2022-01-01/2025-12-12`);
+  const { isLoading, data } = useApi(
+    "get",
+    `calendar?startDate=2023-01-01&endDate=2025-12-12`
+  );
   const [mySchedule, setMySchedule] = useState([]);
 
   useEffect(() => {

@@ -33,7 +33,7 @@ const ChooseClothes = () => {
   // const { selectedItems, toggleItem } = useSelectedItemsStore();
   const { selectedItems, toggleItem } = useSelectedItemsStore();
   const { isLoading, data } = useApi("get", "clothing");
-
+  console.log(selectedItems);
   if (isLoading) return <Loader />;
   return (
     <>
