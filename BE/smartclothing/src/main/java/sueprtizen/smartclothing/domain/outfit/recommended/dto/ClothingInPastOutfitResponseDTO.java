@@ -3,7 +3,7 @@ package sueprtizen.smartclothing.domain.outfit.recommended.dto;
 import lombok.Builder;
 
 @Builder
-public record ClothingDTO(
+public record ClothingInPastOutfitResponseDTO(
         int clothingId,
         String clothingImagePath,
         int x,
