@@ -10,4 +10,5 @@ import java.util.List;
 public interface SocketUserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAll();
+
 }

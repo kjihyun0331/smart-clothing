@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class WasherServiceImpl implements WasherService{
+public class WasherServiceImpl implements WasherService {
     private final WasherRepository washerRepository;
 
     @Transactional(readOnly = true)
-    public List<WasherResponseDTO> getAllLaundryList(){
+    public List<WasherResponseDTO> getAllLaundryList() {
         List<Clothing> laundry = washerRepository.findAllByNowAt("세탁기");
         return laundry.stream().map(entity -> WasherResponseDTO.builder()
                 .worn_count(entity.getWornCount())

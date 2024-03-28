@@ -6,6 +6,9 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingImageDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingInfoDTO;
+import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
 import sueprtizen.smartclothing.socket.clothes.dto.SocketUserResponseDTO;
 import sueprtizen.smartclothing.socket.clothes.service.SocketUserService;
 import sueprtizen.smartclothing.socket.machine.dto.WasherResponseDTO;
@@ -67,6 +70,7 @@ public class SocketController {
             ObjectMapper objectMapper = new ObjectMapper();
             WasherService washerService = applicationContext.getBean(WasherService.class);
             SocketUserService userService = applicationContext.getBean(SocketUserService.class);
+            ClothingService clothingService = applicationContext.getBean(ClothingService.class);
 
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -94,22 +98,20 @@ public class SocketController {
                             case "getAllLaundryList":
                                 List<WasherResponseDTO> laundry = washerService.getAllLaundryList();
                                 responseJson.put("count", laundry.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(laundry));
+                                responseJson.put("result", laundry);
                                 break;
                             case "getUserList":
                                 List<SocketUserResponseDTO> users = userService.getAllUsers();
                                 responseJson.put("count", users.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(users));
+                                responseJson.put("result", users);
                                 break;
                             case "getClothesInfo":
-                                List<SocketUserResponseDTO> users = userService.getAllUsers();
-                                responseJson.put("count", users.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(users));
+                                SocketClothingInfoDTO info = clothingService.getClothingInfo((String) requestDTO.get("rfidUid"));
+                                responseJson.put("result", objectMapper.writeValueAsString(info));
                                 break;
-                            case "getUserList":
-                                List<SocketUserResponseDTO> users = userService.getAllUsers();
-                                responseJson.put("count", users.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(users));
+                            case "getClothesImage":
+                                SocketClothingImageDTO path = clothingService.getClothingImage((String) requestDTO.get("rfidUid"));
+                                responseJson.put("result", objectMapper.writeValueAsString(path));
                                 break;
                         }
                         writer.println(responseJson);
