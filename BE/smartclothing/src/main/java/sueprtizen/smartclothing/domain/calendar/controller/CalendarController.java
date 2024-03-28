@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleResponseDTO;
 import sueprtizen.smartclothing.domain.calendar.dto.ScheduleDetailResponseDTO;
 import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
+import sueprtizen.smartclothing.domain.calendar.dto.TodayScheduleOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.calendar.service.CalendarService;
 import sueprtizen.smartclothing.global.dto.Message;
 
@@ -42,6 +43,13 @@ public class CalendarController {
             @RequestParam String date
     ) {
         return ResponseEntity.ok(Message.success(calendarService.scheduleConfirmation(userId, date)));
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<Message<TodayScheduleOutfitResponseDTO>> todayScheduleOutfitConfirmation(
+            @RequestHeader("User-ID") int userId
+    ) {
+        return ResponseEntity.ok(Message.success(calendarService.todayScheduleOutfitConformation(userId)));
     }
 
 

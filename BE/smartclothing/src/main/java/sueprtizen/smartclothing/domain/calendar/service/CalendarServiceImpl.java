@@ -160,6 +160,26 @@ public class CalendarServiceImpl implements CalendarService {
         );
     }
 
+    @Override
+    public TodayScheduleOutfitResponseDTO todayScheduleOutfitConformation(int userId) {
+        User currentUser = getUser(userId);
+
+//        LocalDate today = LocalDate.now();
+
+        LocalDate today = LocalDate.of(2024, 3, 27);
+
+        Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, today)
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
+
+        return new TodayScheduleOutfitResponseDTO(
+                schedule.getScheduleId(),
+                schedule.getScheduleCategory(),
+                schedule.getScheduleName(),
+                schedule.getOutfitImagePath()
+        );
+    }
+
+
     private User getUser(int userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_MEMBER));

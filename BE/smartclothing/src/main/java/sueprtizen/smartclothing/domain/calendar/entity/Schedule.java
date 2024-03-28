@@ -31,10 +31,10 @@ public class Schedule {
     private Weather weather;
 
     @OneToMany(mappedBy = "schedule")
-    private List<RecommendedOutfit> recommendedOutfits = new ArrayList<>();
+    private final List<RecommendedOutfit> recommendedOutfits = new ArrayList<>();
 
     @OneToMany(mappedBy = "schedule")
-    private List<PastOutfit> pastOutfits = new ArrayList<>();
+    private final List<PastOutfit> pastOutfits = new ArrayList<>();
 
     @Column(nullable = false)
     private String scheduleName;
@@ -48,6 +48,9 @@ public class Schedule {
 
     @Column(nullable = false)
     private int locationKey;
+
+    @Column(nullable = false)
+    private String outfitImagePath;
 
     @Builder
     public Schedule(User user, String scheduleName, String scheduleCategory, Weather weather, LocalDate date, int locationKey) {
