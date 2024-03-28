@@ -14,3 +14,8 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ML.settings')
 
 application = get_wsgi_application()
+
+from mlp.scheduler import start_scheduler
+
+
+start_scheduler()
