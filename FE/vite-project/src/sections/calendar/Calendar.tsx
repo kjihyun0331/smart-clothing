@@ -11,6 +11,7 @@ import moment from "moment";
 import "moment/dist/locale/ko";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
+import { createImage } from "@/hooks/createImage";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -50,9 +51,16 @@ const MyCalendar = () => {
 
   if (isLoading) return <Loader />;
 
+  const imgs = [
+    { url: "https://cdn-icons-png.flaticon.com/512/4485/4485718.png" },
+    { url: "https://cdn-icons-png.flaticon.com/512/4485/4485718.png" },
+    { url: "https://cdn-icons-png.flaticon.com/512/4485/4485718.png" },
+    { url: "https://cdn-icons-png.flaticon.com/512/4485/4485718.png" },
+  ];
   return (
     <>
       <div style={{ height: "7dvh" }}></div>
+      <button onClick={() => createImage(imgs)}></button>
       <StyledCalendarWrapper>
         <StyledCalendar
           value={date}
