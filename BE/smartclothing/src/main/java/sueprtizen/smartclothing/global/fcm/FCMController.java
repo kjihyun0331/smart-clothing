@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("/notification")
 public class FCMController {
 
     private final FCMService fcmService;
@@ -17,7 +17,7 @@ public class FCMController {
         this.fcmService = fcmService;
     }
 
-    @PostMapping("/notification")
+    @PostMapping("/")
     public ResponseEntity<String> sendNotification(@RequestBody @Valid FCMRequest request) {
         String response = fcmService.sendNotification(request);
         return ResponseEntity.ok(response);
