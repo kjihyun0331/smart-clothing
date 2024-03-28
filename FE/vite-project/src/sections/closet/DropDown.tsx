@@ -1,4 +1,4 @@
-const CATEGORY = ["전체", "상의", "하의", "치마", "아우터"];
+const CATEGORY = ["상의", "하의", "치마", "아우터"];
 const TEXTURE = [
   "면",
   "폴리에스테르",

@@ -156,7 +156,10 @@ function Canvas() {
       // background.moveToTop();
 
       const uri = stageRef.current.toDataURL();
-
+      console.log(
+        "완성된 코디 이미지-----------------------------------------------------------"
+      );
+      console.log(uri);
       // 임시 레이어 제거
       // tempLayer.destroy();
 
