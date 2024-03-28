@@ -16,6 +16,9 @@ public class SiGunGu {
     @Column(nullable = false)
     private String siGunGuName;
 
+    @Column(nullable = false)
+    private int locationKey;
+
     @ManyToOne
     @JoinColumn(name = "si_do_id", nullable = false)
     private SiDo siDo;
