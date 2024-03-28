@@ -6,22 +6,34 @@ import {
   StyledDot,
 } from "./CalendarStyle";
 import Schedule from "./Schedule";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/dist/locale/ko";
+import { useApi } from "@/hooks/useApi";
+import { Loader } from "@/components/Loader";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const MyCalendar = () => {
   const today = new Date();
+  const { isLoading, data } = useApi("get", `calendar/2022-01-01/2025-12-12`);
+  const [mySchedule, setMySchedule] = useState([]);
+
+  useEffect(() => {
+    if (data && data.scheduleList) {
+      const dates = data.scheduleList.map((item) => {
+        return moment(item.date).format("YYYY-MM-DD");
+      });
+      setMySchedule(dates);
+    }
+  }, [data]);
+
   moment.locale("ko");
   const [date, setDate] = useState<Value>(today);
   const [activeStartDate, setActiveStartDate] = useState<ValuePiece>(
     new Date()
   );
-
-  const attendDay = ["2024-03-01", "2024-05-02"];
 
   const handleDateChange = (newDate: Value) => {
     setDate(newDate);
@@ -32,6 +44,8 @@ const MyCalendar = () => {
     setActiveStartDate(today);
     setDate(today);
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <>
@@ -67,7 +81,7 @@ const MyCalendar = () => {
             }
             if (view === "month") {
               if (
-                attendDay.find((x) => x === moment(date).format("YYYY-MM-DD"))
+                mySchedule.find((x) => x === moment(date).format("YYYY-MM-DD"))
               ) {
                 html.push(
                   <StyledDot key={moment(date).format("YYYY-MM-DD")} />
@@ -79,7 +93,7 @@ const MyCalendar = () => {
         />
         <StyledDate onClick={handleTodayClick}>오늘</StyledDate>
       </StyledCalendarWrapper>
-      <Schedule date={date || new Date()} attendDay={attendDay} />
+      <Schedule date={date || new Date()} attendDay={mySchedule} />
     </>
   );
 };

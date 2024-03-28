@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/scrollbar";
@@ -60,27 +60,8 @@ const BasketState = () => {
           }}
         >
           <SwiperSlide>
-            {FAKEDATA.map((item) => {
-              return (
-                <Item key={item.id}>
-                  <div className="imgarea">
-                    <img src={item.img} alt={item.name} />
-                  </div>
-                  <div className="textarea">
-                    <p className="message">
-                      <span className="type">{item.device}</span>에
-                      추가되었습니다.
-                    </p>
-                    <p className="name">{item.name}</p>
-                    <p className="date">{item.date}</p>
-                  </div>
-                </Item>
-              );
-            })}
-          </SwiperSlide>
-          <SwiperSlide>
-            {FAKEDATA.map((item) => {
-              if (item.device === "세탁기")
+            {FAKEDATA.length ? (
+              FAKEDATA.map((item) => {
                 return (
                   <Item key={item.id}>
                     <div className="imgarea">
@@ -96,27 +77,58 @@ const BasketState = () => {
                     </div>
                   </Item>
                 );
-            })}
+              })
+            ) : (
+              <p>없습니다</p>
+            )}
           </SwiperSlide>
           <SwiperSlide>
-            {FAKEDATA.map((item) => {
-              if (item.device === "에어드레서")
-                return (
-                  <Item key={item.id}>
-                    <div className="imgarea">
-                      <img src={item.img} alt={item.name} />
-                    </div>
-                    <div className="textarea">
-                      <p className="message">
-                        <span className="type">{item.device}</span>에
-                        추가되었습니다.
-                      </p>
-                      <p className="name">{item.name}</p>
-                      <p className="date">{item.date}</p>
-                    </div>
-                  </Item>
-                );
-            })}
+            {FAKEDATA.length ? (
+              FAKEDATA.map((item) => {
+                if (item.device === "세탁기")
+                  return (
+                    <Item key={item.id}>
+                      <div className="imgarea">
+                        <img src={item.img} alt={item.name} />
+                      </div>
+                      <div className="textarea">
+                        <p className="message">
+                          <span className="type">{item.device}</span>에
+                          추가되었습니다.
+                        </p>
+                        <p className="name">{item.name}</p>
+                        <p className="date">{item.date}</p>
+                      </div>
+                    </Item>
+                  );
+              })
+            ) : (
+              <p>없습니다</p>
+            )}
+          </SwiperSlide>
+          <SwiperSlide>
+            {FAKEDATA.length ? (
+              FAKEDATA.map((item) => {
+                if (item.device === "에어드레서")
+                  return (
+                    <Item key={item.id}>
+                      <div className="imgarea">
+                        <img src={item.img} alt={item.name} />
+                      </div>
+                      <div className="textarea">
+                        <p className="message">
+                          <span className="type">{item.device}</span>에
+                          추가되었습니다.
+                        </p>
+                        <p className="name">{item.name}</p>
+                        <p className="date">{item.date}</p>
+                      </div>
+                    </Item>
+                  );
+              })
+            ) : (
+              <p>없습니다</p>
+            )}
           </SwiperSlide>
         </Swiper>
       </BasketContent>

@@ -152,9 +152,9 @@ export const StyledDate = styled.div`
 export const StyledToday = styled.div`
   font-size: x-small;
   color: ${(props) => props.theme.colors.pointcolor};
-  font-weight: 600;
+  font-weight: 700;
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translateX(-50%);
 `;
@@ -166,7 +166,7 @@ export const StyledDot = styled.div`
   width: 0.3rem;
   height: 0.3rem;
   position: absolute;
-  top: 60%;
+  top: 55%;
   left: 50%;
   transform: translateX(-50%);
 `;

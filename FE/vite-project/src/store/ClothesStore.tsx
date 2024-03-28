@@ -43,22 +43,17 @@ export const useSelectedItemsStore = create<SelectedItemsState>((set) => ({
           x: 10,
           y: 10,
         };
-
-        // // category가 하의인 경우 x, y 값을 조정
-        // if (item.category === "하의") {
-        //   newItem.x = 300;
-        //   newItem.y = 100;
-        // }
-        // 아이템 추가
         return {
           selectedItems: [...state.selectedItems, newItem],
         };
       }
     }),
   clearItems: () =>
-    set(() => ({
-      selectedItems: [],
-    })),
+    set(() => {
+      return {
+        selectedItems: [],
+      };
+    }),
   confirmOutfit: "",
   setConfirmOutfit: (input) =>
     set(() => {

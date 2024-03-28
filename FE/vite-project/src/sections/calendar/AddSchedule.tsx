@@ -5,6 +5,7 @@ import { useState } from "react";
 import { theme } from "@/styles/theme";
 import { useNavigate } from "react-router-dom";
 import { useSelectedDateStore } from "@/store/DateStore";
+import { useSelectedItemsStore } from "@/store/ClothesStore";
 interface propType {
   isWithinNextFiveDays: boolean;
   selected: string | null;
@@ -23,6 +24,9 @@ export const AddSchedule = ({
 
   const { title, setTitle, selectedKeyword, setSelectedKeyword } =
     useSelectedDateStore();
+
+  const { clearItems } = useSelectedItemsStore();
+
   const [selectedSituation, setSelectedSituation] =
     useState<string>(selectedKeyword);
 
@@ -76,7 +80,16 @@ export const AddSchedule = ({
           과거 코디에서 고르기
         </GreenButton>
         {isWithinNextFiveDays && (
-          <GreenButton onClick={() => navigator("recommend")}>
+          <GreenButton
+            onClick={() => {
+              if (selectedKeyword) {
+                clearItems();
+                navigator("recommend");
+              } else {
+                window.alert("상황 하나 이상 선택해주세요");
+              }
+            }}
+          >
             코디 추천 받기
           </GreenButton>
         )}
