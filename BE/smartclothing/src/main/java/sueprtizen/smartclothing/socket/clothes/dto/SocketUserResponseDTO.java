@@ -1,4 +1,4 @@
-package sueprtizen.smartclothing.socket.user.dto;
+package sueprtizen.smartclothing.socket.clothes.dto;
 
 import lombok.Builder;
 

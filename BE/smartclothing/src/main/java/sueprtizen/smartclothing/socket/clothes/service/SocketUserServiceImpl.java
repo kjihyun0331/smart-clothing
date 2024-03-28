@@ -1,12 +1,12 @@
-package sueprtizen.smartclothing.socket.user.service;
+package sueprtizen.smartclothing.socket.clothes.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sueprtizen.smartclothing.domain.users.entity.User;
-import sueprtizen.smartclothing.socket.user.dto.SocketUserResponseDTO;
-import sueprtizen.smartclothing.socket.user.repository.SocketUserRepository;
+import sueprtizen.smartclothing.socket.clothes.dto.SocketUserResponseDTO;
+import sueprtizen.smartclothing.socket.clothes.repository.SocketUserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

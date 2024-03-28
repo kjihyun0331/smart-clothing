@@ -2,11 +2,9 @@ package sueprtizen.smartclothing.domain.clothing.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.SharedUserDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.*;
 import sueprtizen.smartclothing.domain.clothing.entity.*;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
@@ -22,6 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class ClothingServiceImpl implements ClothingService {
 
 
@@ -31,6 +31,7 @@ public class ClothingServiceImpl implements ClothingService {
     private final ClothingStyleRepository clothingStyleRepository;
     private final StyleRepository styleRepository;
     private final ClothingSeasonRepository clothingSeasonRepository;
+    private final ClothingDetailRepository clothingDetailRepository;
 
     @Override
     public List<ClosetConfirmResponseDTO> closetConfirmation(int userId) {
@@ -159,6 +160,17 @@ public class ClothingServiceImpl implements ClothingService {
         //사용자 옷 연결 업데이트
         userClothing.updateUserClothing(clothingUpdateRequestDTO.clothingName(), clothing, newSeasonList);
 
+    }
+
+    public SocketClothingInfoDTO getClothingInfo(String rfidUid) {
+        Clothing info = clothingRepository.findByRfidUid(rfidUid);
+        return new SocketClothingInfoDTO(info.getCategory(), info.getWornCount());
+    }
+
+    public SocketClothingImageDTO getClothingImage(String rfid) {
+        Integer detailId = clothingRepository.findByRfidUid(rfid).getClothingDetail().getClothingDetailId();
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId);
+        return new SocketClothingImageDTO(detail.getClothingImgPath());
     }
 
 

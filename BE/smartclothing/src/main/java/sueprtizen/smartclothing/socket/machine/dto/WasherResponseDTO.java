@@ -1,4 +1,4 @@
-package sueprtizen.smartclothing.socket.washer.dto;
+package sueprtizen.smartclothing.socket.machine.dto;
 
 import lombok.Builder;
 

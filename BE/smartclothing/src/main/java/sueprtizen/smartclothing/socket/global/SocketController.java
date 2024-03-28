@@ -6,10 +6,13 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import sueprtizen.smartclothing.socket.user.dto.SocketUserResponseDTO;
-import sueprtizen.smartclothing.socket.user.service.SocketUserService;
-import sueprtizen.smartclothing.socket.washer.dto.WasherResponseDTO;
-import sueprtizen.smartclothing.socket.washer.service.WasherService;
+import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingImageDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingInfoDTO;
+import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
+import sueprtizen.smartclothing.socket.clothes.dto.SocketUserResponseDTO;
+import sueprtizen.smartclothing.socket.clothes.service.SocketUserService;
+import sueprtizen.smartclothing.socket.machine.dto.WasherResponseDTO;
+import sueprtizen.smartclothing.socket.machine.service.WasherService;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -67,6 +70,7 @@ public class SocketController {
             ObjectMapper objectMapper = new ObjectMapper();
             WasherService washerService = applicationContext.getBean(WasherService.class);
             SocketUserService userService = applicationContext.getBean(SocketUserService.class);
+            ClothingService clothingService = applicationContext.getBean(ClothingService.class);
 
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -82,26 +86,38 @@ public class SocketController {
                     writer.println("Request Accpeted");
 
                     JSONObject requestDTO = (JSONObject) parser.parse(clientMessage);
-                    String requestName = (String) requestDTO.get("requestName");
-                    Long requestNumber = (Long) requestDTO.get("requestNumber");
+                    try {
+                        String requestName = (String) requestDTO.get("requestName");
+                        System.out.println(requestName.getClass().getName());
+                        Long requestNumber = (Long) requestDTO.get("requestNumber");
 
-                    JSONObject responseJson = new JSONObject();
-                    responseJson.put("requestNumber", requestNumber);
+                        JSONObject responseJson = new JSONObject();
+                        responseJson.put("requestNumber", requestNumber);
 
-                    switch (requestName) {
-                        case "getAllLaundryList":
-                            List<WasherResponseDTO> laundry = washerService.getAllLaundryList();
-                            responseJson.put("count", laundry.size());
-                            responseJson.put("result", objectMapper.writeValueAsString(laundry));
-                            break;
-                        case "getUserList":
-                            List<SocketUserResponseDTO> users = userService.getAllUsers();
-                            responseJson.put("count", users.size());
-                            responseJson.put("result", objectMapper.writeValueAsString(users));
-                            break;
+                        switch (requestName) {
+                            case "getAllLaundryList":
+                                List<WasherResponseDTO> laundry = washerService.getAllLaundryList();
+                                responseJson.put("count", laundry.size());
+                                responseJson.put("result", laundry);
+                                break;
+                            case "getUserList":
+                                List<SocketUserResponseDTO> users = userService.getAllUsers();
+                                responseJson.put("count", users.size());
+                                responseJson.put("result", users);
+                                break;
+                            case "getClothesInfo":
+                                SocketClothingInfoDTO info = clothingService.getClothingInfo((String) requestDTO.get("rfidUid"));
+                                responseJson.put("result", objectMapper.writeValueAsString(info));
+                                break;
+                            case "getClothesImage":
+                                SocketClothingImageDTO path = clothingService.getClothingImage((String) requestDTO.get("rfidUid"));
+                                responseJson.put("result", objectMapper.writeValueAsString(path));
+                                break;
+                        }
+                        writer.println(responseJson);
+                    } catch (NullPointerException e) {
+                        writer.println("Bad request");
                     }
-                    writer.println(responseJson);
-
 
                 }
             } catch (Exception e) {

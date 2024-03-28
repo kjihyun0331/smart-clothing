@@ -1,4 +1,4 @@
-package sueprtizen.smartclothing.socket.user.repository;
+package sueprtizen.smartclothing.socket.clothes.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,4 +10,5 @@ import java.util.List;
 public interface SocketUserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAll();
+
 }
