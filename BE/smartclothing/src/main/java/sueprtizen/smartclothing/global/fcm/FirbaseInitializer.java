@@ -3,11 +3,15 @@ package sueprtizen.smartclothing.global.fcm;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 
+@Configuration
 public class FirbaseInitializer {
 
+    @Bean
     public static void initialize() {
         if (FirebaseApp.getApps().isEmpty()) {
             try {
