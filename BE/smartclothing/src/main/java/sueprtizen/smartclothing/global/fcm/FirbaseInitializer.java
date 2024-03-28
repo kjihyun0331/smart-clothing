@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 
-@Configuration
 public class FirbaseInitializer {
 
     @Bean
