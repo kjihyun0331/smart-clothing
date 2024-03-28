@@ -2,10 +2,8 @@ package sueprtizen.smartclothing.domain.outfit.recommended.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import sueprtizen.smartclothing.domain.outfit.recommended.dto.ClothingInPastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.PastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.service.RecommendedOutfitService;
 import sueprtizen.smartclothing.global.dto.Message;
@@ -24,5 +22,13 @@ public class RecommendedOutfitController {
             @RequestHeader("User-Id") int userId
     ) {
         return ResponseEntity.ok(Message.success(recommendedOutfitService.pastOutfitConformation(userId)));
+    }
+
+    @GetMapping("/pastOutfit")
+    public ResponseEntity<Message<List<ClothingInPastOutfitResponseDTO>>> getPastOutfitList(
+            @RequestHeader("User-Id") int userId,
+            @RequestParam int scheduleId
+    ) {
+        return ResponseEntity.ok(Message.success(recommendedOutfitService.getClothingInPastOutfit(userId, scheduleId)));
     }
 }

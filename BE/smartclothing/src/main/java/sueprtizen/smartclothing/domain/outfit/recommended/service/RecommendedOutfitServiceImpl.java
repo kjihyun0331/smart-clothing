@@ -3,10 +3,15 @@ package sueprtizen.smartclothing.domain.outfit.recommended.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
+import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
+import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
 import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
+import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.outfit.recommended.dto.ClothingInPastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.PastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.ScheduleDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.WeatherDTO;
+import sueprtizen.smartclothing.domain.outfit.recommended.entity.RecommendedOutfit;
 import sueprtizen.smartclothing.domain.outfit.recommended.repository.RecommendedOutfitRepository;
 import sueprtizen.smartclothing.domain.users.entity.User;
 import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
@@ -55,6 +60,29 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
 
 
         return pastOutfitResponseDTOList;
+    }
+
+    @Override
+    public List<ClothingInPastOutfitResponseDTO> getClothingInPastOutfit(int userId, int scheduleId) {
+        User currentUser = getUser(userId);
+        Schedule schedule = calendarRepository.findScheduleByUserAndScheduleId(currentUser, scheduleId)
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
+
+        List<RecommendedOutfit> recommendedOutfitList = recommendedOutfitRepository.findAllBySchedule(schedule);
+
+        return recommendedOutfitList.stream().map(pastOutfit -> {
+                    Clothing clothing = pastOutfit.getClothing();
+                    return ClothingInPastOutfitResponseDTO.builder()
+                            .clothingId(clothing.getClothingId())
+                            .x(pastOutfit.getX())
+                            .y(pastOutfit.getY())
+                            .width(pastOutfit.getWidth())
+                            .height(pastOutfit.getHeight())
+                            .clothingImagePath(clothing.getClothingDetail().getClothingImgPath())
+                            .build();
+                }
+        ).toList();
+
     }
 
     private User getUser(int userId) {
