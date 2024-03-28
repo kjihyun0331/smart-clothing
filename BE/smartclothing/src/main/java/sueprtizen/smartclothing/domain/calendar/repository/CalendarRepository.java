@@ -11,6 +11,8 @@ import java.util.Optional;
 @Repository
 public interface CalendarRepository extends JpaRepository<Schedule, Integer> {
 
+    List<Schedule> findAllByUserOrderByDateAsc(User user);
+
     List<Schedule> findSchedulesByUserAndDateBetweenOrderByDateAsc(User user, String startDate, String endDate);
 
     Optional<Schedule> findScheduleByUserAndScheduleId(User user, int scheduleId);

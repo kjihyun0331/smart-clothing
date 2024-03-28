@@ -19,7 +19,7 @@ public class PastOutfitController {
 
     final private PastOutfitService pastOutfitService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<Message<List<PastOutFitResponseDTO>>> getPastOutfitList(
             @RequestHeader("User-Id") int userId
     ) {

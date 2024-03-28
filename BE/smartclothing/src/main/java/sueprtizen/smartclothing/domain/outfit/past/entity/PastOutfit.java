@@ -20,6 +20,6 @@ public class PastOutfit {
 
     @ManyToOne
     @JoinColumn(name = "clothing_id", nullable = false)
-    private Clothing clothingList;
+    private Clothing clothing;
 
 }
