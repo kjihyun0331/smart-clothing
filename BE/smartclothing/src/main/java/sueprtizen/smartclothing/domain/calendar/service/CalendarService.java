@@ -3,6 +3,7 @@ package sueprtizen.smartclothing.domain.calendar.service;
 import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleResponseDTO;
 import sueprtizen.smartclothing.domain.calendar.dto.ScheduleDetailResponseDTO;
 import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
+import sueprtizen.smartclothing.domain.calendar.dto.TodayScheduleOutfitResponseDTO;
 
 public interface CalendarService {
     CalendarMonthlyScheduleResponseDTO calendarMonthlySchedules(
@@ -25,4 +26,6 @@ public interface CalendarService {
             int userId,
             String scheduleId
     );
+
+    TodayScheduleOutfitResponseDTO todayScheduleOutfitConformation(int userId);
 }
