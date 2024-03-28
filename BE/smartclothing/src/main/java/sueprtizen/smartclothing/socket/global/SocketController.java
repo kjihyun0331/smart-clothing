@@ -1,11 +1,14 @@
 package sueprtizen.smartclothing.socket.global;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.socket.user.dto.SocketUserResponseDTO;
+import sueprtizen.smartclothing.socket.user.service.SocketUserService;
+import sueprtizen.smartclothing.socket.washer.dto.WasherResponseDTO;
 import sueprtizen.smartclothing.socket.washer.service.WasherService;
 
 import java.io.*;
@@ -61,7 +64,9 @@ public class SocketController {
         public void run() {
 
             JSONParser parser = new JSONParser();
+            ObjectMapper objectMapper = new ObjectMapper();
             WasherService washerService = applicationContext.getBean(WasherService.class);
+            SocketUserService userService = applicationContext.getBean(SocketUserService.class);
 
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -74,7 +79,7 @@ public class SocketController {
                     if ("exit".equalsIgnoreCase(clientMessage)) {
                         break;
                     }
-                    writer.println("hello Sungjae");
+                    writer.println("Request Accpeted");
 
                     JSONObject requestDTO = (JSONObject) parser.parse(clientMessage);
                     String requestName = (String) requestDTO.get("requestName");
@@ -85,12 +90,17 @@ public class SocketController {
 
                     switch (requestName) {
                         case "getAllLaundryList":
-                            List<Clothing> laundry = washerService.getAllLaundryList();
+                            List<WasherResponseDTO> laundry = washerService.getAllLaundryList();
                             responseJson.put("count", laundry.size());
-                            //responseJson.put("result", laundry);
-
-                            writer.println("hello Sungjae");
+                            responseJson.put("result", objectMapper.writeValueAsString(laundry));
+                            break;
+                        case "getUserList":
+                            List<SocketUserResponseDTO> users = userService.getAllUsers();
+                            responseJson.put("count", users.size());
+                            responseJson.put("result", objectMapper.writeValueAsString(users));
+                            break;
                     }
+                    writer.println(responseJson);
 
 
                 }
