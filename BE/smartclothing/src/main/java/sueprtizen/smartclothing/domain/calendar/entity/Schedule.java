@@ -53,12 +53,13 @@ public class Schedule {
     private String outfitImagePath;
 
     @Builder
-    public Schedule(User user, String scheduleName, String scheduleCategory, Weather weather, LocalDate date, int locationKey) {
+    public Schedule(User user, String scheduleName, String scheduleCategory, Weather weather, LocalDate date, int locationKey, String outfitImagePath) {
         this.user = user;
         this.weather = weather;
         this.scheduleName = scheduleName;
         this.scheduleCategory = scheduleCategory;
         this.date = date;
         this.locationKey = locationKey;
+        this.outfitImagePath = outfitImagePath;
     }
 }
