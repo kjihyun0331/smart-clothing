@@ -72,17 +72,21 @@ const DetailClothes = () => {
             </span>
           </div>
         </div>
-        <div className="btnarea">
-          <button
-            className="btn edit"
-            onClick={() => navigate(`/closet/update/${id}`)}
-          >
-            수정하기
-          </button>
-          <button className="btn delete" onClick={handleDelete}>
-            삭제하기
-          </button>
-        </div>
+        {data.isMyClothing ? (
+          <div className="btnarea">
+            <button
+              className="btn edit"
+              onClick={() => navigate(`/closet/update/${id}`)}
+            >
+              수정하기
+            </button>
+            <button className="btn delete" onClick={handleDelete}>
+              삭제하기
+            </button>
+          </div>
+        ) : (
+          <></>
+        )}
       </DetailContent>
     </>
   );
