@@ -2,16 +2,33 @@ import { create } from "zustand";
 
 interface SelectedDateState {
   selectedDate: string | null;
+  selectedKeyword: string | null;
+  title: string | null;
   setSelectedDate: (item: string) => void;
+  setSelectedKeyword: (item: string) => void;
+  setTitle: (item: string) => void;
 }
 
 export const useSelectedDateStore = create<SelectedDateState>((set) => ({
   selectedDate: "",
+  selectedKeyword: "",
+  title: "",
   setSelectedDate: (input) =>
-    set((state) => {
+    set(() => {
       return {
-        ...state, // 현재 상태를 그대로 유지 (toggleItem 함수 포함)
         selectedDate: input,
+      };
+    }),
+  setSelectedKeyword: (input) =>
+    set(() => {
+      return {
+        selectedKeyword: input,
+      };
+    }),
+  setTitle: (input) =>
+    set(() => {
+      return {
+        title: input,
       };
     }),
 }));

@@ -2,7 +2,7 @@ import moment from "moment";
 import "moment/dist/locale/ko";
 import styled from "styled-components";
 import { AddSchedule } from "./AddSchedule";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MomentInput } from "moment";
 import { useSelectedDateStore } from "@/store/DateStore";
 import { useSelectedItemsStore } from "@/store/ClothesStore";
@@ -57,7 +57,8 @@ type NoSchedulePropType = {
 
 const NoSchedule = ({ date, attendDay, selected }: NoSchedulePropType) => {
   const [popup, setPopup] = useState<popupType>(false);
-  const { setSelectedDate } = useSelectedDateStore();
+  const { setTitle, setSelectedDate, setSelectedKeyword, selectedKeyword } =
+    useSelectedDateStore();
   const { clearItems } = useSelectedItemsStore();
 
   const isSelectedDatePast = moment(date as MomentInput).isBefore(
@@ -79,6 +80,12 @@ const NoSchedule = ({ date, attendDay, selected }: NoSchedulePropType) => {
     "[]"
   );
 
+  useEffect(() => {
+    if (selectedKeyword) {
+      setPopup(true);
+    }
+  }, []);
+
   return (
     <ContentWrapper>
       {isSelectedDatePast ? (
@@ -94,6 +101,8 @@ const NoSchedule = ({ date, attendDay, selected }: NoSchedulePropType) => {
             onClick={() => {
               setPopup(true);
               clearItems();
+              setSelectedKeyword("");
+              setTitle("");
               if (selected) {
                 setSelectedDate(selected);
               }

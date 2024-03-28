@@ -15,7 +15,7 @@ const colors = {
   backgroundcolor: "#f2f2f2 ",
   grey: "#aeaeae",
   lightgrey: "#D6D6D6",
-  pointcolor: "#45ba8c",
+  pointcolor: "rgb(69,186,140)",
   blue: "#0070cc",
 };
 

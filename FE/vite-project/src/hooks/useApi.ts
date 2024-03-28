@@ -16,6 +16,7 @@ export function useApi(method: string, url: string, requestData?: string) {
   const { isLoading, isError, data, isSuccess } = useQuery({
     queryKey: [url, method],
     queryFn: () => axios(axiosRequestConfig).then((res) => res.data),
+    select: (res) => res.dataBody,
   });
   return {
     isLoading,
