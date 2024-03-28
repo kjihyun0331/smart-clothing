@@ -51,7 +51,7 @@ public class PastOutfitServiceImpl implements PastOutfitService {
             ScheduleDTO scheduleDTO = ScheduleDTO.builder()
                     .scheduleId(schedule.getScheduleId())
                     .scheduleCategory(schedule.getScheduleCategory())
-                    .date(schedule.getDate())
+                    .date(schedule.getDate().toString())
                     .build();
 
             Weather weather = schedule.getWeather();

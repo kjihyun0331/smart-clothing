@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleResponseDTO;
+import sueprtizen.smartclothing.domain.calendar.dto.ScheduleDetailResponseDTO;
 import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
 import sueprtizen.smartclothing.domain.calendar.service.CalendarService;
 import sueprtizen.smartclothing.global.dto.Message;
@@ -35,12 +36,21 @@ public class CalendarController {
         return ResponseEntity.ok(Message.success());
     }
 
-    @DeleteMapping("/{scheduleId}")
+    @GetMapping("/detail")
+    public ResponseEntity<Message<ScheduleDetailResponseDTO>> scheduleConfirmation(
+            @RequestHeader("User-ID") int userId,
+            @RequestParam String date
+    ) {
+        return ResponseEntity.ok(Message.success(calendarService.scheduleConfirmation(userId, date)));
+    }
+
+
+    @DeleteMapping
     public ResponseEntity<Message<Void>> scheduleDelete(
             @RequestHeader("User-ID") int userId,
-            @PathVariable int scheduleId
+            @RequestParam String date
     ) {
-        calendarService.scheduleDelete(userId, scheduleId);
+        calendarService.scheduleDelete(userId, date);
         return ResponseEntity.ok(Message.success());
     }
 }

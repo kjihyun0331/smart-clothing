@@ -1,6 +1,7 @@
 package sueprtizen.smartclothing.domain.calendar.service;
 
 import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleResponseDTO;
+import sueprtizen.smartclothing.domain.calendar.dto.ScheduleDetailResponseDTO;
 import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
 
 public interface CalendarService {
@@ -17,6 +18,11 @@ public interface CalendarService {
 
     void scheduleDelete(
             int userId,
-            int scheduleId
+            String date
+    );
+
+    ScheduleDetailResponseDTO scheduleConfirmation(
+            int userId,
+            String scheduleId
     );
 }

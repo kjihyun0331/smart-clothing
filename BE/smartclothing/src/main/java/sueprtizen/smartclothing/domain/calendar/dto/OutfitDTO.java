@@ -1,7 +1,8 @@
 package sueprtizen.smartclothing.domain.calendar.dto;
 
-public record ClothingDTO(
+public record OutfitDTO(
         int clothingId,
+        String clothingImage,
         int x,
         int y,
         int width,

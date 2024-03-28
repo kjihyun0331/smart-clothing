@@ -2,9 +2,7 @@ package sueprtizen.smartclothing.domain.calendar.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleResponseDTO;
-import sueprtizen.smartclothing.domain.calendar.dto.ScheduleDTO;
-import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
+import sueprtizen.smartclothing.domain.calendar.dto.*;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
 import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
 import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
@@ -18,6 +16,7 @@ import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
 import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -35,16 +34,17 @@ public class CalendarServiceImpl implements CalendarService {
     ) {
         User currentUser = getUser(userId);
 
+
         List<ScheduleDTO> schedules = calendarRepository.findSchedulesByUserAndDateBetweenOrderByDateAsc(
                 currentUser,
-                startDate,
-                endDate
+                LocalDate.parse(startDate),
+                LocalDate.parse(endDate)
         ).stream().map(schedule ->
                 new ScheduleDTO(
                         schedule.getScheduleId(),
                         schedule.getScheduleName(),
                         schedule.getScheduleCategory(),
-                        schedule.getDate()
+                        schedule.getDate().toString()
                 )
         ).toList();
 
@@ -68,7 +68,7 @@ public class CalendarServiceImpl implements CalendarService {
                 .scheduleCategory(scheduleSaveRequestDTO.category())
                 .user(currentUser)
                 .weather(weather)
-                .date(scheduleSaveRequestDTO.date())
+                .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
                 .locationKey(scheduleSaveRequestDTO.locationKey())
                 .build();
 
@@ -76,13 +76,63 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public void scheduleDelete(int userId, int scheduleId) {
+    public void scheduleDelete(int userId, String date) {
         User currentUser = getUser(userId);
 
-        Schedule schedule = calendarRepository.findScheduleByUserAndScheduleId(currentUser, scheduleId)
+        LocalDate scheduleDate = LocalDate.parse(date);
+
+        Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, scheduleDate)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
 
         calendarRepository.delete(schedule);
+    }
+
+    @Override
+    public ScheduleDetailResponseDTO scheduleConfirmation(int userId, String date) {
+        User currentUser = getUser(userId);
+
+        LocalDate scheduleDate = LocalDate.parse(date);
+
+        Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, scheduleDate)
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
+
+        ScheduleDTO scheduleDTO = new ScheduleDTO(
+                schedule.getScheduleId(),
+                schedule.getScheduleName(),
+                schedule.getScheduleCategory(),
+                schedule.getDate().toString()
+        );
+
+        List<OutfitDTO> outfitDTOList;
+        if (scheduleDate.isBefore(LocalDate.now())) {
+            outfitDTOList = schedule.getPastOutfits().stream().map(pastOutfit ->
+                    new OutfitDTO(
+                            pastOutfit.getPastOutfitId(),
+                            pastOutfit.getClothing().getClothingDetail().getClothingImgPath(),
+                            pastOutfit.getX(),
+                            pastOutfit.getY(),
+                            pastOutfit.getWidth(),
+                            pastOutfit.getHeight()
+                    )
+            ).toList();
+        } else {
+            outfitDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
+                    new OutfitDTO(
+                            recommendedOutfit.getRecommendedOutfitId(),
+                            recommendedOutfit.getClothing().getClothingDetail().getClothingImgPath(),
+                            recommendedOutfit.getX(),
+                            recommendedOutfit.getY(),
+                            recommendedOutfit.getWidth(),
+                            recommendedOutfit.getHeight()
+                    )
+            ).toList();
+        }
+
+
+        return new ScheduleDetailResponseDTO(
+                scheduleDTO,
+                outfitDTOList
+        );
     }
 
     private User getUser(int userId) {

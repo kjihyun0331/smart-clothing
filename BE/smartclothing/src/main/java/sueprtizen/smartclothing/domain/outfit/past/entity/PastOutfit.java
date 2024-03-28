@@ -14,7 +14,7 @@ public class PastOutfit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pastOutfitId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
@@ -22,4 +22,11 @@ public class PastOutfit {
     @JoinColumn(name = "clothing_id", nullable = false)
     private Clothing clothing;
 
+    private int x;
+
+    private int y;
+
+    private int width;
+
+    private int height;
 }

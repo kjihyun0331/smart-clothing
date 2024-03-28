@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
 import sueprtizen.smartclothing.domain.users.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ public interface CalendarRepository extends JpaRepository<Schedule, Integer> {
 
     List<Schedule> findAllByUserOrderByDateAsc(User user);
 
-    List<Schedule> findSchedulesByUserAndDateBetweenOrderByDateAsc(User user, String startDate, String endDate);
+    List<Schedule> findSchedulesByUserAndDateBetweenOrderByDateAsc(User user, LocalDate startDate, LocalDate endDate);
 
-    Optional<Schedule> findScheduleByUserAndScheduleId(User user, int scheduleId);
+    Optional<Schedule> findScheduleByUserAndDate(User user, LocalDate date);
 }

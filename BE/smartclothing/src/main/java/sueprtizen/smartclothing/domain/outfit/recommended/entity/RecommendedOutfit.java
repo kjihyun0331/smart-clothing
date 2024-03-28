@@ -22,4 +22,11 @@ public class RecommendedOutfit {
     @JoinColumn(name = "clothing_id", nullable = false)
     private Clothing clothing;
 
+    private int x;
+
+    private int y;
+
+    private int width;
+
+    private int height;
 }
