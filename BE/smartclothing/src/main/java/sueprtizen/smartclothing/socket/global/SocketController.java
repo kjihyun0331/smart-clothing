@@ -11,7 +11,9 @@ import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingInfoDTO;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
 import sueprtizen.smartclothing.socket.clothes.dto.SocketUserResponseDTO;
 import sueprtizen.smartclothing.socket.clothes.service.SocketUserService;
+import sueprtizen.smartclothing.socket.machine.dto.AirdresserResponseDTO;
 import sueprtizen.smartclothing.socket.machine.dto.WasherResponseDTO;
+import sueprtizen.smartclothing.socket.machine.service.AirdresserService;
 import sueprtizen.smartclothing.socket.machine.service.WasherService;
 
 import java.io.*;
@@ -71,6 +73,7 @@ public class SocketController {
             WasherService washerService = applicationContext.getBean(WasherService.class);
             SocketUserService userService = applicationContext.getBean(SocketUserService.class);
             ClothingService clothingService = applicationContext.getBean(ClothingService.class);
+            AirdresserService airdresserService = applicationContext.getBean(AirdresserService.class);
 
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -104,6 +107,16 @@ public class SocketController {
                                 List<WasherResponseDTO> laundry = washerService.getAllLaundryList();
                                 responseJson.put("count", laundry.size());
                                 responseJson.put("result", objectMapper.writeValueAsString(laundry));
+                                break;
+                            case "getMainOutfitList":
+                                List<AirdresserResponseDTO> minOutfit = airdresserService.getMainOutfitList();
+                                responseJson.put("count", minOutfit.size());
+                                responseJson.put("result", objectMapper.writeValueAsString(minOutfit));
+                                break;
+                            case "getAllOutfitList":
+                                List<AirdresserResponseDTO> outfit = airdresserService.getAllOutfitList();
+                                responseJson.put("count", outfit.size());
+                                responseJson.put("result", objectMapper.writeValueAsString(outfit));
                                 break;
                             case "getUserList":
                                 List<SocketUserResponseDTO> users = userService.getAllUsers();
