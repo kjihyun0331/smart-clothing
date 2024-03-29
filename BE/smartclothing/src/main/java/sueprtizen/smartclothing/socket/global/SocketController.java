@@ -1,6 +1,7 @@
 package sueprtizen.smartclothing.socket.global;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,29 +100,29 @@ public class SocketController {
 
                         switch (requestName) {
                             case "getMainLaundryList":
-                                List<WasherResponseDTO> minLaundry = washerService.getMainLaundryList();
+                                List<JSONObject> minLaundry = washerService.getMainLaundryList();
                                 responseJson.put("count", minLaundry.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(minLaundry));
+                                responseJson.put("result", minLaundry);
                                 break;
                             case "getAllLaundryList":
-                                List<WasherResponseDTO> laundry = washerService.getAllLaundryList();
+                                List<JSONObject> laundry = washerService.getAllLaundryList();
                                 responseJson.put("count", laundry.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(laundry));
+                                responseJson.put("result", laundry);
                                 break;
                             case "getMainOutfitList":
-                                List<AirdresserResponseDTO> minOutfit = airdresserService.getMainOutfitList();
+                                List<JSONObject> minOutfit = airdresserService.getMainOutfitList();
                                 responseJson.put("count", minOutfit.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(minOutfit));
+                                responseJson.put("result", minOutfit);
                                 break;
                             case "getAllOutfitList":
-                                List<AirdresserResponseDTO> outfit = airdresserService.getAllOutfitList();
+                                List<JSONObject> outfit = airdresserService.getAllOutfitList();
                                 responseJson.put("count", outfit.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(outfit));
+                                responseJson.put("result", outfit);
                                 break;
                             case "getUserList":
-                                List<SocketUserResponseDTO> users = userService.getAllUsers();
+                                List<JSONObject> users = userService.getAllUsers();
                                 responseJson.put("count", users.size());
-                                responseJson.put("result", objectMapper.writeValueAsString(users));
+                                responseJson.put("result",users);
                                 break;
                             case "getClothesInfo":
                                 SocketClothingInfoDTO info = clothingService.getClothingInfo((String)requestDTO.get("rfidUid"));
@@ -130,6 +131,9 @@ public class SocketController {
                             case "getClothesImage":
                                 SocketClothingImageDTO path = clothingService.getClothingImage((String) requestDTO.get("rfidUid"));
                                 responseJson.put("result", objectMapper.writeValueAsString(path));
+                                break;
+                            case "addClothes":
+                                System.out.println(requestDTO.get("users").getClass().getName());
                                 break;
                         }
                         writer.println(responseJson);
