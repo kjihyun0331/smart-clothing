@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
 import { DetailClothesResponseDataType } from "@/types/ClothesTypes";
+
 interface DetailClothesResponseType {
   isLoading: boolean;
   data: DetailClothesResponseDataType;
@@ -19,7 +20,7 @@ const DetailClothes = () => {
   );
 
   const handleGoBack = () => {
-    window.history.back();
+    navigate("/closet");
   };
 
   const handleDelete = () => {

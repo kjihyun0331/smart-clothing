@@ -13,6 +13,7 @@ import {
   initialState,
   clothesreducer,
 } from "@/reducers/updateClothesReducer";
+import { usePatchClothes } from "@/hooks/usePatchClothes";
 interface DetailClothesResponseType {
   isLoading: boolean;
   data: DetailClothesResponseDataType;
@@ -22,6 +23,7 @@ const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const UpdateClothes = () => {
   const { id } = useParams();
+  const { mutate } = usePatchClothes();
   const [value, dispatch] = useReducer(clothesreducer, initialState);
   const { isLoading, data }: DetailClothesResponseType = useApi(
     "get",
@@ -41,7 +43,7 @@ const UpdateClothes = () => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    window.history.back();
+    navigate(`/closet/${id}`);
   };
 
   const handleKeyUp = (event) => {
@@ -55,14 +57,26 @@ const UpdateClothes = () => {
     }
   };
 
+  // const { mutate } = usePatchClothes();
   const handleDispatch = (actionType, value) => {
     dispatch({ type: actionType, payload: value });
   };
 
   const handleFinish = () => {
+    const putData = {
+      clothingId: value.clothingId,
+      clothingName: value.clothingName,
+      category: value.category,
+      styles: value.styles,
+      seasons: value.seasons,
+      sharedUserIds: value.sharedUsers.map((user) => user.userId),
+    };
+    mutate({ id, putData });
     console.log(value);
-    navigate(`/closet/${id}`);
+    navigate(`/closet`);
+    // navigate(`/closet/${id}`);
   };
+
   if (isLoading) return <Loader />;
 
   return (
