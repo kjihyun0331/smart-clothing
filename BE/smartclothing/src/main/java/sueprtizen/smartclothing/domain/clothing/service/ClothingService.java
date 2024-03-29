@@ -16,4 +16,5 @@ public interface ClothingService {
     SocketClothingInfoDTO getClothingInfo(String rfidUid);
 
     SocketClothingImageDTO getClothingImage(String rfidUid);
+
 }
