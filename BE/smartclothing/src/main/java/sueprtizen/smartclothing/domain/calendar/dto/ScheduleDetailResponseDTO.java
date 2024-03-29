@@ -4,6 +4,6 @@ import java.util.List;
 
 public record ScheduleDetailResponseDTO(
         ScheduleDTO schedule,
-        List<OutfitDTO> clothingList
+        List<OutfitResponseDTO> clothingList
 ) {
 }

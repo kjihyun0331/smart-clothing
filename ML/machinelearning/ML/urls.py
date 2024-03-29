@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('knn/', include('knn.urls')),
-    path('mlp/', include('mlp.urls'))
+    path('test/', include('knn.urls')),
+    path('recommend/', include('mlp.urls'))
 ]

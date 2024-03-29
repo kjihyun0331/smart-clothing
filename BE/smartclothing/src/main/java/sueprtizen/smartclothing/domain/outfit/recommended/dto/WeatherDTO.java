@@ -1,4 +1,4 @@
-package sueprtizen.smartclothing.domain.outfit.past.dto;
+package sueprtizen.smartclothing.domain.outfit.recommended.dto;
 
 import lombok.Builder;
 

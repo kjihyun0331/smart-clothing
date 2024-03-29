@@ -23,17 +23,10 @@ public class PastOutfit {
     @JoinColumn(name = "clothing_id", nullable = false)
     private Clothing clothing;
 
-    private int x;
-
-    private int y;
-
-    private int width;
-
-    private int height;
 
     @Builder
     public PastOutfit(Schedule schedule, Clothing clothing) {
-        this.clothing = clothing;
         this.schedule = schedule;
+        this.clothing = clothing;
     }
 }

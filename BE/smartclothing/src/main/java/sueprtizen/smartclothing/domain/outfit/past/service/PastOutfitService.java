@@ -1,12 +1,13 @@
 package sueprtizen.smartclothing.domain.outfit.past.service;
 
-import org.json.simple.JSONArray;
-import sueprtizen.smartclothing.domain.outfit.past.dto.PastOutFitResponseDTO;
+import sueprtizen.smartclothing.domain.outfit.past.dto.TodayClothingDTO;
+import sueprtizen.smartclothing.domain.outfit.past.dto.TodayClothingDTOUpdateRequest;
 
 import java.util.List;
 
 public interface PastOutfitService {
-    List<PastOutFitResponseDTO> pastOutfitsConfirmation(int userId);
 
-    void addTodayOutfit(Long userId, JSONArray clothes);
+    List<TodayClothingDTO> todayOutfitsConfirmation(int userId);
+
+    void updateTodayOutfits(int userId, TodayClothingDTOUpdateRequest todayClothingIds);
 }

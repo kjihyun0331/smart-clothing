@@ -10,11 +10,12 @@ services:
     volumes:
       - /etc/letsencrypt/:/etc/nginx/ssl/
       - /home/ubuntu/clothes_images/:/usr/share/nginx/images/
+      - /home/ubuntu/profile_images/:/usr/share/nginx/profile_images/
     ports:
       - "80:80"
       - "443:443"
     networks:
-      - supertizen_net  
+      - supertizen_net
 
   supertizen_backend:
     container_name: supertizen_backend
