@@ -8,9 +8,11 @@ import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
 import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
 import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
 import sueprtizen.smartclothing.domain.clothing.repository.ClothingRepository;
+import sueprtizen.smartclothing.domain.clothing.repository.UserClothingRepository;
 import sueprtizen.smartclothing.domain.outfit.recommended.entity.RecommendedOutfit;
 import sueprtizen.smartclothing.domain.outfit.recommended.repository.RecommendedOutfitRepository;
 import sueprtizen.smartclothing.domain.users.entity.User;
@@ -33,6 +35,7 @@ public class CalendarServiceImpl implements CalendarService {
     final WeatherRepository weatherRepository;
     final ClothingRepository clothingRepository;
     final RecommendedOutfitRepository recommendedOutfitRepository;
+    final UserClothingRepository userClothingRepository;
 
     @Override
     public CalendarMonthlyScheduleResponseDTO calendarMonthlySchedules(
@@ -172,10 +175,13 @@ public class CalendarServiceImpl implements CalendarService {
         List<ClothingInfoDTO> clothingInfoDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
                 {
                     Clothing clothing = recommendedOutfit.getClothing();
+                    UserClothing userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing)
+                            .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
 
                     //TODO: 현재 어디에 있는지 확인, 입은 횟수 확인 후 세탁 필요 여부 확인 필요
                     return new ClothingInfoDTO(
                             clothing.getClothingId(),
+                            userClothing.getClothingName(),
                             clothing.getClothingDetail().getClothingImgPath(),
                             String.format("현재 %s에 있습니다.", clothing.getNowAt())
                     );
