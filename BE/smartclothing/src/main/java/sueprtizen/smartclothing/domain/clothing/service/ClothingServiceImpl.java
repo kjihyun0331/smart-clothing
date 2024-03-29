@@ -3,6 +3,7 @@ package sueprtizen.smartclothing.domain.clothing.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.*;
 import sueprtizen.smartclothing.domain.clothing.entity.*;
@@ -162,21 +163,26 @@ public class ClothingServiceImpl implements ClothingService {
 
     }
 
-    public SocketClothingInfoDTO getClothingInfo(String rfidUid) {
+    public JSONObject getClothingInfo(String rfidUid) {
         Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingId());
-        SocketClothingInfoDTO info = SocketClothingInfoDTO.builder()
-                .image(detail.getClothingImgPath())
-                .category(clothing.getCategory())
-                .texture(detail.getClothingTextures().get(0).getTexture().getTextureName())
-                .build();
-        return info;
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("texture", detail.getClothingTextures());
+        jsonObject.put("image", detail.getClothingImgPath());
+        jsonObject.put("category",clothing.getCategory());
+
+        return jsonObject;
     }
 
-    public SocketClothingImageDTO getClothingImage(String rfid) {
+    public JSONObject getClothingImage(String rfid) {
         Integer detailId = clothingRepository.findByRfidUid(rfid).getClothingDetail().getClothingDetailId();
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId);
-        return new SocketClothingImageDTO(detail.getClothingImgPath());
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("image",detail.getClothingImgPath());
+
+        return jsonObject;
     }
 
 

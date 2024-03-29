@@ -1,5 +1,6 @@
 package sueprtizen.smartclothing.domain.clothing.service;
 
+import org.json.simple.JSONObject;
 import sueprtizen.smartclothing.domain.clothing.dto.*;
 
 import java.util.List;
@@ -13,8 +14,8 @@ public interface ClothingService {
 
     void updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO);
 
-    SocketClothingInfoDTO getClothingInfo(String rfidUid);
+    JSONObject getClothingInfo(String rfidUid);
 
-    SocketClothingImageDTO getClothingImage(String rfidUid);
+    JSONObject getClothingImage(String rfidUid);
 
 }
