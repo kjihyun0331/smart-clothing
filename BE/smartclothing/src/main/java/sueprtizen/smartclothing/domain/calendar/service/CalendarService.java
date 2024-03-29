@@ -1,9 +1,6 @@
 package sueprtizen.smartclothing.domain.calendar.service;
 
-import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleResponseDTO;
-import sueprtizen.smartclothing.domain.calendar.dto.ScheduleDetailResponseDTO;
-import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
-import sueprtizen.smartclothing.domain.calendar.dto.ScheduleOutfitResponseDTO;
+import sueprtizen.smartclothing.domain.calendar.dto.*;
 
 public interface CalendarService {
     CalendarMonthlyScheduleResponseDTO calendarMonthlySchedules(
@@ -28,4 +25,7 @@ public interface CalendarService {
     );
 
     ScheduleOutfitResponseDTO scheduleOutfitConformation(int userId, String date);
+
+
+    ScheduleCheckingResponseDTO scheduleChecking(int userId, String date);
 }

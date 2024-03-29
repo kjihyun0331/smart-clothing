@@ -194,6 +194,14 @@ public class CalendarServiceImpl implements CalendarService {
         );
     }
 
+    @Override
+    public ScheduleCheckingResponseDTO scheduleChecking(int userId, String date) {
+        User currentUser = getUser(userId);
+        return calendarRepository.findScheduleByUserAndDate(currentUser, LocalDate.parse(date)).map(schedule ->
+                new ScheduleCheckingResponseDTO(true)
+        ).orElseGet(() -> new ScheduleCheckingResponseDTO(false));
+    }
+
 
     private User getUser(int userId) {
         return userRepository.findByUserId(userId)
