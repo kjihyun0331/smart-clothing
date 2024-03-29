@@ -73,10 +73,6 @@ class PastOutfit(models.Model):
     past_outfit_id = models.BigAutoField(primary_key=True)
     schedule = models.ForeignKey('Schedule', models.DO_NOTHING)
     clothing = models.ForeignKey(Clothing, models.DO_NOTHING)
-    x = models.IntegerField()
-    y = models.IntegerField()
-    width = models.IntegerField()
-    height = models.IntegerField()
 
     class Meta:
         managed = False
@@ -101,8 +97,8 @@ class Schedule(models.Model):
     schedule_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey('User', models.DO_NOTHING)
     weather = models.ForeignKey('Weather', models.DO_NOTHING)
-    schedule_name = models.CharField(max_length=20)     
-    schedule_category = models.CharField(max_length=20) 
+    schedule_name = models.CharField(max_length=20)
+    schedule_category = models.CharField(max_length=20)
     date = models.DateTimeField()
     location_key = models.IntegerField()
     outfit_image_path = models.CharField(max_length=200)
@@ -114,7 +110,7 @@ class Schedule(models.Model):
 
 class SiDo(models.Model):
     si_do_id = models.AutoField(primary_key=True)
-    si_do_name = models.CharField(max_length=20) 
+    si_do_name = models.CharField(max_length=20)
 
     class Meta:
         managed = False
