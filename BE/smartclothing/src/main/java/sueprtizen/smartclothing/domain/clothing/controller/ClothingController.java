@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.ClothingPositionResponseDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
 import sueprtizen.smartclothing.global.dto.Message;
@@ -62,5 +63,12 @@ public class ClothingController {
         return ResponseEntity.ok(Message.success());
     }
 
+    @GetMapping("/position")
+    public ResponseEntity<Message<List<ClothingPositionResponseDTO>>> getClothingPosition(
+            @RequestHeader("User-ID") int userId
+    ) {
+        List<ClothingPositionResponseDTO> clothingPosition = clothingService.getClothingPosition(userId);
+        return ResponseEntity.ok(Message.success(clothingPosition));
+    }
 
 }

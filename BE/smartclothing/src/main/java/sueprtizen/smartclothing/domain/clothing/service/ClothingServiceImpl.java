@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Text;
 import sueprtizen.smartclothing.domain.clothing.dto.*;
 import sueprtizen.smartclothing.domain.clothing.entity.*;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
@@ -165,6 +164,25 @@ public class ClothingServiceImpl implements ClothingService {
 
     }
 
+    @Override
+    public List<ClothingPositionResponseDTO> getClothingPosition(int userId) {
+        User currentUser = getUser(userId);
+        List<UserClothing> userClothing = userClothingRepository.findAllByUser(currentUser);
+        return userClothing.stream().filter(uc ->
+                !uc.getClothing().getNowAt().equals("옷장")
+        ).map(uc ->
+                {
+                    Clothing clothing = uc.getClothing();
+                    return new ClothingPositionResponseDTO(
+                            clothing.getClothingId(),
+                            clothing.getNowAt(),
+                            uc.getClothingName(),
+                            clothing.getClothingDetail().getClothingImgPath()
+                    );
+                }
+        ).toList();
+    }
+
     public JSONObject getClothingInfo(String rfidUid) {
         Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingId());
@@ -173,7 +191,7 @@ public class ClothingServiceImpl implements ClothingService {
         List<ClothingTexture> texture = detail.getClothingTextures();
         jsonObject.put("texture", texture.get(0).getTexture().getTextureName());
         jsonObject.put("image", detail.getClothingImgPath());
-        jsonObject.put("category",clothing.getCategory());
+        jsonObject.put("category", clothing.getCategory());
 
         return jsonObject;
     }
@@ -183,21 +201,22 @@ public class ClothingServiceImpl implements ClothingService {
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId);
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("image",detail.getClothingImgPath());
+        jsonObject.put("image", detail.getClothingImgPath());
 
         return jsonObject;
     }
 
-    public void addClothes(String rfid, JSONArray users, Long detailId){
+    public void addClothes(String rfid, JSONArray users, Long detailId) {
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId.intValue());
-        Clothing newClothing = new Clothing().builder()
+        new Clothing();
+        Clothing newClothing = Clothing.builder()
                 .rfidUid(rfid)
                 .detail(detail)
                 .build();
         clothingRepository.save(newClothing);
-        for(Object user:users){
+        for (Object user : users) {
             User newUser = getUser(Integer.valueOf(String.valueOf(user)));
-            UserClothing uc = new UserClothing(newUser,newClothing);
+            UserClothing uc = new UserClothing(newUser, newClothing);
             userClothingRepository.save(uc);
         }
     }
