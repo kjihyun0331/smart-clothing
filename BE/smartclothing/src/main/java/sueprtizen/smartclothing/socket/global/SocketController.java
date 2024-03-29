@@ -84,7 +84,6 @@ public class SocketController {
                     if ("exit".equalsIgnoreCase(clientMessage)) {
                         break;
                     }
-                    writer.println("Request Accpeted");
 
                     JSONObject requestDTO = (JSONObject) parser.parse(clientMessage);
                     try {
