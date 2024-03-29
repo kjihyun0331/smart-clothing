@@ -412,6 +412,7 @@ def fine_tuning():
 
 @api_view(['GET'])
 def test(request):
+    fine_tuning()
     test = {}
     test_list = []
     test_list2 = []
