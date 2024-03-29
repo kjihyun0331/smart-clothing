@@ -12,7 +12,7 @@ export const StyledCalendarWrapper = styled.div`
     border: none;
     border-radius: 0.5rem;
     box-shadow: 4px 2px 10px 0px rgba(0, 0, 0, 0.13);
-    padding: 3% 5%;
+    padding: 5% 5%;
     background-color: white;
   }
 

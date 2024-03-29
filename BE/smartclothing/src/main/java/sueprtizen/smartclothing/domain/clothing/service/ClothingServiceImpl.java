@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Text;
 import sueprtizen.smartclothing.domain.clothing.dto.*;
 import sueprtizen.smartclothing.domain.clothing.entity.*;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
@@ -169,7 +170,8 @@ public class ClothingServiceImpl implements ClothingService {
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingId());
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("texture", detail.getClothingTextures());
+        List<ClothingTexture> texture = detail.getClothingTextures();
+        jsonObject.put("texture", texture.get(0).getTexture().getTextureName());
         jsonObject.put("image", detail.getClothingImgPath());
         jsonObject.put("category",clothing.getCategory());
 
