@@ -10,7 +10,7 @@ def start_scheduler():
 
     scheduler.add_job(
         fine_tuning,
-        trigger=CronTrigger(hour=0, minute=5, second=10),
+        trigger=CronTrigger(hour=10, minute=0, second=10),
         id="fine_tuning",
         max_instances=1,
     )

@@ -84,13 +84,6 @@ WSGI_APPLICATION = 'ML.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 DATABASES = local_settings.DATABASES
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = local_settings.SECRET_KEY
