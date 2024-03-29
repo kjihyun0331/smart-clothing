@@ -163,8 +163,14 @@ public class ClothingServiceImpl implements ClothingService {
     }
 
     public SocketClothingInfoDTO getClothingInfo(String rfidUid) {
-        Clothing info = clothingRepository.findByRfidUid(rfidUid);
-        return new SocketClothingInfoDTO(info.getCategory(), info.getWornCount());
+        Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingId());
+        SocketClothingInfoDTO info = SocketClothingInfoDTO.builder()
+                .image(detail.getClothingImgPath())
+                .category(clothing.getCategory())
+                .texture(detail.getClothingTextures().get(0).getTexture().getTextureName())
+                .build();
+        return info;
     }
 
     public SocketClothingImageDTO getClothingImage(String rfid) {
