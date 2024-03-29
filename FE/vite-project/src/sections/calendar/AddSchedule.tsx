@@ -73,7 +73,16 @@ export const AddSchedule = ({
           onChange={handleInputChange}
           defaultValue={title}
         />
-        <GreenButton onClick={() => navigator("makeoutfit")}>
+        <GreenButton
+          onClick={() => {
+            if (selectedKeyword) {
+              clearItems();
+              navigator("makeoutfit");
+            } else {
+              window.alert("상황 하나 이상 선택해주세요");
+            }
+          }}
+        >
           옷장에서 고르기
         </GreenButton>
         <GreenButton onClick={() => navigator("past")}>

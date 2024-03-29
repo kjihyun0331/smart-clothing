@@ -38,6 +38,21 @@ export const situation = [
   },
 ];
 
+export const situationcolor = {
+  졸업식: "#f4d6ff",
+  데이트: "#ffd6f5",
+  업무: "#c8f7f3",
+  여행: "#b3f2c5",
+  운동: "#fcd6a4",
+  휴식: "#f9e28b",
+  결혼식: "#e9f98b",
+  소개팅: "#d3f98b",
+  경조사: "#aaffc6",
+  일상: "#ffb5d7",
+  기타: "#c4cdfc",
+  면접: "#adf2ff",
+};
+
 export const outfitSelectionOptions = [
   {
     name: "옷장에서 고르기",
@@ -100,3 +115,10 @@ export const hashtagOptions = [
     name: "겨울",
   },
 ];
+
+export const stateColor = {
+  "현재 세탁기에 있습니다.": "#55A8FB",
+  "현재 옷장에 있습니다.": "#6d6d6d",
+  "현재 에어드레서에 있습니다.": "#FB7B3D",
+  "알 수 없음": "#FF0000",
+};
