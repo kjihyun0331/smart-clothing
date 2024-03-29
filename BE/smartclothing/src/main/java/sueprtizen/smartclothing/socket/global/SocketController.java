@@ -103,7 +103,7 @@ public class SocketController {
                             case "getUserList":
                                 List<SocketUserResponseDTO> users = userService.getAllUsers();
                                 responseJson.put("count", users.size());
-                                responseJson.put("result", users);
+                                responseJson.put("result", objectMapper.writeValueAsString(users));
                                 break;
                             case "getClothesInfo":
                                 SocketClothingInfoDTO info = clothingService.getClothingInfo((String)requestDTO.get("rfidUid"));
