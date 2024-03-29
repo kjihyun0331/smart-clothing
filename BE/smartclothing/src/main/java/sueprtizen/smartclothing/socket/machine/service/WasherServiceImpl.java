@@ -22,7 +22,20 @@ public class WasherServiceImpl implements WasherService {
     public List<WasherResponseDTO> getAllLaundryList() {
         List<Clothing> laundry = washerRepository.findAllByNowAt("세탁기");
         return laundry.stream().map(entity -> WasherResponseDTO.builder()
-                .worn_count(entity.getWornCount())
+                .texture(entity.getClothingDetail().getClothingTextures().get(0).getTexture().getTextureName())
+                .image(entity.getClothingDetail().getClothingImgPath())
+                .wornCount(entity.getWornCount())
+                .build()
+        ).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<WasherResponseDTO> getMainLaundryList() {
+        List<Clothing> laundry = washerRepository.findTop2ByNowAt("세탁기");
+        return laundry.stream().map(entity -> WasherResponseDTO.builder()
+                .texture(entity.getClothingDetail().getClothingTextures().get(0).getTexture().getTextureName())
+                .image(entity.getClothingDetail().getClothingImgPath())
+                .wornCount(entity.getWornCount())
                 .build()
         ).collect(Collectors.toList());
     }

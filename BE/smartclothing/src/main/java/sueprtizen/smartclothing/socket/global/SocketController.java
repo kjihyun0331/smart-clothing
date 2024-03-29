@@ -95,10 +95,15 @@ public class SocketController {
                         responseJson.put("requestNumber", requestNumber);
 
                         switch (requestName) {
+                            case "getMainLaundryList":
+                                List<WasherResponseDTO> minLaundry = washerService.getMainLaundryList();
+                                responseJson.put("count", minLaundry.size());
+                                responseJson.put("result", objectMapper.writeValueAsString(minLaundry));
+                                break;
                             case "getAllLaundryList":
                                 List<WasherResponseDTO> laundry = washerService.getAllLaundryList();
                                 responseJson.put("count", laundry.size());
-                                responseJson.put("result", laundry);
+                                responseJson.put("result", objectMapper.writeValueAsString(laundry));
                                 break;
                             case "getUserList":
                                 List<SocketUserResponseDTO> users = userService.getAllUsers();
