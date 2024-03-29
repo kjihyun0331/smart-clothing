@@ -30,17 +30,17 @@ const UpdateClothes = () => {
     `clothing/${id}`
   );
 
-  useEffect(() => {
-    if (data) {
-      dispatch({ type: ACTION_TYPES.set, payload: data });
-    }
-  }, [data]);
-
   const [viewCategory, setViewCategory] = useState(false);
   const [viewTexture, setViewTexture] = useState(false);
   const [viewStyle, setViewStyle] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (data) {
+      dispatch({ type: ACTION_TYPES.set, payload: data });
+    }
+  }, [data]);
 
   const handleGoBack = () => {
     navigate(`/closet/${id}`);
@@ -55,6 +55,11 @@ const UpdateClothes = () => {
         break;
       default:
     }
+  };
+
+  const handleBlur = (event) => {
+    const { value } = event.target;
+    dispatch({ type: ACTION_TYPES.updateClothingName, payload: value });
   };
 
   // const { mutate } = usePatchClothes();
@@ -72,9 +77,8 @@ const UpdateClothes = () => {
       sharedUserIds: value.sharedUsers.map((user) => user.userId),
     };
     mutate({ id, putData });
-    console.log(value);
-    navigate(`/closet`);
-    // navigate(`/closet/${id}`);
+    // navigate(`/closet`);
+    navigate(`/closet/${id}`);
   };
 
   if (isLoading) return <Loader />;
@@ -93,6 +97,7 @@ const UpdateClothes = () => {
           type="text"
           defaultValue={value.clothingName}
           onKeyUp={handleKeyUp}
+          onBlur={handleBlur}
         />
         <div className="titlearea">
           <span className="title">카테고리</span>

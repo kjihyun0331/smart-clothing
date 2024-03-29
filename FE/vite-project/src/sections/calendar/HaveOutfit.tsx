@@ -34,8 +34,6 @@ const HaveOutfit = ({ date }) => {
 
   if (isLoading) return <Loader />;
 
-  console.log(data);
-
   return (
     <HaveOutfitContainer>
       <span

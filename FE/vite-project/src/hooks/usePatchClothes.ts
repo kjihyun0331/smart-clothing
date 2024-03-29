@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/config/config";
-import { useMutation, QueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 type dataType = {
@@ -15,15 +15,13 @@ type dataType = {
 };
 
 export function usePatchClothes() {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const userToken = localStorage.getItem("token");
 
   const { data, isPending, mutate } = useMutation({
     mutationFn: (data: dataType) => {
       const { id, putData } = data;
       console.log("useMutation");
-      console.log(id);
-      console.log(putData);
 
       return axios({
         method: "put",
@@ -34,9 +32,12 @@ export function usePatchClothes() {
         data: putData,
       }).then((res) => res.data);
     },
-    onSuccess: (variables) => {
+    onSuccess: (data) => {
+      // queryClient.removeQueries({
+      //   queryKey: ["detail", data.id],
+      // });
       queryClient.invalidateQueries({
-        queryKey: ["get", `clothing/${variables.id}`],
+        queryKey: ["detail", data.id],
       });
     },
   });
