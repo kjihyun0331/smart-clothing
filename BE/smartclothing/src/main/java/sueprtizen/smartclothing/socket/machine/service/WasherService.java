@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface WasherService {
     List<WasherResponseDTO> getAllLaundryList();
+    List<WasherResponseDTO> getMainLaundryList();
 }

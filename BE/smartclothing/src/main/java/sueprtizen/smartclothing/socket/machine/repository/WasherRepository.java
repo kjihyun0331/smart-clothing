@@ -10,4 +10,6 @@ import java.util.List;
 public interface WasherRepository extends JpaRepository<Clothing, Integer> {
 
     List<Clothing> findAllByNowAt(String location);
+
+    List<Clothing> findTop2ByNowAt(String location);
 }
