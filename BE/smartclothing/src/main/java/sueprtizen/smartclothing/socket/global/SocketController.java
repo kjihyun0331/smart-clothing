@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingImageDTO;
 import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingInfoDTO;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
+import sueprtizen.smartclothing.domain.outfit.past.service.PastOutfitService;
 import sueprtizen.smartclothing.socket.clothes.service.SocketUserService;
 import sueprtizen.smartclothing.socket.machine.service.AirdresserService;
 import sueprtizen.smartclothing.socket.machine.service.WasherService;
@@ -72,6 +73,7 @@ public class SocketController {
             SocketUserService userService = applicationContext.getBean(SocketUserService.class);
             ClothingService clothingService = applicationContext.getBean(ClothingService.class);
             AirdresserService airdresserService = applicationContext.getBean(AirdresserService.class);
+            PastOutfitService pastOutfitService = applicationContext.getBean(PastOutfitService.class);
 
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -130,6 +132,9 @@ public class SocketController {
                                 break;
                             case "addClothes":
                                 clothingService.addClothes((String)requestDTO.get("rfidUid"),(JSONArray) requestDTO.get("users"),(Long)requestDTO.get("clothesDetailId"));
+                                break;
+                            case "addDailyOutfit":
+                                pastOutfitService.addTodayOutfit((Long)requestDTO.get("userId"),(JSONArray)requestDTO.get("clothes"));
                                 break;
                         }
                         writer.println(responseJson);
