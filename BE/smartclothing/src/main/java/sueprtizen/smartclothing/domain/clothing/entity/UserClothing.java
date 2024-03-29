@@ -50,4 +50,12 @@ public class UserClothing {
         this.accrueWornCount = 0;
     }
 
+    @Builder
+    public UserClothing(User user, Clothing clothing) {
+        this.user = user;
+        this.clothing = clothing;
+        this.clothingName = "옷이름";
+        this.accrueWornCount = 0;
+    }
+
 }

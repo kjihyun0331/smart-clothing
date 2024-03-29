@@ -3,6 +3,7 @@ package sueprtizen.smartclothing.domain.clothing.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.*;
@@ -183,6 +184,20 @@ public class ClothingServiceImpl implements ClothingService {
         jsonObject.put("image",detail.getClothingImgPath());
 
         return jsonObject;
+    }
+
+    public void addClothes(String rfid, JSONArray users, Long detailId){
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId.intValue());
+        Clothing newClothing = new Clothing().builder()
+                .rfidUid(rfid)
+                .detail(detail)
+                .build();
+        clothingRepository.save(newClothing);
+        for(Object user:users){
+            User newUser = getUser(Integer.valueOf(String.valueOf(user)));
+            UserClothing uc = new UserClothing(newUser,newClothing);
+            userClothingRepository.save(uc);
+        }
     }
 
 

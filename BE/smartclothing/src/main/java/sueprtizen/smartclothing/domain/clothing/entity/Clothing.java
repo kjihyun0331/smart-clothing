@@ -1,10 +1,15 @@
 package sueprtizen.smartclothing.domain.clothing.entity;
 
+import com.google.type.DateTime;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import sueprtizen.smartclothing.domain.clothing.repository.ClothingDetailRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -50,5 +55,13 @@ public class Clothing {
     public void updateClothing(List<ClothingStyle> clothingStyleList, String category) {
         this.clothingStyleList = clothingStyleList;
         this.category = category;
+    }
+    @Builder
+    public Clothing(String rfidUid, ClothingDetail detail){
+        this.rfidUid=rfidUid;
+        this.clothingDetail=detail;
+        this.category="없음";
+        this.nowAt="옷장";
+        this.washedAt=LocalDateTime.now().toString();
     }
 }

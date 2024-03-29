@@ -1,6 +1,7 @@
 package sueprtizen.smartclothing.socket.global;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +130,7 @@ public class SocketController {
                                 responseJson.put("result", path);
                                 break;
                             case "addClothes":
+                                clothingService.addClothes((String)requestDTO.get("rfidUid"),(JSONArray) requestDTO.get("users"),(Long)requestDTO.get("clothesDetailId"));
                                 break;
                         }
                         writer.println(responseJson);
