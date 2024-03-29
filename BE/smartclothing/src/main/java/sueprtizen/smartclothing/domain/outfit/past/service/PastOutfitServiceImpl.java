@@ -1,6 +1,8 @@
 package sueprtizen.smartclothing.domain.outfit.past.service;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
@@ -81,6 +83,16 @@ public class PastOutfitServiceImpl implements PastOutfitService {
                 }
         ).toList();
         pastOutfitRepository.saveAll(newPastOutfitList);
+    }
+
+    public void addTodayOutfit(Long userId, JSONArray clothes){
+        Schedule todaySchedule = calendarRepository.findScheduleByUserAndDate(getUser(userId.intValue()), LocalDate.now())
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
+        for(Object clothing:clothes){
+            Clothing tmpClothing = clothingRepository.findByRfidUid(String.valueOf(clothing));
+            PastOutfit newpastOutfit = new PastOutfit(todaySchedule,tmpClothing);
+            pastOutfitRepository.save(newpastOutfit);
+        }
     }
 
     private User getUser(int userId) {
