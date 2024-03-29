@@ -4,6 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record WasherResponseDTO(
-        String clothingImgPath, String texture, Integer worn_count, String schedule, String userName
+        String image, String texture, Integer wornCount, String schedule, String userName
 ) {
 }
