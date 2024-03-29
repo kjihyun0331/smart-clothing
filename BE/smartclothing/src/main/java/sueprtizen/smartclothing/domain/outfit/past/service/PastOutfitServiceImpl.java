@@ -1,10 +1,16 @@
 package sueprtizen.smartclothing.domain.outfit.past.service;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
+import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
+import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
 import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
+import sueprtizen.smartclothing.domain.clothing.repository.ClothingRepository;
 import sueprtizen.smartclothing.domain.outfit.past.dto.ClothingDTO;
 import sueprtizen.smartclothing.domain.outfit.past.dto.PastOutFitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.past.dto.ScheduleDTO;
@@ -17,6 +23,7 @@ import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 import sueprtizen.smartclothing.domain.weather.entity.Weather;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +33,7 @@ public class PastOutfitServiceImpl implements PastOutfitService {
     final private UserRepository userRepository;
     final private CalendarRepository calendarRepository;
     final private PastOutfitRepository pastOutfitRepository;
+    final private ClothingRepository clothingRepository;
 
     @Override
     public List<PastOutFitResponseDTO> pastOutfitsConfirmation(int userId) {
@@ -67,6 +75,16 @@ public class PastOutfitServiceImpl implements PastOutfitService {
 
 
         return pastOutFitResponseDTOList;
+    }
+
+    public void addTodayOutfit(Long userId, JSONArray clothes){
+        Schedule todaySchedule = calendarRepository.findScheduleByUserAndDate(getUser(userId.intValue()), LocalDate.now())
+                .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
+        for(Object clothing:clothes){
+            Clothing tmpClothing = clothingRepository.findByRfidUid(String.valueOf(clothing));
+            PastOutfit newpastOutfit = new PastOutfit(todaySchedule,tmpClothing);
+            pastOutfitRepository.save(newpastOutfit);
+        }
     }
 
     private User getUser(int userId) {
