@@ -416,10 +416,10 @@ def test(request):
     test_list = []
     test_list2 = []
     for a in Weather.objects.all():
-        test_list.append(a)
+        test_list.append(a.location_key)
     
     for b in Schedule.objects.all():
-        test_list2.append(b)
+        test_list2.append(b.schedule_category)
         
     test['init'] = test_list
     test['fin'] = test_list2
