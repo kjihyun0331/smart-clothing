@@ -97,7 +97,11 @@ const Wrapper = styled.div`
     margin: 1rem 0 0 0;
     width: 80%;
     aspect-ratio: 1 / 1;
-    background-color: #fcdddd;
+    background-color: ${(props) =>
+      `${props.theme.colors.pointcolor
+        .replace("rgb", "rgba")
+        .replace(")", ", 0.3)")}`};
+
     border-radius: 20px;
     padding: 1rem 1rem;
   }

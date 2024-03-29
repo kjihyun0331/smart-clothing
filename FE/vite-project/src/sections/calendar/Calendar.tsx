@@ -52,7 +52,7 @@ const MyCalendar = () => {
 
   return (
     <>
-      <div style={{ height: "7dvh" }}></div>
+      {/* <div style={{ height: "7dvh" }}></div> */}
       <StyledCalendarWrapper>
         <StyledCalendar
           value={date}
