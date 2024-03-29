@@ -14,7 +14,19 @@ const TEXTURE = [
   "트위드",
 ];
 
-const STYLE = ["캐주얼", "러블리", "빈티지"];
+const STYLE = [
+  "캐주얼",
+  "러블리",
+  "아메카지",
+  "시크",
+  "댄디",
+  "걸리시",
+  "스포티",
+  "레트로",
+  "로맨틱",
+  "하이틴",
+  "미니멀",
+];
 
 const ARR = {
   category: CATEGORY,
@@ -25,7 +37,6 @@ const ARR = {
 function DropDown({ type, handleDispatch }) {
   const handleClick = (event) => {
     const value = event.target.textContent;
-    console.log(value);
     if (type === "category") {
       handleDispatch("updateCategory", value);
       return;
