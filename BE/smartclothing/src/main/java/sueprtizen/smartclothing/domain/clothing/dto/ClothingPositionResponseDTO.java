@@ -4,6 +4,7 @@ public record ClothingPositionResponseDTO(
         int id,
         String device,
         String name,
+        String date,
         String img
 ) {
 }

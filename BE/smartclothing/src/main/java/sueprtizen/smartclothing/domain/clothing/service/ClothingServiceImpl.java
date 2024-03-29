@@ -16,6 +16,7 @@ import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -177,6 +178,7 @@ public class ClothingServiceImpl implements ClothingService {
                             clothing.getClothingId(),
                             clothing.getNowAt(),
                             uc.getClothingName(),
+                            clothing.getLocationModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
                             clothing.getClothingDetail().getClothingImgPath()
                     );
                 }
