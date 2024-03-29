@@ -77,10 +77,7 @@ const UpdateClothes = () => {
       sharedUserIds: value.sharedUsers.map((user) => user.userId),
     };
     mutate({ id, putData });
-    navigate(`/closet`);
-    // navigate(`/closet/${id}`);
   };
-
   if (isLoading) return <Loader />;
 
   return (
