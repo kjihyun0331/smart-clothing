@@ -406,3 +406,27 @@ def fine_tuning():
     for file in all_update_files_list:
         shutil.copy2(f'{path}/ML_models/current/{file}', f'{path}/ML_models/backup')
 
+
+
+    
+
+@api_view(['GET'])
+def test(request):
+    test = {}
+    test_list = []
+    test_list2 = []
+    for a in Weather.objects.all():
+        test_list.append(a)
+    
+    for b in Schedule.objects.all():
+        test_list2.append(b)
+        
+    test['init'] = test_list
+    test['fin'] = test_list2
+    
+    with open(f'{path}/ML_models/current/label.json', 'r', encoding='utf-8') as file:
+        label_infos = json.load(file)
+        
+    test['label'] = label_infos
+    
+    return Response(test)
