@@ -7,6 +7,12 @@ import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
 import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
 import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
 import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
+import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
+import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
+import sueprtizen.smartclothing.domain.clothing.repository.ClothingRepository;
+import sueprtizen.smartclothing.domain.outfit.recommended.entity.RecommendedOutfit;
+import sueprtizen.smartclothing.domain.outfit.recommended.repository.RecommendedOutfitRepository;
 import sueprtizen.smartclothing.domain.users.entity.User;
 import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
@@ -25,6 +31,8 @@ public class CalendarServiceImpl implements CalendarService {
     final UserRepository userRepository;
     final CalendarRepository calendarRepository;
     final WeatherRepository weatherRepository;
+    final ClothingRepository clothingRepository;
+    final RecommendedOutfitRepository recommendedOutfitRepository;
 
     @Override
     public CalendarMonthlyScheduleResponseDTO calendarMonthlySchedules(
@@ -73,6 +81,23 @@ public class CalendarServiceImpl implements CalendarService {
                 .build();
 
         calendarRepository.save(newScheDule);
+
+        scheduleSaveRequestDTO.clothing().forEach(
+                outfitRequestDTO -> {
+                    Clothing clothing = clothingRepository.findById(outfitRequestDTO.clothingId())
+                            .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
+                    RecommendedOutfit newRecommendedOutfit = new RecommendedOutfit(
+                            newScheDule,
+                            clothing,
+                            outfitRequestDTO.x(),
+                            outfitRequestDTO.y(),
+                            outfitRequestDTO.width(),
+                            outfitRequestDTO.height()
+                    );
+                    recommendedOutfitRepository.save(newRecommendedOutfit);
+
+                }
+        );
     }
 
     @Override
@@ -103,10 +128,10 @@ public class CalendarServiceImpl implements CalendarService {
                 schedule.getDate().toString()
         );
 
-        List<OutfitDTO> outfitDTOList;
+        List<OutfitResponseDTO> outfitResponseDTOList;
         if (scheduleDate.isBefore(LocalDate.now())) {
-            outfitDTOList = schedule.getPastOutfits().stream().map(pastOutfit ->
-                    new OutfitDTO(
+            outfitResponseDTOList = schedule.getPastOutfits().stream().map(pastOutfit ->
+                    new OutfitResponseDTO(
                             pastOutfit.getPastOutfitId(),
                             pastOutfit.getClothing().getClothingDetail().getClothingImgPath(),
                             pastOutfit.getX(),
@@ -116,8 +141,8 @@ public class CalendarServiceImpl implements CalendarService {
                     )
             ).toList();
         } else {
-            outfitDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
-                    new OutfitDTO(
+            outfitResponseDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
+                    new OutfitResponseDTO(
                             recommendedOutfit.getRecommendedOutfitId(),
                             recommendedOutfit.getClothing().getClothingDetail().getClothingImgPath(),
                             recommendedOutfit.getX(),
@@ -131,22 +156,20 @@ public class CalendarServiceImpl implements CalendarService {
 
         return new ScheduleDetailResponseDTO(
                 scheduleDTO,
-                outfitDTOList
+                outfitResponseDTOList
         );
     }
 
     @Override
-    public TodayScheduleOutfitResponseDTO todayScheduleOutfitConformation(int userId) {
+    public ScheduleOutfitResponseDTO scheduleOutfitConformation(int userId, String date) {
         User currentUser = getUser(userId);
 
-//        LocalDate today = LocalDate.now();
+        LocalDate localDate = LocalDate.parse(date);
 
-        LocalDate today = LocalDate.of(2024, 3, 27);
-
-        Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, today)
+        Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, localDate)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
 
-        return new TodayScheduleOutfitResponseDTO(
+        return new ScheduleOutfitResponseDTO(
                 schedule.getScheduleId(),
                 schedule.getScheduleCategory(),
                 schedule.getScheduleName(),

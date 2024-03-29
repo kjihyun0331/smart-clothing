@@ -7,6 +7,6 @@ public record ScheduleSaveRequestDTO(
         String title,
         String category,
         int locationKey,
-        List<OutfitDTO> clothing
+        List<OutfitRequestDTO> clothing
 ) {
 }

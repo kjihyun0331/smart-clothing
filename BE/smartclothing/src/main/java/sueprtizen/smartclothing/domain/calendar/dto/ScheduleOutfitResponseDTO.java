@@ -1,6 +1,6 @@
 package sueprtizen.smartclothing.domain.calendar.dto;
 
-public record TodayScheduleOutfitResponseDTO(
+public record ScheduleOutfitResponseDTO(
         int scheduleId,
         String scheduleCategory,
         String scheduleName,

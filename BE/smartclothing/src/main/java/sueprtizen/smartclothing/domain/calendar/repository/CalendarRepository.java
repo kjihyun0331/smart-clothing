@@ -17,4 +17,6 @@ public interface CalendarRepository extends JpaRepository<Schedule, Integer> {
     List<Schedule> findSchedulesByUserAndDateBetweenOrderByDateAsc(User user, LocalDate startDate, LocalDate endDate);
 
     Optional<Schedule> findScheduleByUserAndDate(User user, LocalDate date);
+
+    Optional<Schedule> findScheduleByUserAndScheduleId(User user, int scheduleId);
 }
