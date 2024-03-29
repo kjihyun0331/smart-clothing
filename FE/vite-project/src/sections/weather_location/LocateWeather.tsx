@@ -3,22 +3,36 @@ import LocateSelectModal from './LocateSelectModal';
 import { useState, useRef } from 'react';
 import { useLocateStore } from '@/store/LocateStore';
 import IconLocate from '@/assets/ui/IconLocate';
-import { useTodayWeather } from '@/hooks/useCustomQuery';
+// import { useTodayWeather } from '@/hooks/useCustomQuery';
+import { useApi } from '@/hooks/useApi';
 
 
-function StoreLocate() {
+
+function LocateWeather() {
     // 상태관리
     const { Sido, Sigungu, LocateInfo } = useLocateStore()
     // modal 관리
     const [selectLocate, setSelectLocate] = useState<boolean>(false)
     // 시계 변수
     let today:Date = new Date()
+
+    const date:string = today.toISOString().split('T')[0];
+
     const hours = useRef<number>(0)
     const AMPM = useRef<string>('AM')
     const [minutes, setMinutes] = useState<string>('00')
 
+    const locatekey = LocateInfo
+
     // 날씨 API
-    const weatherInfo = useTodayWeather(LocateInfo);
+    const { isLoading, isError, data } = useApi(
+        "get",
+        `weather?locationKey=${locatekey}&date=${date}`
+    );
+
+    if (data) {
+        console.log('호가인',data)
+    }
 
 
     // modal controll
@@ -43,12 +57,13 @@ function StoreLocate() {
     }, 100);
 
     
+    
     return (
         <Container>
 
             {/* icon 영역 */}
             <IconContainer>
-                {weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].WeatherIcon}
+                {isError || isLoading ? '--' : data.WeatherIcon}
             </IconContainer>
 
             {/* 현재 위치 */}
@@ -63,7 +78,7 @@ function StoreLocate() {
 
             {/* 현재 온도 */}
             <SimpleWeahterContainer>
-                {weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].Temperature.Metric.Value + '°'}
+                {isError || isLoading ? '--' : data.highestTemperature + '°' + '\u00a0\u00a0' + data.lowestTemperature + '°'}
             </SimpleWeahterContainer>
 
             {/* 날씨 세부사항 */}
@@ -79,21 +94,21 @@ function StoreLocate() {
                 <div>
                     <DetailWeahterHeader>UV</DetailWeahterHeader>
                     <DetailWeahterInfo>
-                        {weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].UVIndex}
-                        <span>{weatherInfo.isError || weatherInfo.isPending ? '' : '(' + weatherInfo.data.data[0].UVIndexText + ')'}</span>
+                        {isError || isLoading ? '--' : data.UV}
+                        <span>{isError || isLoading ? '' : '(' + data.UVMessage + ')'}</span>
                     </DetailWeahterInfo>
                 </div>
 
                 {/* 현재 강수량 */}
                 <div>
                     <DetailWeahterHeader>%RAIN</DetailWeahterHeader>
-                    <DetailWeahterInfo>{weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].Precip1hr.Metric.Value}</DetailWeahterInfo>
+                    <DetailWeahterInfo>{isError || isLoading ? '--' : data.precipitation}</DetailWeahterInfo>
                 </div>
 
                 {/* 체감온도 */}
                 <div>
                     <DetailWeahterHeader>체감온도</DetailWeahterHeader>
-                    <DetailWeahterInfo>{weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].RealFeelTemperature.Metric.Value + '°'}</DetailWeahterInfo>
+                    <DetailWeahterInfo>{isError || isLoading ? '--' : data.highestRealFeelingTemperature+ '°/' + data.lowestRealFeelingTemperature + '°'}</DetailWeahterInfo>
                 </div>
             </DetailWeahterContainer>
         </Container>
@@ -102,7 +117,7 @@ function StoreLocate() {
 }
 
 
-export default StoreLocate;
+export default LocateWeather;
 
 
 const Container = styled.div`
@@ -150,7 +165,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 font-weight: bolder;
-font-size: 4.5rem;
+font-size: 3rem;
 `
 
 const DetailWeahterContainer = styled.div`
