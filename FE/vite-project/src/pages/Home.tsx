@@ -1,9 +1,10 @@
 import Layout from "@/components/Layout";
 // import { useEffect, useRef } from "react";
-import HomeLocate from '@/sections/weather_location/HomeLocate'
-import TodaySchedule from "@/sections/today_schedule/TodaySchedule";
+// import HomeLocate from '@/sections/weather_location/HomeLocate'
+// import TodaySchedule from "@/sections/today_schedule/TodaySchedule";
 // import { useLocateStore } from "@/store/LocateStore";
 // import { useQueryClient } from "@tanstack/react-query";
+import { Outlet } from "react-router-dom";
 
 
 function Home() {
@@ -31,9 +32,9 @@ function Home() {
 
   return (
     <Layout>
-      <HomeLocate/>
-      <TodaySchedule/>
+      <Outlet />
     </Layout>
+
   );
 }
 

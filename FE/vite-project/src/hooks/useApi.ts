@@ -13,13 +13,12 @@ export function useApi(method: string, url: string, requestData?: string) {
     },
     ...(requestData && { data: requestData }),
   };
-  const { isLoading, isError, data, isSuccess, error } = useQuery({
+  const { isLoading, isError, data, isSuccess } = useQuery({
     queryKey: [url, method],
     queryFn: () => axios(axiosRequestConfig).then((res) => res.data),
     select: (res) => res.dataBody,
   });
   return {
-    error,
     isLoading,
     isError,
     data,
