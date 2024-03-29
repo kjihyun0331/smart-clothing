@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 // import styled from 'styled-components';
 import CurrentLocate from './CurrentLocate';
 import { useLocateStore } from '@/store/LocateStore';
-import StoreLocate from './LocateWeather';
+import LocateWeather from './LocateWeather';
+import { Loader } from "@/components/Loader";
 
 
 function HomeLocate() {
@@ -39,25 +40,16 @@ function HomeLocate() {
     // Sido, Sigungu가 비워져있으며, 현재 좌표를 얻지 못했을 때
     } else if ((latitude === null || longitude === null) && (Sido == '' || Sigungu == '')) {
         return (
-            <div>위치 로딩중</div>
+            <Loader/>
         )
     // Sido, Sigungu가 존재할 때
     } else {
         return (
-          <StoreLocate/>
+          <LocateWeather/>
         )
     }
 
 }
 
 
-
 export default HomeLocate;
-
-
-// const Container = styled.div`
-// width: 100%;
-// padding: 2rem;
-// box-sizing: border-box;
-// background-color: #ffffff;
-// `
