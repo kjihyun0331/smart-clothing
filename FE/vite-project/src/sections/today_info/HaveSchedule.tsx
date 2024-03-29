@@ -9,10 +9,11 @@ interface ScheduleProps {
 
 
 const HaveSchedule = ({schedule, outfit}: ScheduleProps) => {
-
     return (
         <Container>
-            <Message>오늘 <Schedule>{schedule}</Schedule>에 예약된 코디</Message>
+            {schedule == '없음' ? <Message>오늘 예약된 코디</Message>
+            :  <Message>오늘 <Schedule>{schedule}</Schedule>에 예약된 코디</Message>            
+            }
             <TodayCoordi>
                 <CoordiImage outfit={outfit}/>
             </TodayCoordi>

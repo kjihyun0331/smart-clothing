@@ -28,10 +28,9 @@ const HaveSchedule = () => {
                         })
                      )
                 }
-
             </CoordiList>
             <button>오늘 일정 등록하기</button>
-            
+ 
         </Container>
     );
 };

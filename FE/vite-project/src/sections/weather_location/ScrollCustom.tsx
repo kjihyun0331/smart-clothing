@@ -81,22 +81,6 @@ const CustomScrollBar = styled.div`
   overflow-y: auto;
   width: 100%;
 
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #ffffff;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #a4a4f7;
-    border-radius: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #5454f2;
-  }
 `;
 
 const CustomSelects = styled.div`

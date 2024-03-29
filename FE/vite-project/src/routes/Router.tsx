@@ -11,6 +11,11 @@ import Home from "@/pages/Home";
 import Calendar from "@/pages/Calendar";
 import Closet from "@/pages/Closet";
 import Basket from "@/pages/Basket";
+////////////홈 하위
+import TodaySchedule from "@/sections/today_info/TodaySchedule";
+import HomeLocate from "@/sections/weather_location/HomeLocate";
+import CurrentClothes from "@/sections/current_clothes/CurrentClothes";
+import AddCurrentClothes from "@/sections/current_clothes/AddCurrentClothes";
 ///////////캘린더 하위
 import MyCalendar from "@/sections/calendar/Calendar";
 import Recommend from "@/sections/calendar/Recommend";
@@ -47,7 +52,22 @@ const router = createBrowserRouter([
       {
         path: "/home",
         element: <Home />,
+        children: [
+          {
+            path: "",
+            element: <><HomeLocate /><TodaySchedule /></>,
+          },
+          {
+            path: "currentclothes",
+            element: <><HomeLocate /><CurrentClothes /></>,
+          },
+          {
+            path: "addclothes",
+            element: <><HomeLocate /><AddCurrentClothes /></>,
+          },
+        ],
       },
+
       {
         path: "/calendar",
         element: <Calendar />,
