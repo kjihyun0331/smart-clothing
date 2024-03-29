@@ -2,6 +2,7 @@ package sueprtizen.smartclothing.domain.calendar.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import sueprtizen.smartclothing.domain.calendar.dto.*;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
 import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
@@ -63,7 +64,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public void scheduleSave(int userId, ScheduleSaveRequestDTO scheduleSaveRequestDTO) {
+    public void scheduleSave(int userId, ScheduleSaveRequestDTO scheduleSaveRequestDTO, MultipartFile file) {
         User currentUser = getUser(userId);
 
         Weather weather = weatherRepository.findByLocationKeyAndDate(
@@ -73,6 +74,7 @@ public class CalendarServiceImpl implements CalendarService {
                 () -> new WeatherException(WeatherErrorCode.WEATHER_NOT_FOUND)
         );
 
+        //TODO: file 저장 후 file 위치 저장
 
         Schedule newScheDule = Schedule.builder()
                 .scheduleName(scheduleSaveRequestDTO.title())
