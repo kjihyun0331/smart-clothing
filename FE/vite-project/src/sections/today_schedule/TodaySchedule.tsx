@@ -8,8 +8,8 @@ import { Loader } from "@/components/Loader";
 const TodaySchedule = () => {
 
     const today:Date = new Date()
-    const formattedDate:string = today.toISOString().split('T')[0];
-    // const formattedDate:string = '2024  -02'
+    // const formattedDate:string = today.toISOString().split('T')[0];
+    const formattedDate:string = '2024-02-25'
 
     const { isLoading, isError, data, error } = useApi(
         "get",
@@ -24,11 +24,23 @@ const TodaySchedule = () => {
 
     if (isError) {
         console.log('확인', error, error.response.status)
+        if (error.response.status == 404) {
+            console.log('들어옴')
+            return (
+                <Container>
+                    <NoSchedule/>
+                </Container>
+            )
+        } else {
+            return (
+                <Loader />
+            )
+        }
     }
 
     return (
         <Container>
-            {data && (data.schedule.scheduleCategory == '휴식' ?  <NoSchedule/> : <HaveSchedule schedule={data.schedule.scheduleCategory} outfit={data.clothingList}/>)}
+            {data && <HaveSchedule schedule={data.schedule.scheduleCategory} outfit={data.clothingList}/>}
         </Container>
     );
 };
