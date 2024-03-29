@@ -14,4 +14,5 @@ public interface PastOutfitRepository extends JpaRepository<PastOutfit, Integer>
     List<PastOutfit> findAllBySchedule_UserAndSchedule_Date(User user, LocalDate date);
 
     void deleteAllBySchedule_UserAndSchedule_Date(User user, LocalDate date);
+
 }
