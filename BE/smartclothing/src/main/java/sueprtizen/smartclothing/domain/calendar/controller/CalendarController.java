@@ -3,10 +3,7 @@ package sueprtizen.smartclothing.domain.calendar.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sueprtizen.smartclothing.domain.calendar.dto.CalendarMonthlyScheduleResponseDTO;
-import sueprtizen.smartclothing.domain.calendar.dto.ScheduleDetailResponseDTO;
-import sueprtizen.smartclothing.domain.calendar.dto.ScheduleSaveRequestDTO;
-import sueprtizen.smartclothing.domain.calendar.dto.ScheduleOutfitResponseDTO;
+import sueprtizen.smartclothing.domain.calendar.dto.*;
 import sueprtizen.smartclothing.domain.calendar.service.CalendarService;
 import sueprtizen.smartclothing.global.dto.Message;
 
@@ -45,12 +42,21 @@ public class CalendarController {
         return ResponseEntity.ok(Message.success(calendarService.scheduleConfirmation(userId, date)));
     }
 
+
     @GetMapping("/date")
     public ResponseEntity<Message<ScheduleOutfitResponseDTO>> scheduleOutfitConfirmation(
             @RequestHeader("User-ID") int userId,
             @RequestParam String date
     ) {
         return ResponseEntity.ok(Message.success(calendarService.scheduleOutfitConformation(userId, date)));
+    }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Message<ScheduleCheckingResponseDTO>> scheduleCheck(
+            @RequestHeader("User-ID") int userId,
+            @RequestParam String date
+    ) {
+        return ResponseEntity.ok(Message.success(calendarService.scheduleChecking(userId, date)));
     }
 
 
