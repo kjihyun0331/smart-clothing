@@ -169,11 +169,25 @@ public class CalendarServiceImpl implements CalendarService {
         Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, localDate)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
 
+        List<ClothingInfoDTO> clothingInfoDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
+                {
+                    Clothing clothing = recommendedOutfit.getClothing();
+
+                    //TODO: 현재 어디에 있는지 확인, 입은 횟수 확인 후 세탁 필요 여부 확인 필요
+                    return new ClothingInfoDTO(
+                            clothing.getClothingId(),
+                            clothing.getClothingDetail().getClothingImgPath(),
+                            String.format("현재 %s에 있습니다.", clothing.getNowAt())
+                    );
+                }
+        ).toList();
+
         return new ScheduleOutfitResponseDTO(
                 schedule.getScheduleId(),
                 schedule.getScheduleCategory(),
                 schedule.getScheduleName(),
-                schedule.getOutfitImagePath()
+                schedule.getOutfitImagePath(),
+                clothingInfoDTOList
         );
     }
 
