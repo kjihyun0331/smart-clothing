@@ -24,6 +24,7 @@ public class SocketUserServiceImpl implements SocketUserService {
         return users.stream().map(entity -> SocketUserResponseDTO.builder()
                 .userId(entity.getUserId())
                 .userName(entity.getUserName())
+                .image(entity.getProfileImgPath())
                 .build()
         ).collect(Collectors.toList());
     }
