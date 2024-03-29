@@ -3,12 +3,11 @@ package sueprtizen.smartclothing.domain.outfit.past.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
+import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
+import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
 import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
-import sueprtizen.smartclothing.domain.outfit.past.dto.ClothingDTO;
-import sueprtizen.smartclothing.domain.outfit.past.dto.PastOutFitResponseDTO;
-import sueprtizen.smartclothing.domain.outfit.past.dto.ScheduleDTO;
-import sueprtizen.smartclothing.domain.outfit.past.dto.WeatherDTO;
+import sueprtizen.smartclothing.domain.outfit.past.dto.*;
 import sueprtizen.smartclothing.domain.outfit.past.entity.PastOutfit;
 import sueprtizen.smartclothing.domain.outfit.past.repository.PastOutfitRepository;
 import sueprtizen.smartclothing.domain.users.entity.User;
@@ -17,6 +16,7 @@ import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 import sueprtizen.smartclothing.domain.weather.entity.Weather;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +67,28 @@ public class PastOutfitServiceImpl implements PastOutfitService {
 
 
         return pastOutFitResponseDTOList;
+    }
+
+    @Override
+    public List<TodayClothingDTO> todayOutfitsConfirmation(int userId) {
+        User currentUser = getUser(userId);
+
+        List<PastOutfit> pastOutFitList = pastOutfitRepository.findAllBySchedule_UserAndSchedule_Date(
+                currentUser, LocalDate.now()
+        );
+
+        if (pastOutFitList.isEmpty()) {
+            throw new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND);
+        }
+
+        return pastOutFitList.stream().map(
+                pastOutfit -> {
+                    Clothing clothing = pastOutfit.getClothing();
+                    return new TodayClothingDTO(
+                            clothing.getOwnerId(), clothing.getClothingDetail().getClothingImgPath()
+                    );
+                }
+        ).toList();
     }
 
     private User getUser(int userId) {
