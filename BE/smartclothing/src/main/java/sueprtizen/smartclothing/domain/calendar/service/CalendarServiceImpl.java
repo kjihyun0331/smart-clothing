@@ -137,10 +137,7 @@ public class CalendarServiceImpl implements CalendarService {
                     new OutfitResponseDTO(
                             pastOutfit.getPastOutfitId(),
                             pastOutfit.getClothing().getClothingDetail().getClothingImgPath(),
-                            pastOutfit.getX(),
-                            pastOutfit.getY(),
-                            pastOutfit.getWidth(),
-                            pastOutfit.getHeight()
+                            0, 0, 0, 0
                     )
             ).toList();
         } else {
