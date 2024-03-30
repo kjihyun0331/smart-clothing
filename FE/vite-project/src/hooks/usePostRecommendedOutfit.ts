@@ -21,7 +21,7 @@ export function usePostRecommendedOutfit() {
 
       return axios({
         method: "post",
-        url: `https//j10s006.p.ssafy.io:8000/recommend/test`,
+        url: `http://j10s006.p.ssafy.io:8000/recommend/test`,
         headers: {
           userid: userToken,
           "Content-Type": "multipart/form-data",
