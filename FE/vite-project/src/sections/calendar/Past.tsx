@@ -5,6 +5,8 @@ import { useSelectedItemsStore } from "@/store/ClothesStore";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
 import moment from "moment";
+import axios from "axios";
+import { BASE_URL } from "@/config/config";
 
 type PastResponseItem = {
   schedule: {
@@ -27,12 +29,43 @@ interface ClothingPositionQueryType {
 
 function Past() {
   const navigate = useNavigate();
-  const { setConfirmOutfit } = useSelectedItemsStore();
+  const { setConfirmOutfit, toggleItem, selectedItems } =
+    useSelectedItemsStore();
   const { isLoading, data }: ClothingPositionQueryType = useApi(
     "get",
     "outfit/recommended"
   );
 
+  async function handleSelect(item: PastResponseItem) {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}outfit/recommended/pastOutfit?scheduleId=${item.schedule.scheduleId}`,
+        {
+          headers: {
+            "User-ID": localStorage.getItem("token"),
+          },
+        }
+      );
+      console.log("==========");
+      console.log(response.data);
+      const simpleClothesData = response.data.dataBody.map((item) => ({
+        clothingId: item.clothingId,
+        clothingName: item.clothingName,
+        clothingImagePath: item.clothingImagePath,
+      }));
+
+      simpleClothesData.forEach((item) => {
+        toggleItem(item);
+        console.log(selectedItems);
+      });
+
+      setConfirmOutfit(item.schedule.outfitImagePath);
+
+      navigate("/calendar/confirmoutfit");
+    } catch (error) {
+      console.error("Error fetching item details:", error);
+    }
+  }
   if (isLoading) return <Loader />;
 
   return (
@@ -47,8 +80,7 @@ function Past() {
             <Item
               key={item.schedule.scheduleId}
               onClick={() => {
-                setConfirmOutfit(item.schedule.outfitImagePath);
-                navigate("/calendar/confirmoutfit");
+                handleSelect(item);
               }}
             >
               <span className="date">
