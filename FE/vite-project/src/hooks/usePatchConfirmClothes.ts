@@ -9,8 +9,13 @@ export function usePatchConfirmClothes() {
 
   const { data, mutate } = useMutation({
     mutationFn: async (formData: FormData) => {
-      // FormData 로깅을 위해 사용된 코드는 제거합니다.
-      // 서버로 전송
+      ////////////////////
+      console.log(
+        "----------------useMutation에서 formData 상태 확인하기--------------"
+      );
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
       return axios({
         method: "post",
         url: `${BASE_URL}/calendar`,
