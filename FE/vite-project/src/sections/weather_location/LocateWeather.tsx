@@ -63,6 +63,7 @@ function LocateWeather() {
 
             {/* icon 영역 */}
             <IconContainer>
+                {data}
                 {isError || isLoading ? '--' : data.WeatherIcon}
             </IconContainer>
 

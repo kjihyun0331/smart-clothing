@@ -59,11 +59,7 @@ const router = createBrowserRouter([
           },
           {
             path: "currentclothes",
-            element: <><HomeLocate /><CurrentClothes /></>,
-          },
-          {
-            path: "addclothes",
-            element: <><HomeLocate /><AddCurrentClothes /></>,
+            element: <><CurrentClothes /></>,
           },
         ],
       },
