@@ -68,6 +68,12 @@ public class CalendarServiceImpl implements CalendarService {
     public void scheduleSave(int userId, ScheduleSaveRequestDTO scheduleSaveRequestDTO, MultipartFile file) {
         User currentUser = getUser(userId);
 
+        Optional<Schedule> oldSchedule = calendarRepository.findScheduleByUserAndDate(currentUser, LocalDate.parse(scheduleSaveRequestDTO.date()));
+
+        if (oldSchedule.isPresent()) {
+            throw new CalendarException(CalendarErrorCode.SCHEDULE_ALREADY_EXISTS);
+        }
+
         Optional<Weather> weather = weatherRepository.findByLocationKeyAndDate(
                 scheduleSaveRequestDTO.locationKey(),
                 scheduleSaveRequestDTO.date()
@@ -75,7 +81,6 @@ public class CalendarServiceImpl implements CalendarService {
 
         //TODO: file 저장 후 file 위치 저장
         Schedule newScheDule;
-
 
         if (weather.isEmpty()) {
             newScheDule = Schedule.builder()
@@ -148,33 +153,23 @@ public class CalendarServiceImpl implements CalendarService {
                 schedule.getDate().toString()
         );
 
-        List<OutfitResponseDTO> outfitResponseDTOList;
-        if (scheduleDate.isBefore(LocalDate.now())) {
-            outfitResponseDTOList = schedule.getPastOutfits().stream().map(pastOutfit ->
-                    new OutfitResponseDTO(
-                            pastOutfit.getPastOutfitId(),
-                            pastOutfit.getClothing().getClothingDetail().getClothingImgPath(),
-                            0, 0, 0, 0
-                    )
-            ).toList();
-        } else {
-            outfitResponseDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
-                    new OutfitResponseDTO(
-                            recommendedOutfit.getRecommendedOutfitId(),
-                            recommendedOutfit.getClothing().getClothingDetail().getClothingImgPath(),
-                            recommendedOutfit.getX(),
-                            recommendedOutfit.getY(),
-                            recommendedOutfit.getWidth(),
-                            recommendedOutfit.getHeight()
-                    )
-            ).toList();
-        }
-
+        List<OutfitResponseDTO> outfitResponseDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
+                new OutfitResponseDTO(
+                        recommendedOutfit.getRecommendedOutfitId(),
+                        recommendedOutfit.getClothing().getClothingDetail().getClothingImgPath(),
+                        recommendedOutfit.getX(),
+                        recommendedOutfit.getY(),
+                        recommendedOutfit.getWidth(),
+                        recommendedOutfit.getHeight()
+                )
+        ).toList();
 
         return new ScheduleDetailResponseDTO(
                 scheduleDTO,
                 outfitResponseDTOList
         );
+
+
     }
 
     @Override
