@@ -54,7 +54,7 @@ gender_dict = {
     '여자' : 'female'
 }
 
-clothes_type = ['상의', '아우터', '바지', '원피스', '스커트', '하의', '기타']
+clothes_type = ['상의', '아우터', '바지', '원피스', '스커트', '하의', '외투', '기타']
 
 
 
@@ -173,35 +173,43 @@ def mlp(request):
 
 
         # 응답 폼
-        response_form = {
-            'recommand_outfit' : {
-                '상의' : [],
-                '바지' : [],
-                '하의' : [],
-                '스커트' : [],
-                '아우터' : [],
-                '원피스' : [],
-                '기타' : []
-            },
-            '상의' : [],
-            '바지' : [],
-            '하의' : [],
-            '스커트' : [],
-            '아우터' : [],
-            '원피스' : [],
-            '기타' : []
-        }
+        # response_form = {
+        #     'recommand_outfit' : {
+        #         '상의' : [],
+        #         '바지' : [],
+        #         '하의' : [],
+        #         '스커트' : [],
+        #         '아우터' : [],
+        #         '원피스' : [],
+        #         '외투' : [],
+        #         '기타' : []
+        #     },
+        #     '상의' : [],
+        #     '바지' : [],
+        #     '하의' : [],
+        #     '스커트' : [],
+        #     '아우터' : [],
+        #     '원피스' : [],
+        #     '외투' : [],
+        #     '기타' : []
+        # }
         
         # schedule에서 옷 가져오기
         recommand_outfit = PastOutfit.objects.filter(schedule__schedule_id=result)
+        
+        nes_response_form = []
         
         # start = time.time()
         for clothes in recommand_outfit:
             # 여기 serialize할건지 결정
             actual_clothing = clothes.clothing
             
+            new_response = []
+            
+            new_response.append(ClothingSerializer(actual_clothing, context={'user_id': request.META['HTTP_USERID']}).data)
+            
             # 일단 담기
-            response_form['recommand_outfit'][clothes.clothing.category].append(ClothingSerializer(actual_clothing, context={'user_id': request.META['HTTP_USERID']}).data)
+            # response_form['recommand_outfit'][clothes.clothing.category].append(ClothingSerializer(actual_clothing, context={'user_id': request.META['HTTP_USERID']}).data)
             
             # 비교를 위한 벡터 생성
             style_vector = np.zeros(style_count + 1)
@@ -286,16 +294,20 @@ def mlp(request):
             
             knn_result_list = knn.classes_[knn_result_index_list]
             
-            recommend_clothes_results = []
+            # recommend_clothes_results = []
             
             for knn_result_clothes in knn_result_list[0]:
 
-                recommend_clothes_results.append(ClothingSerializer(get_object_or_404(Clothing, clothing_id= int(knn_result_clothes)), context={'user_id': request.META['HTTP_USERID']}).data)
+                new_response.append(ClothingSerializer(get_object_or_404(Clothing, clothing_id= int(knn_result_clothes)), context={'user_id': request.META['HTTP_USERID']}).data)
+                # recommend_clothes_results.append(ClothingSerializer(get_object_or_404(Clothing, clothing_id= int(knn_result_clothes)), context={'user_id': request.META['HTTP_USERID']}).data)
             # print(f'네번째 {time.time() - start: .5f}')
             
-            response_form[clothes.clothing.category].append(recommend_clothes_results)
+            # response_form[clothes.clothing.category].append(recommend_clothes_results)
+            nes_response_form.append(new_response)
+            
+        
 
-        return Response(response_form)
+        return Response({'data':nes_response_form})
         
         
 
