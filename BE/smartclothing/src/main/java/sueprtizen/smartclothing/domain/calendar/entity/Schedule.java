@@ -52,6 +52,9 @@ public class Schedule {
     @Column(nullable = false)
     private String outfitImagePath;
 
+    @Column(nullable = false)
+    private boolean scheduleDisabled;
+
     @Builder
     public Schedule(User user, String scheduleName, String scheduleCategory, Weather weather, LocalDate date, int locationKey, String outfitImagePath) {
         this.user = user;
@@ -72,5 +75,9 @@ public class Schedule {
         this.date = date;
         this.locationKey = locationKey;
         this.outfitImagePath = outfitImagePath;
+    }
+
+    public void updateScheduleDisabled(boolean scheduleDisabled) {
+        this.scheduleDisabled = scheduleDisabled;
     }
 }

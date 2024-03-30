@@ -128,9 +128,8 @@ public class CalendarServiceImpl implements CalendarService {
         Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, scheduleDate)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
 
-        recommendedOutfitRepository.deleteAll(schedule.getRecommendedOutfits());
+        schedule.updateScheduleDisabled(true);
 
-        calendarRepository.delete(schedule);
     }
 
     @Override
