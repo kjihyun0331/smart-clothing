@@ -7,6 +7,10 @@ import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
 import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
 import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
+import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
+import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
+import sueprtizen.smartclothing.domain.clothing.repository.UserClothingRepository;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.ClothingInPastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.PastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.ScheduleDTO;
@@ -33,6 +37,7 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
     final CalendarRepository calendarRepository;
     final RecommendedOutfitRepository recommendedOutfitRepository;
     final WeatherRepository weatherRepository;
+    final UserClothingRepository userClothingRepository;
 
     @Override
     public List<PastOutfitResponseDTO> pastOutfitConformation(int userId) {
@@ -75,12 +80,16 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
         Schedule schedule = calendarRepository.findScheduleByUserAndScheduleId(currentUser, scheduleId)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
 
+
         List<RecommendedOutfit> recommendedOutfitList = recommendedOutfitRepository.findAllBySchedule(schedule);
 
         return recommendedOutfitList.stream().map(pastOutfit -> {
                     Clothing clothing = pastOutfit.getClothing();
+            UserClothing userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing)
+                    .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
                     return ClothingInPastOutfitResponseDTO.builder()
                             .clothingId(clothing.getClothingId())
+                            .clothingName(userClothing.getClothingName())
                             .x(pastOutfit.getX())
                             .y(pastOutfit.getY())
                             .width(pastOutfit.getWidth())
