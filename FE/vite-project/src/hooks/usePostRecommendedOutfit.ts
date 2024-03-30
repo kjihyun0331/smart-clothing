@@ -14,10 +14,14 @@ export function usePostRecommendedOutfit() {
   const { data, mutate } = useMutation({
     mutationFn: (data: dataType) => {
       const formData = new FormData();
-      formData.append("rate", data.rate);
-      formData.append("date", data.date);
-      formData.append("locate", data.locate);
-      formData.append("schedule", data.schedule);
+      // formData.append("rate", data.rate);
+      // formData.append("date", data.date);
+      // formData.append("locate", data.locate);
+      // formData.append("schedule", data.schedule);
+      formData.append("rate", '0');
+      formData.append("date", '2024-03-28');
+      formData.append("locate", '223680');
+      formData.append("schedule", '졸업식');
 
       return axios({
         method: "post",
