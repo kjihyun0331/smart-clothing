@@ -8,7 +8,7 @@ class Clothing(models.Model):
     now_at = models.CharField(max_length=20)
     rfid_uid = models.CharField(db_column='RFID_uid', max_length=15)  # Field name made lowercase.
     created_at = models.DateTimeField()
-    update_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     washed_at = models.DateTimeField()
     location_modified_at = models.DateTimeField()
     polluted = models.IntegerField()
