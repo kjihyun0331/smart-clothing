@@ -21,7 +21,7 @@ export function usePostRecommendedOutfit() {
 
       return axios({
         method: "post",
-        url: `https://j10s006.p.ssafy.io/ML-api/recommend/test`,
+        url: `https://j10s006.p.ssafy.io/ML-api/test`,
         headers: {
           userid: userToken,
           "Content-Type": "multipart/form-data",
