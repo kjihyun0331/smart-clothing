@@ -69,4 +69,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/outfit/past/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi familyApi() {
+        return GroupedOpenApi.builder()
+                .group("family-api")
+                .pathsToMatch("/familyApi/**")
+                .build();
+    }
 }

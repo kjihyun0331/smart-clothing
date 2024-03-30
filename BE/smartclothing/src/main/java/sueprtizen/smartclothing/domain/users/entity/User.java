@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sueprtizen.smartclothing.domain.family.entity.Family;
 import sueprtizen.smartclothing.global.entity.BaseEntity;
 
 @Entity
@@ -15,20 +16,29 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "INT")
     private int userId;
-    @Column(nullable = false)
-    private int familyId;
+
+    @ManyToOne
+    @JoinColumn(name = "family_id")
+    private Family family;
+
     @Column(nullable = false)
     private String email;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     private String userName;
+
     @Column(nullable = false)
     private int age;
+
     @Column(nullable = false)
     private String gender;
+
     @Column(nullable = false)
     private String profileImgPath;
+
     @Column(nullable = false)
     private String fcmToken;
 }
