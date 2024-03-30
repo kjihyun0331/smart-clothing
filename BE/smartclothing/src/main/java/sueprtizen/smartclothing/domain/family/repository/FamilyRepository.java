@@ -6,4 +6,5 @@ import sueprtizen.smartclothing.domain.family.entity.Family;
 
 @Repository
 public interface FamilyRepository extends JpaRepository<Family, Integer> {
+
 }
