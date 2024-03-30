@@ -7,6 +7,9 @@ import { Loader } from "@/components/Loader";
 import moment from "moment";
 import axios from "axios";
 import { BASE_URL } from "@/config/config";
+import IconEdit from "@/assets/ui/IconEdit";
+import { useState } from "react";
+import IconCheck from "@/assets/ui/IconCheck";
 
 type PastResponseItem = {
   schedule: {
@@ -28,6 +31,8 @@ interface ClothingPositionQueryType {
 }
 
 function Past() {
+  const [selectedPast, setSelectedPast] = useState<PastResponseItem>(null);
+
   const navigate = useNavigate();
   const { setConfirmOutfit, toggleItem, selectedItems } =
     useSelectedItemsStore();
@@ -36,10 +41,14 @@ function Past() {
     "outfit/recommended"
   );
 
-  async function handleSelect(item: PastResponseItem) {
+  function handleSelect(item) {
+    setSelectedPast(item);
+  }
+
+  async function handleConfirm() {
     try {
       const response = await axios.get(
-        `${BASE_URL}/outfit/recommended/pastOutfit?scheduleId=${item.schedule.scheduleId}`,
+        `${BASE_URL}outfit/recommended/pastOutfit?scheduleId=${selectedPast.schedule.scheduleId}`,
         {
           headers: {
             "User-ID": localStorage.getItem("token"),
@@ -62,13 +71,39 @@ function Past() {
         console.log(selectedItems);
       });
 
-      setConfirmOutfit(item.schedule.outfitImagePath);
+      setConfirmOutfit(selectedPast.schedule.outfitImagePath);
     } catch (error) {
       console.error("Error fetching item details:", error);
     }
-
     navigate("/calendar/confirmoutfit");
   }
+
+  async function handleEdit() {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}outfit/recommended/pastOutfit?scheduleId=${selectedPast.schedule.scheduleId}`,
+        {
+          headers: {
+            "User-ID": localStorage.getItem("token"),
+          },
+        }
+      );
+      const simpleClothesData = response.data.dataBody.map((item) => ({
+        clothingId: item.clothingId,
+        clothingName: item.clothingName,
+        clothingImagePath: item.clothingImagePath,
+      }));
+
+      simpleClothesData.forEach((item) => {
+        toggleItem(item);
+        console.log(selectedItems);
+      });
+    } catch (error) {
+      console.error("Error fetching item details:", error);
+    }
+    navigate("/calendar/makeoutfit");
+  }
+
   if (isLoading) return <Loader />;
 
   return (
@@ -76,6 +111,8 @@ function Past() {
       <Header>
         <IconBack onClick={() => navigate("/calendar")} />
         <p className="title">내 과거 코디에서 고르기</p>
+        <IconEdit onClick={() => handleEdit()} />
+        <IconCheck onClick={() => handleConfirm()} />
       </Header>
       <Content>
         {data.map((item) => {
@@ -94,7 +131,11 @@ function Past() {
                 [icon] {item.weather.highestTemperature}°C /{" "}
                 {item.weather.lowestTemperature}°C
               </div>
-              <div className="imgarea">
+              <div
+                className={
+                  selectedPast === item ? "imgarea selected" : "imgarea"
+                }
+              >
                 <img
                   src={item.schedule.outfitImagePath}
                   alt={item.schedule.date}
@@ -140,6 +181,10 @@ const Content = styled.div`
 const Item = styled.div`
   width: 100%;
   padding: 10px 10px;
+
+  .selected {
+    filter: contrast(0.5);
+  }
 
   .date {
     font-size: 1.2rem;
