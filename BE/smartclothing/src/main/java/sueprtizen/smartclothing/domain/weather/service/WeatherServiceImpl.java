@@ -2,17 +2,22 @@ package sueprtizen.smartclothing.domain.weather.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import sueprtizen.smartclothing.domain.location.dto.LocationKey;
+import sueprtizen.smartclothing.domain.location.repository.SiGunGuRepository;
 import sueprtizen.smartclothing.domain.weather.dto.WeatherResponseDTO;
 import sueprtizen.smartclothing.domain.weather.entity.Weather;
 import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
 import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WeatherServiceImpl implements WeatherService {
 
     final WeatherRepository weatherRepository;
+    final SiGunGuRepository siGunGuRepository;
 
     @Override
     public WeatherResponseDTO weatherFromLocationAndDate(int locationKey, String date) {
@@ -33,5 +38,9 @@ public class WeatherServiceImpl implements WeatherService {
                 weather.getUVMessage()
 
         );
+    }
+
+    public void callOpenApi(){
+
     }
 }

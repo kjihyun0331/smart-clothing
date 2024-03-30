@@ -2,6 +2,7 @@ package sueprtizen.smartclothing.domain.weather.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import sueprtizen.smartclothing.domain.weather.dto.WeatherResponseDTO;
 import sueprtizen.smartclothing.domain.weather.service.WeatherService;
@@ -22,5 +23,12 @@ public class WeatherController {
                 Message.success(weatherService.weatherFromLocationAndDate(locationKey, date))
         );
     }
+
+    @Scheduled(cron="0 0 0 * * * ",zone="Asia/Seoul")
+    @GetMapping("/openApi")
+    public void callOpenApi(){
+        weatherService.callOpenApi();
+    }
+
 }
 
