@@ -54,17 +54,20 @@ function Past() {
         clothingImagePath: item.clothingImagePath,
       }));
 
+      console.log("simpleclothesdata");
+      console.log(simpleClothesData);
       simpleClothesData.forEach((item) => {
         toggleItem(item);
+        console.log("item", item);
         console.log(selectedItems);
       });
 
       setConfirmOutfit(item.schedule.outfitImagePath);
-
-      navigate("/calendar/confirmoutfit");
     } catch (error) {
       console.error("Error fetching item details:", error);
     }
+
+    navigate("/calendar/confirmoutfit");
   }
   if (isLoading) return <Loader />;
 
