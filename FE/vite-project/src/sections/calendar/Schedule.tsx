@@ -107,8 +107,8 @@ const NoSchedule = ({ date, attendDay, selected }: NoSchedulePropType) => {
               clearItems();
               setSelectedKeyword("");
               setTitle("");
-              if (selected) {
-                setSelectedDate(selected);
+              if (selectedDate) {
+                setSelectedDate(selectedDate);
               }
             }}
           >
