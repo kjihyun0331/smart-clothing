@@ -1,46 +1,40 @@
 from rest_framework import serializers
-from .models import Clothing, ClothingDetail, ClothingTexture, ClothingStyle, UserClothing, Style, Texture
+from .models import Clothing, ClothingDetail, UserClothing
+
+
 
 class ClothingDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClothingDetail
-        fields = ['clothing_detail_id', 'clothing_img_path', 'color']
+        fields = ['clothing_detail_id', 'clothing_img_path']
 
-class TextureSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Texture
-        fields = ['texture_id', 'texture_name']
 
-class ClothingTextureSerializer(serializers.ModelSerializer):
-    texture = TextureSerializer(read_only=True)
 
-    class Meta:
-        model = ClothingTexture
-        fields = ['texture_connection_id', 'texture']
+class UserClothingSerializer(serializers.Serializer):
+    clothing_name = serializers.SerializerMethodField()
 
-class StyleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Style
-        fields = ['style_id', 'style_name']
+    def get_clothing_name(self, obj):
+        user_id = self.context.get('user_id')
+        user_clothing = obj.userclothing_set.filter(user_id=user_id).first()
+        return user_clothing.clothing_name if user_clothing else None
 
-class ClothingStyleSerializer(serializers.ModelSerializer):
-    style = StyleSerializer(read_only=True)
 
-    class Meta:
-        model = ClothingStyle
-        fields = ['style_connection_id', 'style']
-
-class UserClothingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserClothing
-        fields = ['clothing_connection_id', 'clothing_name', 'accrue_worn_count']
 
 class ClothingSerializer(serializers.ModelSerializer):
     clothing_detail = ClothingDetailSerializer(read_only=True)
-    clothing_textures = ClothingTextureSerializer(source='clothingtexture_set', many=True, read_only=True)
-    clothing_styles = ClothingStyleSerializer(source='clothingstyle_set', many=True, read_only=True)
-    user_clothings = UserClothingSerializer(source='userclothing_set', many=True, read_only=True)
-
+    user_clothing = UserClothingSerializer(source='*', read_only=True)
+    
     class Meta:
         model = Clothing
-        fields = ['clothing_id', 'clothing_detail', 'now_at', 'rfid_uid', 'created_at', 'update_at', 'washed_at', 'polluted', 'worn_count', 'category', 'clothing_textures', 'clothing_styles', 'user_clothings']
+        fields = ['clothing_id', 'clothing_detail', 'user_clothing']
+
+    # 응답 폼
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+
+        clothing_data = rep.get('clothing_detail', {})
+        return {
+            'clothing_id': rep.get('clothing_id'),
+            'clothing_name': rep['user_clothing'].get('clothing_name'),
+            'clothing_img_path': clothing_data.get('clothing_img_path'),
+        }
