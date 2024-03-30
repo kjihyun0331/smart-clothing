@@ -22,12 +22,11 @@ import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 import sueprtizen.smartclothing.domain.weather.entity.Weather;
-import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
-import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -69,24 +68,35 @@ public class CalendarServiceImpl implements CalendarService {
     public void scheduleSave(int userId, ScheduleSaveRequestDTO scheduleSaveRequestDTO, MultipartFile file) {
         User currentUser = getUser(userId);
 
-        Weather weather = weatherRepository.findByLocationKeyAndDate(
+        Optional<Weather> weather = weatherRepository.findByLocationKeyAndDate(
                 scheduleSaveRequestDTO.locationKey(),
                 scheduleSaveRequestDTO.date()
-        ).orElseThrow(
-                () -> new WeatherException(WeatherErrorCode.WEATHER_NOT_FOUND)
         );
 
         //TODO: file 저장 후 file 위치 저장
+        Schedule newScheDule;
 
-        Schedule newScheDule = Schedule.builder()
-                .scheduleName(scheduleSaveRequestDTO.title())
-                .scheduleCategory(scheduleSaveRequestDTO.category())
-                .user(currentUser)
-                .outfitImagePath("https://j10s006.p.ssafy.io/images/8fb97a55-1a04-4f82-a4a5-eb85b1f1a7c4.png")
-                .weather(weather)
-                .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
-                .locationKey(scheduleSaveRequestDTO.locationKey())
-                .build();
+
+        if (weather.isEmpty()) {
+            newScheDule = Schedule.builder()
+                    .scheduleName(scheduleSaveRequestDTO.title())
+                    .scheduleCategory(scheduleSaveRequestDTO.category())
+                    .user(currentUser)
+                    .outfitImagePath("https://j10s006.p.ssafy.io/images/8fb97a55-1a04-4f82-a4a5-eb85b1f1a7c4.png")
+                    .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
+                    .locationKey(scheduleSaveRequestDTO.locationKey())
+                    .build();
+        } else {
+            newScheDule = Schedule.builder()
+                    .scheduleName(scheduleSaveRequestDTO.title())
+                    .scheduleCategory(scheduleSaveRequestDTO.category())
+                    .user(currentUser)
+                    .outfitImagePath("https://j10s006.p.ssafy.io/images/8fb97a55-1a04-4f82-a4a5-eb85b1f1a7c4.png")
+                    .weather(weather.get())
+                    .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
+                    .locationKey(scheduleSaveRequestDTO.locationKey())
+                    .build();
+        }
 
         calendarRepository.save(newScheDule);
 
