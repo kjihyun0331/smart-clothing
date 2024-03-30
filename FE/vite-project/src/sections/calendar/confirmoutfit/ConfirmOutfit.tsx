@@ -18,7 +18,7 @@ interface SelectedItem {
 
 const ConfirmOutfit = () => {
   const navigate = useNavigate();
-  const { clearItems, confirmOutfit, selectedItems } = useSelectedItemsStore();
+  const { confirmOutfit, selectedItems } = useSelectedItemsStore();
   const { selectedDate, title, selectedKeyword } = useSelectedDateStore();
   const { mutate } = usePatchConfirmClothes();
   const date = new Date();
@@ -78,8 +78,6 @@ const ConfirmOutfit = () => {
         <IconBack onClick={() => navigate("/calendar/makeoutfit")} />
         <IconCheck
           onClick={() => {
-            navigate("/calendar");
-            clearItems();
             postCanvasImage(
               selectedDate,
               selectedKeyword,
