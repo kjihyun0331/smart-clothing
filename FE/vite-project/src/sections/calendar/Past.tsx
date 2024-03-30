@@ -39,7 +39,7 @@ function Past() {
   async function handleSelect(item: PastResponseItem) {
     try {
       const response = await axios.get(
-        `${BASE_URL}outfit/recommended/pastOutfit?scheduleId=${item.schedule.scheduleId}`,
+        `${BASE_URL}/outfit/recommended/pastOutfit?scheduleId=${item.schedule.scheduleId}`,
         {
           headers: {
             "User-ID": localStorage.getItem("token"),
