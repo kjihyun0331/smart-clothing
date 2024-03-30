@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import numpy as np
-from .models import User, Weather, Schedule, PastOutfit, Style, Texture, Clothing, ClothingStyle, ClothingTexture
+from .models import User, Weather, Schedule, PastOutfit, Style, Texture, Clothing, ClothingStyle, ClothingTexture, UserClothing
 import os
 import cv2
 from datetime import datetime
@@ -54,7 +54,7 @@ gender_dict = {
     '여자' : 'female'
 }
 
-clothes_type = ['상의', '아우터', '바지', '원피스', '스커트', '기타']
+clothes_type = ['상의', '아우터', '바지', '원피스', '스커트', '하의', '기타']
 
 
 
@@ -177,6 +177,7 @@ def mlp(request):
             'recommand_outfit' : {
                 '상의' : [],
                 '바지' : [],
+                '하의' : [],
                 '스커트' : [],
                 '아우터' : [],
                 '원피스' : [],
@@ -184,6 +185,7 @@ def mlp(request):
             },
             '상의' : [],
             '바지' : [],
+            '하의' : [],
             '스커트' : [],
             '아우터' : [],
             '원피스' : [],
@@ -199,7 +201,7 @@ def mlp(request):
             actual_clothing = clothes.clothing
             
             # 일단 담기
-            response_form['recommand_outfit'][clothes.clothing.category] = ClothingSerializer(actual_clothing).data
+            response_form['recommand_outfit'][clothes.clothing.category].append(ClothingSerializer(actual_clothing, context={'user_id': request.META['HTTP_USERID']}).data)
             
             # 비교를 위한 벡터 생성
             style_vector = np.zeros(style_count + 1)
@@ -284,11 +286,14 @@ def mlp(request):
             
             knn_result_list = knn.classes_[knn_result_index_list]
             
+            recommend_clothes_results = []
+            
             for knn_result_clothes in knn_result_list[0]:
 
-                response_form[clothes.clothing.category].append(ClothingSerializer(get_object_or_404(Clothing, clothing_id= int(knn_result_clothes))).data)
+                recommend_clothes_results.append(ClothingSerializer(get_object_or_404(Clothing, clothing_id= int(knn_result_clothes)), context={'user_id': request.META['HTTP_USERID']}).data)
             # print(f'네번째 {time.time() - start: .5f}')
-
+            
+            response_form[clothes.clothing.category].append(recommend_clothes_results)
 
         return Response(response_form)
         
