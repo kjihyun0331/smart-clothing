@@ -1,5 +1,6 @@
 package sueprtizen.smartclothing.domain.calendar.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import sueprtizen.smartclothing.domain.calendar.dto.*;
 
 public interface CalendarService {
@@ -11,7 +12,8 @@ public interface CalendarService {
 
     void scheduleSave(
             int userId,
-            ScheduleSaveRequestDTO scheduleSaveRequestDTO
+            ScheduleSaveRequestDTO scheduleSaveRequestDTO,
+            MultipartFile file
     );
 
     void scheduleDelete(
