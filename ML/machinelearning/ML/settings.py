@@ -59,7 +59,7 @@ MIDDLEWARE = [
 # CORS 설정
 CORS_ALLOWED_ORIGINS = [
     'https://j10s006.p.ssafy.io',
-    'http://localhost:5173/'
+    'http://localhost:5173'
 ]
 
 ROOT_URLCONF = 'ML.urls'
