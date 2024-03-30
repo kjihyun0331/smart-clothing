@@ -2,6 +2,7 @@ package sueprtizen.smartclothing.domain.calendar.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sueprtizen.smartclothing.domain.calendar.dto.*;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
@@ -64,6 +65,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @Transactional
     public void scheduleSave(int userId, ScheduleSaveRequestDTO scheduleSaveRequestDTO, MultipartFile file) {
         User currentUser = getUser(userId);
 
@@ -107,6 +109,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @Transactional
     public void scheduleDelete(int userId, String date) {
         User currentUser = getUser(userId);
 
@@ -114,6 +117,8 @@ public class CalendarServiceImpl implements CalendarService {
 
         Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, scheduleDate)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
+
+        recommendedOutfitRepository.deleteAll(schedule.getRecommendedOutfits());
 
         calendarRepository.delete(schedule);
     }
