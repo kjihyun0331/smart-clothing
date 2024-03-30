@@ -1,12 +1,39 @@
 import styled from "styled-components";
 import IconBack from "@/assets/ui/IconBack";
 import { useNavigate } from "react-router-dom";
-import { testclothesarr } from "./testclothesarr";
 import { useSelectedItemsStore } from "@/store/ClothesStore";
+import { useApi } from "@/hooks/useApi";
+import { Loader } from "@/components/Loader";
+import moment from "moment";
+
+type PastResponseItem = {
+  schedule: {
+    scheduleId: 0;
+    date: "string";
+    scheduleCategory: "string";
+    outfitImagePath: "string";
+  };
+  weather: {
+    icon: 0;
+    lowestTemperature: 0;
+    highestTemperature: 0;
+  };
+};
+
+interface ClothingPositionQueryType {
+  isLoading: boolean;
+  data: PastResponseItem[];
+}
 
 function Past() {
   const navigate = useNavigate();
   const { setConfirmOutfit } = useSelectedItemsStore();
+  const { isLoading, data }: ClothingPositionQueryType = useApi(
+    "get",
+    "outfit/recommended"
+  );
+
+  if (isLoading) return <Loader />;
 
   return (
     <>
@@ -15,22 +42,28 @@ function Past() {
         <p className="title">내 과거 코디에서 고르기</p>
       </Header>
       <Content>
-        {testclothesarr.map((item) => {
+        {data.map((item) => {
           return (
             <Item
-              key={item.id}
+              key={item.schedule.scheduleId}
               onClick={() => {
-                setConfirmOutfit(item.url);
+                setConfirmOutfit(item.schedule.outfitImagePath);
                 navigate("/calendar/confirmoutfit");
               }}
             >
-              <span className="date">{item.date}</span>
-              <div className="keyword">{item.keyword}</div>
+              <span className="date">
+                {moment(item.schedule.date).format("M월 DD일 (dd)")}
+              </span>
+              <div className="keyword">{item.schedule.scheduleCategory}</div>
               <div className="weather">
-                [icon] {item.weatherhigh}°C / {item.weatherlow}°C
+                [icon] {item.weather.highestTemperature}°C /{" "}
+                {item.weather.lowestTemperature}°C
               </div>
               <div className="imgarea">
-                <img src={item.url} alt={item.keyword} />
+                <img
+                  src={item.schedule.outfitImagePath}
+                  alt={item.schedule.date}
+                />
               </div>
             </Item>
           );
