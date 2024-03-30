@@ -1,7 +1,8 @@
 package sueprtizen.smartclothing.domain.weather.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
@@ -70,5 +71,20 @@ public class Weather {
         this.UVMessage=category;
 
 
+    }
+
+    public void updateValue(Weather weather) {
+        this.icon = weather.icon;
+        this.lowestTemperature = weather.lowestTemperature;
+        this.highestTemperature = weather.highestTemperature;
+        this.highestRealFeelingTemperature = weather.highestRealFeelingTemperature;
+        this.lowestRealFeelingTemperature = weather.lowestRealFeelingTemperature;
+        this.precipitation = weather.precipitation;
+        this.snowCover = weather.snowCover;
+        this.humidity = weather.humidity;
+        this.windSpeed = weather.windSpeed;
+        this.solarIrradiance = weather.solarIrradiance;
+        this.uv = weather.uv;
+        this.UVMessage = weather.UVMessage;
     }
 }
