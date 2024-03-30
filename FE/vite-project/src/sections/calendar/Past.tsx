@@ -48,7 +48,7 @@ function Past() {
   async function handleConfirm() {
     try {
       const response = await axios.get(
-        `${BASE_URL}outfit/recommended/pastOutfit?scheduleId=${selectedPast.schedule.scheduleId}`,
+        `${BASE_URL}/outfit/recommended/pastOutfit?scheduleId=${selectedPast.schedule.scheduleId}`,
         {
           headers: {
             "User-ID": localStorage.getItem("token"),
@@ -78,7 +78,7 @@ function Past() {
   async function handleEdit() {
     try {
       const response = await axios.get(
-        `${BASE_URL}outfit/recommended/pastOutfit?scheduleId=${selectedPast.schedule.scheduleId}`,
+        `${BASE_URL}/outfit/recommended/pastOutfit?scheduleId=${selectedPast.schedule.scheduleId}`,
         {
           headers: {
             "User-ID": localStorage.getItem("token"),
