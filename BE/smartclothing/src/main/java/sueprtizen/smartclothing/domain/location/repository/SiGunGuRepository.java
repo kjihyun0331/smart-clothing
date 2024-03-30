@@ -13,4 +13,6 @@ import java.util.List;
 public interface SiGunGuRepository extends JpaRepository<SiGunGu, Integer> {
 
     List<SiGunGuDTO> findAllBySiDo(SiDo sido);
+
+    List<LocationKey> findAllByLocationKeyNotNull();
 }
