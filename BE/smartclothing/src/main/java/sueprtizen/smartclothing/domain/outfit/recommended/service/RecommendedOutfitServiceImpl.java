@@ -18,6 +18,9 @@ import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 import sueprtizen.smartclothing.domain.weather.entity.Weather;
+import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
+import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
+import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,7 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
     final UserRepository userRepository;
     final CalendarRepository calendarRepository;
     final RecommendedOutfitRepository recommendedOutfitRepository;
+    final WeatherRepository weatherRepository;
 
     @Override
     public List<PastOutfitResponseDTO> pastOutfitConformation(int userId) {
@@ -47,7 +51,10 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
                     .outfitImagePath(schedule.getOutfitImagePath())
                     .build();
 
-            Weather weather = schedule.getWeather();
+
+            Weather weather = weatherRepository.findByLocationKeyAndDate(schedule.getLocationKey(), schedule.getDate())
+                    .orElseThrow(() -> new WeatherException(WeatherErrorCode.WEATHER_NOT_FOUND));
+
             WeatherDTO weatherDTO = WeatherDTO.builder()
                     .highestTemperature(weather.getHighestTemperature())
                     .lowestTemperature(weather.getLowestTemperature())

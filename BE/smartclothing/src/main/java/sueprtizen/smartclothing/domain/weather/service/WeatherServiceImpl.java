@@ -16,6 +16,7 @@ import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
 import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public WeatherResponseDTO weatherFromLocationAndDate(int locationKey, String date) {
-        Weather weather = weatherRepository.findByLocationKeyAndDate(locationKey, date)
+        Weather weather = weatherRepository.findByLocationKeyAndDate(locationKey, LocalDate.parse(date))
                 .orElseThrow(() -> new WeatherException(WeatherErrorCode.WEATHER_NOT_FOUND));
         return new WeatherResponseDTO(
                 weather.getIcon(),
@@ -70,7 +71,7 @@ public class WeatherServiceImpl implements WeatherService {
             JSONArray daily = (JSONArray) body.get("DailyForecasts");
             for (Object day : daily) {
                 JSONObject jsonDay = (JSONObject) day;
-                String date = (String) jsonDay.get("Date");
+                LocalDate date = LocalDate.parse((String) jsonDay.get("Date"));
                 JSONObject dayTime = (JSONObject) jsonDay.get("Day");
                 JSONObject temp = (JSONObject) jsonDay.get("Temperature");
                 JSONObject real = (JSONObject) jsonDay.get("RealFeelTemperature");

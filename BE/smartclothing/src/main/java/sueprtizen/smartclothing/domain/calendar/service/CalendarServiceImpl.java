@@ -76,7 +76,7 @@ public class CalendarServiceImpl implements CalendarService {
 
         Optional<Weather> weather = weatherRepository.findByLocationKeyAndDate(
                 scheduleSaveRequestDTO.locationKey(),
-                scheduleSaveRequestDTO.date()
+                LocalDate.parse(scheduleSaveRequestDTO.date())
         );
 
         //TODO: file 저장 후 file 위치 저장

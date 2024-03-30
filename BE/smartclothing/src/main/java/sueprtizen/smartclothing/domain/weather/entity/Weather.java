@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @Getter
 @Entity
@@ -16,7 +18,7 @@ public class Weather {
     private int locationKey;
 
     @Column(nullable = false)
-    private String date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private int icon;
@@ -54,7 +56,7 @@ public class Weather {
     @Column(nullable = false, name = "uv_message")
     private String UVMessage;
 
-    public Weather(Integer key, String date, int icon, Double value, Double value1, Double value2, Double value3, Double value4, Double value5, Double average, Double value6, Double value7, Double value8, String category) {
+    public Weather(Integer key, LocalDate date, int icon, Double value, Double value1, Double value2, Double value3, Double value4, Double value5, Double average, Double value6, Double value7, Double value8, String category) {
         this.locationKey=key;
         this.date=date;
         this.icon=icon;
