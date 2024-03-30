@@ -1,6 +1,5 @@
 package sueprtizen.smartclothing.domain.weather.service;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,7 +16,6 @@ import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
 import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +50,7 @@ public class WeatherServiceImpl implements WeatherService {
         );
     }
 
-    Double changeToDouble(Object obj){
+    Double changeToDouble(Object obj) {
         String strX = (obj).toString();
         return Double.parseDouble(strX);
     }
@@ -72,7 +70,7 @@ public class WeatherServiceImpl implements WeatherService {
             JSONArray daily = (JSONArray) body.get("DailyForecasts");
             for (Object day : daily) {
                 JSONObject jsonDay = (JSONObject) day;
-                String date = (String)jsonDay.get("Date");
+                String date = (String) jsonDay.get("Date");
                 JSONObject dayTime = (JSONObject) jsonDay.get("Day");
                 JSONObject temp = (JSONObject) jsonDay.get("Temperature");
                 JSONObject real = (JSONObject) jsonDay.get("RealFeelTemperature");
@@ -86,15 +84,18 @@ public class WeatherServiceImpl implements WeatherService {
                 JSONObject wind = (JSONObject) dayTime.get("Wind");
                 JSONObject speed = (JSONObject) wind.get("Speed");
                 JSONObject solar = (JSONObject) dayTime.get("SolarIrradiance");
-                JSONObject air = (JSONObject) ((JSONArray)(jsonDay.get("AirAndPollen"))).get(5);
+                JSONObject air = (JSONObject) ((JSONArray) (jsonDay.get("AirAndPollen"))).get(5);
 
-                Optional<Weather> weather = weatherRepository.findByLocationKeyAndDate(key,date);
-                weather.ifPresent(value -> weatherRepository.deleteById(value.getWeatherId()));
+                Optional<Weather> weather = weatherRepository.findByLocationKeyAndDate(key, date);
+                if (weather.isPresent()) {
+                    weather.get().updateValue(weather.get());
+                } else {
+                    Weather newWeather = new Weather(
+                            key, date, Integer.parseInt(dayTime.get("Icon").toString()), changeToDouble(minTemp.get("Value")), changeToDouble(maxTemp.get("Value")), changeToDouble(realMinTem.get("Value")), changeToDouble(realMaxTem.get("Value")), changeToDouble(rain.get("Value")), changeToDouble(snow.get("Value")), changeToDouble(humidity.get("Average")), changeToDouble(speed.get("Value")), changeToDouble(solar.get("Value")), changeToDouble(air.get("Value")), (String) air.get("Category")
+                    );
+                    weatherRepository.save(newWeather);
+                }
 
-                Weather newWeather = new Weather(
-                        key,date, Integer.parseInt(dayTime.get("Icon").toString()),changeToDouble(minTemp.get("Value")),changeToDouble(maxTemp.get("Value")),changeToDouble(realMinTem.get("Value")),changeToDouble(realMaxTem.get("Value")),changeToDouble(rain.get("Value")),changeToDouble(snow.get("Value")),changeToDouble(humidity.get("Average")),changeToDouble(speed.get("Value")),changeToDouble(solar.get("Value")),changeToDouble(air.get("Value")),(String)air.get("Category")
-                );
-                weatherRepository.save(newWeather);
             }
         }
     }
