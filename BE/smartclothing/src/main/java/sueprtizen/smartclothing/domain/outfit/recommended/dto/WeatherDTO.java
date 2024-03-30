@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record WeatherDTO(
         int icon,
-        int lowestTemperature,
-        int highestTemperature
+        double lowestTemperature,
+        double highestTemperature
 ) {
 }
