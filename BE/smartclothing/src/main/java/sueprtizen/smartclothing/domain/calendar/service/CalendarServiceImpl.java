@@ -80,6 +80,7 @@ public class CalendarServiceImpl implements CalendarService {
                 .scheduleName(scheduleSaveRequestDTO.title())
                 .scheduleCategory(scheduleSaveRequestDTO.category())
                 .user(currentUser)
+                .outfitImagePath("https://j10s006.p.ssafy.io/images/8fb97a55-1a04-4f82-a4a5-eb85b1f1a7c4.png")
                 .weather(weather)
                 .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
                 .locationKey(scheduleSaveRequestDTO.locationKey())
