@@ -23,11 +23,13 @@ interface NameAreaProps {
 const AddCurrentClothes = () => {
     useEffect(() => {
         console.log('asdfasfd')
+
         axios({
             method: "post",
-            url: "http://j10s006.p.ssafy.io:8000/recommend/test",
+            url: 'https://j10s006.p.ssafy.io/ML-api/test',
             headers: {
-              userid: 1,
+            userid: 1,
+            //   "Content-Type": "multipart/form-data",
             },
             data : {
                 rate : 0,
@@ -35,23 +37,6 @@ const AddCurrentClothes = () => {
                 locate : 223680,
                 schedule : '졸업식'
             }
-          })
-          .then((res) => console.log(res.data))
-          .catch((err) => console.log(err))
-
-        axios({
-            method: "get",
-            url: 'http://j10s006.p.ssafy.io:8080/api/v1/weather?locationKey=223680&date=2024-03-28',
-            headers: {
-            userid: 1,
-            //   "Content-Type": "multipart/form-data",
-            },
-            // data : {
-            //     rate : 0,
-            //     date : '2024-03-28',
-            //     locate : 223680,
-            //     schedule : '졸업식'
-            // }
         })
         .then((res) => res.data)
         .catch((err) => console.log(err))
