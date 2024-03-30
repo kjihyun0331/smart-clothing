@@ -38,8 +38,14 @@ const AddCurrentClothes = () => {
                 schedule : '졸업식'
             }
         })
-        .then((res) => res.data)
-        .catch((err) => console.log(err))
+        .then((res) => 
+        console.log(res.data)
+        )
+        .catch((err) => 
+        {
+          console.log('에러!!!')
+          console.log(err)
+        })
 
     })
   
