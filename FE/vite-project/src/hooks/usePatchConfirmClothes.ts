@@ -2,8 +2,13 @@ import { BASE_URL } from "@/config/config";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelectedItemsStore } from "@/store/ClothesStore";
+import { useSelectedDateStore } from "@/store/DateStore";
 
 export function usePatchConfirmClothes() {
+  const { clearItems } = useSelectedItemsStore();
+  const { setTitle, setSelectedKeyword } = useSelectedDateStore();
+
   const navigate = useNavigate();
   const userToken = localStorage.getItem("token");
 
@@ -28,6 +33,9 @@ export function usePatchConfirmClothes() {
     },
     onSuccess: () => {
       navigate(`/calendar`);
+      clearItems();
+      setTitle("");
+      setSelectedKeyword("");
     },
   });
 
