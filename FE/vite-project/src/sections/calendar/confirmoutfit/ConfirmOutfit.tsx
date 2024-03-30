@@ -47,8 +47,8 @@ const ConfirmOutfit = () => {
           JSON.stringify({
             date,
             title,
-            category: keyword, // 예시에서 keyword를 category로 사용
-            locationKey: 0, // 예시 값
+            category: keyword,
+            locationKey: 226003,
             clothing: selectedClothes.map((clothing) => ({
               clothingId: clothing.id,
               x: clothing.x,
