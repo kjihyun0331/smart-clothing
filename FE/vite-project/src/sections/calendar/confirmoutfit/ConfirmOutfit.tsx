@@ -34,8 +34,8 @@ const ConfirmOutfit = () => {
     selectedClothes: SelectedItem[],
     imageData: string
   ) => {
-    console.log(date, keyword, title);
-    console.log(imageData);
+    // console.log(date, keyword, title);
+    // console.log(imageData);
 
     const formData = new FormData();
 
@@ -64,9 +64,9 @@ const ConfirmOutfit = () => {
 
     // 이미지 데이터를 Blob으로 변환하여 FormData에 추가
     const imageBlob = await fetch(imageData).then((res) => res.blob());
-    console.log("**** imageBlob 확인**************");
-    console.log(typeof imageBlob);
-    console.log(imageBlob);
+    // console.log("**** imageBlob 확인**************");
+    // console.log(typeof imageBlob);
+    // console.log(imageBlob);
     formData.append("file", imageBlob, "image.png");
 
     mutate(formData);

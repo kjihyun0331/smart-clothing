@@ -15,12 +15,12 @@ export function usePatchConfirmClothes() {
   const { data, mutate } = useMutation({
     mutationFn: async (formData: FormData) => {
       ////////////////////
-      console.log(
-        "----------------useMutation에서 formData 상태 확인하기--------------"
-      );
-      for (const [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
+      // console.log(
+      //   "----------------useMutation에서 formData 상태 확인하기--------------"
+      // );
+      // for (const [key, value] of formData.entries()) {
+      //   console.log(key, value);
+      // }
       return axios({
         method: "post",
         url: `${BASE_URL}/calendar`,

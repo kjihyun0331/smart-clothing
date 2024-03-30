@@ -1,11 +1,10 @@
 import { BASE_URL } from "@/config/config";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export function useDeleteSchedule() {
-  const navigate = useNavigate();
   const userToken = localStorage.getItem("token");
+  const queryClient = useQueryClient();
 
   const { data, mutate } = useMutation({
     mutationFn: (data: string) => {
@@ -18,7 +17,11 @@ export function useDeleteSchedule() {
       }).then((res) => res.data);
     },
     onSuccess: () => {
-      navigate(`/calendar`);
+      // InvalidateQueryFilters 객체를 사용하는 예시
+      queryClient.invalidateQueries({
+        queryKey: ["calendarData"],
+        // 필요한 경우, 여기에 더 많은 필터 옵션을 추가할 수 있습니다.
+      });
     },
   });
 

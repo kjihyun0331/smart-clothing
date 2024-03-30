@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "@/config/config";
 import axios, { AxiosRequestConfig } from "axios";
 
-export function useApi(method: string, url: string) {
+export function useApi(method: string, url: string, querykey?: string) {
   const userToken = localStorage.getItem("token");
 
   const axiosRequestConfig: AxiosRequestConfig = {
@@ -13,7 +13,7 @@ export function useApi(method: string, url: string) {
     },
   };
   const { isLoading, isError, data, isSuccess } = useQuery({
-    queryKey: [url],
+    queryKey: [querykey, url],
     queryFn: () => axios(axiosRequestConfig).then((res) => res.data),
     select: (res) => res.dataBody,
   });
