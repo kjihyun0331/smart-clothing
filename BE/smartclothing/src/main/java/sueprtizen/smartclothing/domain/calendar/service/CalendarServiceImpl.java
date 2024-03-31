@@ -83,7 +83,7 @@ public class CalendarServiceImpl implements CalendarService {
         );
 
         //TODO: file 저장 후 file 위치 저장
-        String uploadDir = "/usr/share/nginx/outfit_images/";
+        String uploadDir = "/app/outfit_images/";
         String fileName = UUID.randomUUID()+".png";
         // 파일 객체 생성
         File outfitPNG = new File(uploadDir + fileName);
@@ -103,7 +103,7 @@ public class CalendarServiceImpl implements CalendarService {
                     .scheduleName(scheduleSaveRequestDTO.title())
                     .scheduleCategory(scheduleSaveRequestDTO.category())
                     .user(currentUser)
-                    .outfitImagePath("https://j10s006.p.ssafy.io/images/"+fileName) //url
+                    .outfitImagePath("https://j10s006.p.ssafy.io/outfit/"+fileName) //url
                     .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
                     .locationKey(scheduleSaveRequestDTO.locationKey())
                     .build();
@@ -112,7 +112,7 @@ public class CalendarServiceImpl implements CalendarService {
                     .scheduleName(scheduleSaveRequestDTO.title())
                     .scheduleCategory(scheduleSaveRequestDTO.category())
                     .user(currentUser)
-                    .outfitImagePath("https://j10s006.p.ssafy.io/images/"+fileName)
+                    .outfitImagePath("https://j10s006.p.ssafy.io/outfit/"+fileName)
                     .weather(weather.get())
                     .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
                     .locationKey(scheduleSaveRequestDTO.locationKey())
