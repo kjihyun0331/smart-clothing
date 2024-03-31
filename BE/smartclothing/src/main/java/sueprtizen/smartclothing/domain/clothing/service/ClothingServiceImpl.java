@@ -223,6 +223,16 @@ public class ClothingServiceImpl implements ClothingService {
         }
     }
 
+    public void putClothingIntoWasher(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        clothing.updateNowat("세탁기");
+    }
+
+    public void putClothingIntoAirdresser(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        clothing.updateNowat("에어드레서");
+    }
+
 
     private User getUser(int userId) {
         return userRepository.findByUserId(userId)
