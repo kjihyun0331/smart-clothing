@@ -28,7 +28,7 @@ export default ClothesImage;
 
 
 const Container = styled.div<ColorProps>`
-background-color: ${props => props.backgroundColor || '#f5f5f5'};
+background-color: ${(props) => {return props.backgroundColor || '#f5f5f5'}}; 
 box-sizing: border-box;
 width: 100%;
 height: 100%;
