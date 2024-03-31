@@ -11,6 +11,7 @@ services:
       - /etc/letsencrypt/:/etc/nginx/ssl/
       - /home/ubuntu/clothes_images/:/usr/share/nginx/images/
       - /home/ubuntu/profile_images/:/usr/share/nginx/profile_images/
+      - /home/ubuntu/outfit_images/:/usr/share/nginx/outfit_images/
     ports:
       - "80:80"
       - "443:443"
