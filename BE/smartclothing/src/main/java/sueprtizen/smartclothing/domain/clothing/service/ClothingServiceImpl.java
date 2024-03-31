@@ -35,6 +35,8 @@ public class ClothingServiceImpl implements ClothingService {
     private final StyleRepository styleRepository;
     private final ClothingSeasonRepository clothingSeasonRepository;
     private final ClothingDetailRepository clothingDetailRepository;
+    private final ClothingTextureRepository clothingTextureRepository;
+    private final TextureRepository textureRepository;
 
     @Override
     public List<ClosetConfirmResponseDTO> closetConfirmation(int userId) {
@@ -111,6 +113,22 @@ public class ClothingServiceImpl implements ClothingService {
 
         //새로운 스타일 연결
         clothingStyleRepository.saveAll(newClothingStyleList);
+
+        //소재 모두 삭제
+        clothingTextureRepository.deleteAllByClothingDetail(clothing.getClothingDetail());
+        List<Texture> newTextures = clothingUpdateRequestDTO.textures().stream().map(textureName ->
+                textureRepository.findByTextureName(textureName)
+                        .orElseThrow(() -> new ClothingException(ClothingErrorCode.TEXTURE_NOT_FOUND))
+        ).toList();
+
+        //새로운 소재 연결
+        clothingTextureRepository.saveAll(newTextures.stream().map(texture ->
+                ClothingTexture.builder()
+                        .clothingDetail(clothing.getClothingDetail())
+                        .texture(texture)
+                        .build()
+        ).toList());
+
 
 
         // 계절 모두 삭제
