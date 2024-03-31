@@ -71,6 +71,6 @@ public class WasherServiceImpl implements WasherService {
 
     public void addLaundry(String rfid,Long userId) {
         clothingService.putClothingIntoWasher(rfid);
-        fcmService.sendMessageTo(userId,"옷을 세탁기에 넣었어요");
+        fcmService.sendMessageTo(userId,"옷이 세탁기에 들어갔습니다.","세탁 알림");
     }
 }
