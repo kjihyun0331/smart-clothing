@@ -6,7 +6,6 @@ import ClothesImage from "@/components/CLothesImage";
 import { useCurrentClothesStore } from "@/store/CurrentClothesStore";
 
 
-
 const CATEGORY = ["전체", "상의", "하의", "아우터", "치마", "바지"];
 const SORT = ["최근 등록 순", "오래된 순", "많이 입은 순"];
 
@@ -16,7 +15,7 @@ interface ApiResponseType {
 }
 
 interface NameAreaProps {
-    fontSize: string; // 여기에서 fontSize prop의 타입을 명시합니다.
+    fontSize: string;
 }
 
 
@@ -24,9 +23,16 @@ interface LastItemProps {
   $isLastItem : boolean
 }
 
+interface ItemListProps {
+  $isItmeList : boolean
+}
+
 
 const AddCurrentClothes = () => {
     const {AddClothesList} = useCurrentClothesStore()
+
+    const isItmeList = (0 !== AddClothesList.length)
+
 
     const handleDetailClick = (id: number) => {
       console.log('aaa')
@@ -77,7 +83,7 @@ const AddCurrentClothes = () => {
         </Header>
 
   
-        <ClosetContent>
+        <ClosetContent $isItmeList={isItmeList}>
           {data.map((item) => {
             return (
                 <Item
@@ -95,12 +101,11 @@ const AddCurrentClothes = () => {
         </ClosetContent>
         <AddList>
           <Container>
-            <Message>오늘 내가 입은 옷</Message>
             <InfoContainer>
                 <ClothesList>
                   {
                       AddClothesList.map((item, index:number) => {
-                          const isLastItem = (index === testRFIDResponse.data.outfit_list.length - 1)
+                          const isLastItem = (index === AddClothesList.length - 1)
                           return (
                               <Clothes key={index} $isLastItem={isLastItem}>
                                   <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/>
@@ -109,9 +114,6 @@ const AddCurrentClothes = () => {
                       })
                   }
                 </ClothesList>
-                <AddBox>
-                    {/* <IconAdd onClick={moveAddClothes}/> */}
-                </AddBox>
             </InfoContainer>
             <button>확정하기</button>
           </Container>
@@ -126,18 +128,8 @@ const Container = styled.div`
 width: 95%;
 margin: auto;
 background-color: #ffffff;
-border-radius: 1rem;
 box-sizing: border-box;
-height: 30vh;
-
-`
-
-const Message = styled.div`
-text-align:center;
-padding: 1rem;
-font-size: 1.2rem;
-font-weight: bolder;
-color: #8d8d8d;
+text-align: center;
 `
 
 const InfoContainer = styled.div`
@@ -152,28 +144,18 @@ margin: 0 auto;
 overflow-x: auto
 `
 
-const AddBox = styled.div`
-padding: 1rem;
-flex: 1;
-min-width: 15%;
-min-height: 15vh;
-display: flex;
-justify-content: center;
-align-items: center;
-`
-
 const Clothes = styled.div<LastItemProps>`
-  height: 15vh;
-  min-width: 15vh;
+  height: 13vh;
+  min-width: 13vh;
   margin: 0.5rem ${({ $isLastItem }) => ($isLastItem ? '0' : '1rem')} 0.5rem 0;
 `
 
 
-const ClosetContent = styled.div`
-  padding: 3rem 0.7rem 12dvh 0.7rem;
+const ClosetContent = styled.div<ItemListProps>`
+  padding: 3rem 0.7rem ${({ $isItmeList }) => ($isItmeList ? '32dvh' : '12dvh')} 0.7rem;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   background-color: ${(props) => props.theme.colors.backgroundcolor};
   gap: 0.3rem;
 `;
@@ -249,6 +231,5 @@ const AddList = styled.div`
   position: fixed;
   bottom: 12dvh;
   width: 100%;
-  height: 15vdh;
   background-color: #ffffff;
 `

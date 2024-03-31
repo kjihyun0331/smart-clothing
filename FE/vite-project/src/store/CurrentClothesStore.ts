@@ -25,7 +25,7 @@ export const useCurrentClothesStore = create<CurrentClothesState>((set) => ({
               (clothes) => clothes.clothingId !== deleteClothes.clothingId
           ),
       })),
-    AddClothesList: [],
+    AddClothesList: [1, 2,3 , 4],
     AddCurrentClothes: (addClothes:Clothes) => set({}),
     DeleteAddCurrentClothes: (addDeleteClothes:Clothes) => set((state) => ({
       AddClothesList: state.AddClothesList.filter(
