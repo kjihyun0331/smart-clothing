@@ -24,7 +24,7 @@
 
 #include <app_resource_manager.h>
 
-#define BUF_SIZE 1024
+#define BUF_SIZE 4096
 #define RFID_SIZE 20
 #define MAX_OUTFIT 40
 #define MAX_PROFILE 4
