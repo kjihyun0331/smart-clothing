@@ -29,9 +29,9 @@ public class FCMServiceImpl implements FCMService {
     }
 
     @Override
-    public void sendMessageTo(Integer userId, String body) {
+    public void sendMessageTo(Long userId, String body) {
         // token 찾고
-        User user = userRepository.findByUserId(userId).orElseThrow(()
+        User user = userRepository.findByUserId(userId.intValue()).orElseThrow(()
                 -> new UserException(UserErrorCode.NOT_FOUND_MEMBER));
         String token = user.getFcmToken();
 
