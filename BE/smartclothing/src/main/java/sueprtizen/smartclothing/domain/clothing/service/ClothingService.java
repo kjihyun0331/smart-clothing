@@ -26,4 +26,8 @@ public interface ClothingService {
 
     void addClothes(String rfid, JSONArray users, Long detailId);
 
+    void putClothingIntoWasher(String rfid);
+
+    void putClothingIntoAirdresser(String rfid);
+
 }

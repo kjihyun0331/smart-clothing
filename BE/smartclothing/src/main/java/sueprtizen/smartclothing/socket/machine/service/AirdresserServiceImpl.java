@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
+import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
 import sueprtizen.smartclothing.socket.machine.dto.AirdresserResponseDTO;
 import sueprtizen.smartclothing.socket.machine.repository.AirdresserRepository;
 
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AirdresserServiceImpl implements AirdresserService {
     private final AirdresserRepository airdresserRepository;
+    private final ClothingService clothingService;
 
     LocalDate today = LocalDate.now();
 
@@ -68,8 +70,7 @@ public class AirdresserServiceImpl implements AirdresserService {
     }
 
     public void addCareClothes(String rfid) {
-        //위치 에어드레서로 바꾸기
-        //location changed at 바꾸기
+        clothingService.putClothingIntoAirdresser(rfid);
     }
 
 }
