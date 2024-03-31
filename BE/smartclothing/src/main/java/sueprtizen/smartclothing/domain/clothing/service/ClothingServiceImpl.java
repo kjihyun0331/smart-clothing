@@ -11,6 +11,7 @@ import sueprtizen.smartclothing.domain.clothing.entity.*;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
 import sueprtizen.smartclothing.domain.clothing.repository.*;
+import sueprtizen.smartclothing.domain.outfit.recommended.dto.ClothingInPastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.users.entity.User;
 import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
@@ -268,6 +269,11 @@ public class ClothingServiceImpl implements ClothingService {
     private User getUser(int userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    public Integer getClothingOwner(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        return clothing.getOwnerId();
     }
 
 }
