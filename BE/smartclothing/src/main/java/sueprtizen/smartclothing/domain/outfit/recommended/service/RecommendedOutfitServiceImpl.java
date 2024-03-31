@@ -7,6 +7,10 @@ import sueprtizen.smartclothing.domain.calendar.exception.CalendarErrorCode;
 import sueprtizen.smartclothing.domain.calendar.exception.CalendarException;
 import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
+import sueprtizen.smartclothing.domain.clothing.entity.UserClothing;
+import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
+import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
+import sueprtizen.smartclothing.domain.clothing.repository.UserClothingRepository;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.ClothingInPastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.PastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.outfit.recommended.dto.ScheduleDTO;
@@ -18,6 +22,9 @@ import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 import sueprtizen.smartclothing.domain.weather.entity.Weather;
+import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
+import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
+import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +36,8 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
     final UserRepository userRepository;
     final CalendarRepository calendarRepository;
     final RecommendedOutfitRepository recommendedOutfitRepository;
+    final WeatherRepository weatherRepository;
+    final UserClothingRepository userClothingRepository;
 
     @Override
     public List<PastOutfitResponseDTO> pastOutfitConformation(int userId) {
@@ -47,7 +56,10 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
                     .outfitImagePath(schedule.getOutfitImagePath())
                     .build();
 
-            Weather weather = schedule.getWeather();
+
+            Weather weather = weatherRepository.findByLocationKeyAndDate(schedule.getLocationKey(), schedule.getDate())
+                    .orElseThrow(() -> new WeatherException(WeatherErrorCode.WEATHER_NOT_FOUND));
+
             WeatherDTO weatherDTO = WeatherDTO.builder()
                     .highestTemperature(weather.getHighestTemperature())
                     .lowestTemperature(weather.getLowestTemperature())
@@ -68,12 +80,16 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
         Schedule schedule = calendarRepository.findScheduleByUserAndScheduleId(currentUser, scheduleId)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
 
+
         List<RecommendedOutfit> recommendedOutfitList = recommendedOutfitRepository.findAllBySchedule(schedule);
 
         return recommendedOutfitList.stream().map(pastOutfit -> {
                     Clothing clothing = pastOutfit.getClothing();
+            UserClothing userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing)
+                    .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
                     return ClothingInPastOutfitResponseDTO.builder()
                             .clothingId(clothing.getClothingId())
+                            .clothingName(userClothing.getClothingName())
                             .x(pastOutfit.getX())
                             .y(pastOutfit.getY())
                             .width(pastOutfit.getWidth())

@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/config/config";
-import { useMutation, QueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type dataType = {
   id: string;
@@ -15,15 +16,13 @@ type dataType = {
 };
 
 export function usePatchClothes() {
-  const queryClient = new QueryClient();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const userToken = localStorage.getItem("token");
 
-  const { data, isPending, mutate } = useMutation({
+  const { data, mutate } = useMutation({
     mutationFn: (data: dataType) => {
       const { id, putData } = data;
-      console.log("useMutation");
-      console.log(id);
-      console.log(putData);
 
       return axios({
         method: "put",
@@ -34,12 +33,13 @@ export function usePatchClothes() {
         data: putData,
       }).then((res) => res.data);
     },
-    onSuccess: (variables) => {
+    onSuccess: (context, data) => {
       queryClient.invalidateQueries({
-        queryKey: ["get", `clothing/${variables.id}`],
+        queryKey: ["detail", data.id],
       });
+      navigate(`/closet/${data.id}`);
     },
   });
 
-  return { data, isPending, mutate };
+  return { data, mutate };
 }

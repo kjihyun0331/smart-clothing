@@ -1,6 +1,5 @@
 package sueprtizen.smartclothing.domain.outfit.past.service;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
@@ -44,10 +43,6 @@ public class PastOutfitServiceImpl implements PastOutfitService {
         List<PastOutfit> pastOutFitList = pastOutfitRepository.findAllBySchedule_UserAndSchedule_Date(
                 currentUser, LocalDate.now()
         );
-
-        if (pastOutFitList.isEmpty()) {
-            throw new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND);
-        }
 
         return pastOutFitList.stream().map(
                 pastOutfit -> {

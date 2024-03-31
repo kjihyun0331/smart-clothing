@@ -5,41 +5,72 @@ import IconBack from "@/assets/ui/IconBack";
 import IconCheck from "@/assets/ui/IconCheck";
 import { useNavigate } from "react-router-dom";
 import HashTag from "./HashTag";
-
-// const saveCanvasImage = async (imageData: string) => {
-//   try {
-//     // imageData는 'data:image/png;base64,iVBORw0...' 형식의 문자열입니다.
-//     // 서버에 전송할 FormData 객체를 생성합니다.
-//     const formData = new FormData();
-//     // imageData를 Blob으로 변환합니다.
-//     const imageBlob = await (await fetch(imageData)).blob();
-//     // FormData에 이미지 Blob을 추가합니다. 'image'는 서버에서 해당 파일을 식별하는 키입니다.
-//     formData.append("image", imageBlob, "canvas-image.png");
-
-//     // axios를 사용하여 POST 요청을 보냅니다.
-//     // 'YOUR_BACKEND_ENDPOINT'는 실제 백엔드 엔드포인트 URL로 대체해야 합니다.
-//     const response = await axios.post("YOUR_BACKEND_ENDPOINT", formData, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-
-//     console.log("서버 응답:", response.data);
-//   } catch (error) {
-//     console.error("이미지 저장 중 에러 발생:", error);
-//   }
-// };
+import { usePatchConfirmClothes } from "@/hooks/usePatchConfirmClothes";
+interface SelectedItem {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  url: string;
+}
 
 const ConfirmOutfit = () => {
   const navigate = useNavigate();
-  const { clearItems, confirmOutfit } = useSelectedItemsStore();
-  const { selectedDate } = useSelectedDateStore();
-
+  const { confirmOutfit, selectedItems } = useSelectedItemsStore();
+  const { selectedDate, title, selectedKeyword } = useSelectedDateStore();
+  const { mutate } = usePatchConfirmClothes();
   const date = new Date();
   const fileName = `CanvasImage_${date.getFullYear()}-${
     date.getMonth() + 1
   }-${date.getDate()}_${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}.png`;
   console.log(fileName);
+
+  const postCanvasImage = async (
+    date: string,
+    keyword: string,
+    title: string,
+    selectedClothes: SelectedItem[],
+    imageData: string
+  ) => {
+    // console.log(date, keyword, title);
+    // console.log(imageData);
+
+    const formData = new FormData();
+
+    // schedule 객체를 application/json 타입의 Blob으로 변환하여 FormData에 추가
+    formData.append(
+      "schedule",
+      new Blob(
+        [
+          JSON.stringify({
+            date,
+            title,
+            category: keyword,
+            locationKey: 226003,
+            clothing: selectedClothes.map((clothing) => ({
+              clothingId: clothing.id,
+              x: clothing.x,
+              y: clothing.y,
+              width: clothing.width,
+              height: clothing.height,
+            })),
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    // 이미지 데이터를 Blob으로 변환하여 FormData에 추가
+    const imageBlob = await fetch(imageData).then((res) => res.blob());
+    // console.log("**** imageBlob 확인**************");
+    // console.log(typeof imageBlob);
+    // console.log(imageBlob);
+    formData.append("file", imageBlob, "image.png");
+
+    mutate(formData);
+  };
 
   return (
     <>
@@ -47,8 +78,13 @@ const ConfirmOutfit = () => {
         <IconBack onClick={() => navigate("/calendar/makeoutfit")} />
         <IconCheck
           onClick={() => {
-            navigate("/calendar");
-            clearItems();
+            postCanvasImage(
+              selectedDate,
+              selectedKeyword,
+              title,
+              selectedItems,
+              confirmOutfit
+            );
           }}
         />
       </Header>

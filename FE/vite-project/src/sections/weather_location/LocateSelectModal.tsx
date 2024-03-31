@@ -20,7 +20,6 @@ const LocateSelectModal = ({ onClick }: ModalProps) => {
         </ModalBackGround>
         <ModalContainer>
             <div>
-                <p>위치 선택</p>
                 <button onClick={currentLocate}>현재 위치</button>
             </div>
         <ScrollableComponent onClick={onClick}/>
@@ -41,7 +40,6 @@ const ModalWrap = styled.div`
 
 const ModalContainer = styled.div`
   border-radius: 2rem;
-  padding: 3.6rem 0;
   transform: translate(-50%, -50%);
   top: 25%;
   left: 50%;

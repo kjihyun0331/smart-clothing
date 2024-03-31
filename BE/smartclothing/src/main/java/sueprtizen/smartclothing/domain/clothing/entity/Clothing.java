@@ -1,14 +1,10 @@
 package sueprtizen.smartclothing.domain.clothing.entity;
 
-import com.google.type.DateTime;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import sueprtizen.smartclothing.domain.clothing.repository.ClothingDetailRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,6 +38,9 @@ public class Clothing {
 
     @Column
     private String washedAt;
+
+    @Column
+    private LocalDateTime locationModifiedAt;
 
     @Column
     private int polluted;

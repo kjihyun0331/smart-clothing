@@ -1,9 +1,7 @@
 import axios from "axios";
 
 
-const weatherToken = import.meta.env.VITE_WEATHER_TOKEN;
-const loacteToken = import.meta.env.VITE_LOCATE_TOKEN;
-
+const weatherToken = 'abcd'
 
 const weatherURL = `http://dataservice.accuweather.com/`;
 const weatherAxiosInstance = axios.create({ 
@@ -14,7 +12,7 @@ const locateURL = `https://dapi.kakao.com/`;
 const locateAxiosInstance = axios.create({ 
     baseURL: locateURL,
     headers: {
-        'Authorization': `KakaoAK ${loacteToken}`
+        'Authorization': 'KakaoAK 51ed9bb753bc25e7d5a84697266346f4'
       }
 });
 

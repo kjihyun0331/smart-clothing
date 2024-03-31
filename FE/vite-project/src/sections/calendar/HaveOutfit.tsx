@@ -4,6 +4,8 @@ import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
 import styled from "styled-components";
 import { situationcolor, stateColor } from "./config-schedule";
+import IconTrash from "@/assets/ui/IconTrash";
+import { useDeleteSchedule } from "@/hooks/useDeleteSchedule";
 
 type OutfitResponseType = {
   scheduleId: number;
@@ -26,26 +28,32 @@ interface OutfitQuery {
 }
 
 const HaveOutfit = ({ date }) => {
+  const { deletemutate } = useDeleteSchedule();
   const selected = moment(date as MomentInput).format("YYYY-MM-DD");
   const { isLoading, data }: OutfitQuery = useApi(
     "get",
     `calendar/date?date=${selected}`
   );
 
-  if (isLoading) return <Loader />;
+  const handleDelete = () => {
+    deletemutate(selected);
+  };
 
-  console.log(data);
+  if (isLoading) return <Loader />;
 
   return (
     <HaveOutfitContainer>
-      <span
-        className="tag"
-        style={{
-          backgroundColor: situationcolor[data.scheduleCategory],
-        }}
-      >
-        {data.scheduleCategory}
-      </span>
+      <div className="upper">
+        <span
+          className="tag"
+          style={{
+            backgroundColor: situationcolor[data.scheduleCategory],
+          }}
+        >
+          {data.scheduleCategory}
+        </span>
+        <IconTrash onClick={handleDelete} />
+      </div>
 
       <div className="coordarea">
         <img src={data.outfitImagePath} alt={data.scheduleName} />
@@ -84,6 +92,10 @@ const HaveOutfitContainer = styled.div`
   flex-direction: column;
   padding-bottom: 12dvh;
 
+  .upper {
+    display: flex;
+    justify-content: space-between;
+  }
   .tag {
     width: 20%;
     padding: 5px 5px;
