@@ -26,6 +26,7 @@ import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
 import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class RecommendedOutfitServiceImpl implements RecommendedOutfitService {
     public List<PastOutfitResponseDTO> pastOutfitConformation(int userId) {
         User currentUser = getUser(userId);
 
-        List<Schedule> scheduleList = calendarRepository.findAllByUserOrderByDateAsc(currentUser);
+        List<Schedule> scheduleList = calendarRepository.findAllByUserOrderByDateAsc(currentUser, LocalDate.now());
 
         List<PastOutfitResponseDTO> pastOutfitResponseDTOList = new ArrayList<>();
 
