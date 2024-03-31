@@ -138,7 +138,7 @@ public class SocketController {
                                 washerService.addLaundry((String) requestDTO.get("rfidUid"),(Long)requestDTO.get("userId"));
                                 break;
                             case "addCareClothes":
-                                airdresserService.addCareClothes((String) requestDTO.get("rfidUid"));
+                                airdresserService.addCareClothes((String) requestDTO.get("rfidUid"),(Long)requestDTO.get("userId"));
                                 break;
                         }
                         writer.println(responseJson);
