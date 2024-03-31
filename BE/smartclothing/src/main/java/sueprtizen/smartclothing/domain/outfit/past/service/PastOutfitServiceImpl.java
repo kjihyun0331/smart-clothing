@@ -25,6 +25,8 @@ import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -44,14 +46,22 @@ public class PastOutfitServiceImpl implements PastOutfitService {
                 currentUser, LocalDate.now()
         );
 
+        AtomicInteger index = new AtomicInteger(1);
+
         return pastOutFitList.stream().map(
                 pastOutfit -> {
                     Clothing clothing = pastOutfit.getClothing();
-                    UserClothing userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing)
-                            .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
+                    String clothingName;
 
+                    Optional<UserClothing> userClothing = userClothingRepository.findUserClothingByClothing(currentUser, clothing);
+
+                    if (userClothing.isEmpty()) {
+                        clothingName = "옷" + index.getAndIncrement();
+                    } else {
+                        clothingName = userClothing.get().getClothingName();
+                    }
                     return new TodayClothingDTO(
-                            clothing.getClothingId(), userClothing.getClothingName(), clothing.getClothingDetail().getClothingImgPath()
+                            clothing.getClothingId(), clothingName, clothing.getClothingDetail().getClothingImgPath()
                     );
                 }
         ).toList();
