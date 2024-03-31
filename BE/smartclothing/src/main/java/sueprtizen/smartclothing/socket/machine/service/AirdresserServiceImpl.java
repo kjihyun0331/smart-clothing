@@ -73,7 +73,8 @@ public class AirdresserServiceImpl implements AirdresserService {
 
     public void addCareClothes(String rfid,Long userId) {
         clothingService.putClothingIntoAirdresser(rfid);
-        fcmService.sendMessageTo(userId,"옷이 에어드레서에 들어갔습니다.","케어 알림");
+        String image = clothingService.getClothingImage(rfid).get("image").toString();
+        fcmService.sendMessageTo(userId,"옷이 에어드레서에 들어갔습니다.","케어 알림",image);
     }
 
 }
