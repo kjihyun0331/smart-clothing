@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
 import DropDown from "./DropDown";
+import SharedUsers from "./SharedUsers";
 import { DetailClothesResponseDataType } from "@/types/ClothesTypes";
 import {
   ACTION_TYPES,
@@ -33,6 +34,7 @@ const UpdateClothes = () => {
   const [viewCategory, setViewCategory] = useState(false);
   const [viewTexture, setViewTexture] = useState(false);
   const [viewStyle, setViewStyle] = useState(false);
+  const [viewSharedUsers, setViewSharedUsers] = useState(false);
 
   const navigate = useNavigate();
 
@@ -57,6 +59,11 @@ const UpdateClothes = () => {
     }
   };
 
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    dispatch({ type: ACTION_TYPES.updateClothingName, payload: value });
+  };
+
   const handleBlur = (event) => {
     const { value } = event.target;
     dispatch({ type: ACTION_TYPES.updateClothingName, payload: value });
@@ -72,6 +79,7 @@ const UpdateClothes = () => {
       clothingId: value.clothingId,
       clothingName: value.clothingName,
       category: value.category,
+      textures: value.textures,
       styles: value.styles,
       seasons: value.seasons,
       sharedUserIds: value.sharedUsers.map((user) => user.userId),
@@ -93,6 +101,7 @@ const UpdateClothes = () => {
         <input
           type="text"
           defaultValue={value.clothingName}
+          onChange={handleInputChange}
           onKeyUp={handleKeyUp}
           onBlur={handleBlur}
         />
@@ -203,14 +212,28 @@ const UpdateClothes = () => {
           <span className="title">같이 입는 사람</span>{" "}
           {value.sharedUsers.map((item) => {
             return (
-              <span key={item.userId} className="tag">
+              <span
+                key={item.userId}
+                className="tag"
+                onClick={() =>
+                  handleDispatch(ACTION_TYPES.deleteSharedUsers, item.userId)
+                }
+              >
                 {item.userName}
                 <IconCloseSmall />
               </span>
             );
           })}
         </div>
-        <input type="text" />
+        <div
+          className="input"
+          onClick={() => {
+            setViewSharedUsers(!viewSharedUsers);
+          }}
+        >
+          같이 입는 사람을 골라주세요 <span>{viewSharedUsers ? "▲" : "▼"}</span>
+          {viewSharedUsers && <SharedUsers handleDispatch={handleDispatch} />}
+        </div>
 
         <button className="finish" onClick={handleFinish}>
           {" "}
