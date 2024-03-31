@@ -83,7 +83,7 @@ public class CalendarServiceImpl implements CalendarService {
         );
 
         //TODO: file 저장 후 file 위치 저장
-        String uploadDir = "/home/ubuntu/clothes_images";
+        String uploadDir = "/usr/share/nginx/outfit_images/";
         String fileName = UUID.randomUUID()+".png";
         // 파일 객체 생성
         File outfitPNG = new File(uploadDir + fileName);
