@@ -4,18 +4,18 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"></SignatureMethod>
 <Reference URI="author-signature-default.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>WrY9fEOiPj01KETkVcMH7/dqTtS1XuguBgYkLL18mO4JSWDExRC2RKvWdVXVT7e4bFh+Fl2Xlsuk
-AyDWjX3LoQ==</DigestValue>
+<DigestValue>d5AgO/sYMSwTh2y4l1IdLHtgo0rys2HnfAlGPLFuORPTF/0TKuahXpgwrvb6v0unlV2BaqezbqXX
+88vnAVjJ+A==</DigestValue>
 </Reference>
 <Reference URI="author-signature.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>pXTVTxzGsgJ7SV5JS4Mz2e6Q/JJVOmWAZS8WL/xZ1yeNB2/H7T/8jIAnfjOQNiNV4R9W9GmZimjG
-ZjoD2lg/0w==</DigestValue>
+<DigestValue>Nd8HEuR0HG0oiei29eUkE+YZguG7IWvIGpwTjMhcQAtXYUjGylAEQLbWhFbLOB1+HipVXTCSd8ti
+9s8jvoy/9g==</DigestValue>
 </Reference>
 <Reference URI="bin%2Fwasher">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>AiZTRLspRmwOoRPi/hfFehaO+LwMl7eGaOI1A5RA5APXhQN/cgEiNX9zlIELia6AAP1/PT10BK7M
-M3KhYZMC+g==</DigestValue>
+<DigestValue>bafSTtlaaUi7VDLyj70QCprLZmhkjEYEWmR6bjXnGRcKGKCkiYIrtW3WwfXcfIMeoDH0bVquysTa
+qigceW6vng==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fclothes_example.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -39,8 +39,8 @@ AktI9349Cw==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fedje_res%2Fsample.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>NMs8BR3TEJj85WRXP2eYeUw26hN0en0yN0FLp604nHjt6Daw28NywybKSmRVNhwiBolezy/F+GAd
-mpCdIjxNfg==</DigestValue>
+<DigestValue>hcFDzfcU0eHnSTgCLSUgqrqlXLT3bPAY+Z8TGrWfSh4H+PKismo2FxfZEpolnPjUYKrLHx42AE59
+C4aRXNSC7A==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fexpand.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -72,11 +72,11 @@ GyvKX9Snig==</DigestValue>
 </Reference>
 </SignedInfo>
 <SignatureValue>
-RqM8I9cuGr80znrbSfWhvo+ygn+5HQcOLsNL60H1b2oEH3meUhu+mwqbVnIApLmGEAj7RE6gST8W
-m5nafNVYgBw8TPHvzcVgzeMdFuYC4mqsJ91jaQt8Izz5MRA3xEndmibSowWUkTGnrEai7PLO5Mj5
-m95rKnw5eRkd1JIIXUnxfhtoQk0xCdh75Yo+ZjIv8YA3Vgjs02LnwTcEKc/DEEXrj8zbx5DoW5Ki
-+XLR6RA3ThAMzjVPYZytj3Q0WwPPsxzRioV+cn0paptqehlq61VYaU01htdos6mTtuPwdzcOUTGE
-9bMlfFHozYeEGUH6mk3kxKPRy5Wb8a3JYxsIkA==
+IMagPQri8Q4NtTVUyyCOqCMUaMpvSzaphCwiKY6AsBHHtR7Wa4TK/J7r8mbpCvujiW3bx2UZ0K1G
+g+6JNWjeajVKP38m1P9i5oOmI0WWz3k8Lq/1phZ2I3+UX/us1Q4Qr3CD7qtEKqHC1ydR/r5zfecz
+Y78S8WYcwKRxczNg+U2ZleuS3AF3fh9phHN1+T8xS4WXi9hxm8sNhLU0HjmR4YFAB4HizyHD+hs5
+8eIE4AN/zS5XRHbY6sYH+xqxqVYYat/SskWZ+6MqEIZISOmolPfc81ttOfdLVkPToZWmwliIEyg6
+nFpBwosTU5i8ZDn4ND0FwGSEzCQzeiYDdHuXMg==
 </SignatureValue>
 <KeyInfo>
 <X509Data>

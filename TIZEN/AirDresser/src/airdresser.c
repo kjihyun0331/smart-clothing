@@ -136,10 +136,13 @@ pthread_cond_t cv_read;
 REQUEST_TYPE request;
 RFID_STATE rfid_state;
 
+static peripheral_i2c_h i2c_h;
+
 void server_connect(int);
 void socket_init();
 void socket_send(void*);
 void socket_recv(void*);
+static int i2c_init();
 void rfid_i2c();
 void encodeToEuc(char*, char*);
 void decodeToUtf(char*, char*);
@@ -360,7 +363,7 @@ void socket_send(void *data) {
 		else if(request == REQUEST_ADD_CARE_CLOTHES){
 			json_object_set_string_member(root, "requestName", "addCareClothes");
 			json_object_set_int_member(root, "familyId", family_id);
-			json_object_set_string_member(root, "rfidUid", "");
+			json_object_set_string_member(root, "rfidUid", care_clothes_rfid);
 		}
 		else if(request == REQUEST_USER_LIST){
 			json_object_set_string_member(root, "requestName", "getUserList");
@@ -483,8 +486,6 @@ void socket_recv(void *data) {
 	}
 }
 
-static peripheral_i2c_h i2c_h;
-
 static int i2c_init() {
 	int bus = 1;
 	int address = 0x08;   /* See the specification */
@@ -527,17 +528,19 @@ void rfid_i2c() {
 			}
 
 			if(before != ruid){
-				char rfid_uid[RFID_SIZE] = { 0, };
-				snprintf(rfid_uid, RFID_SIZE, "%llu", ruid);
+				if(ruid != 16843009ull){
+					char rfid_uid[RFID_SIZE] = { 0, };
+					snprintf(rfid_uid, RFID_SIZE, "%llu", ruid);
 
-				if(rfid_state == RFID_MAIN){
-					ecore_main_loop_thread_safe_call_sync(add_care_clothes_rfid, &rfid_uid);
-				}
-				else if(rfid_state == RFID_DAILY_OUTFIT){
-					ecore_main_loop_thread_safe_call_sync(check_daily_outfit_rfid, &rfid_uid);
-				}
-				else if(rfid_state == RFID_ADD_CLOTHES){
-					ecore_main_loop_thread_safe_call_sync(add_clothes_register_rfid, &rfid_uid);
+					if(rfid_state == RFID_MAIN){
+						ecore_main_loop_thread_safe_call_sync(add_care_clothes_rfid, &rfid_uid);
+					}
+					else if(rfid_state == RFID_DAILY_OUTFIT){
+						ecore_main_loop_thread_safe_call_sync(check_daily_outfit_rfid, &rfid_uid);
+					}
+					else if(rfid_state == RFID_ADD_CLOTHES){
+						ecore_main_loop_thread_safe_call_sync(add_clothes_register_rfid, &rfid_uid);
+					}
 				}
 
 				before = ruid;
@@ -2028,7 +2031,6 @@ main(int argc, char *argv[])
 
 	pthread_t rfid_thread;
 	pthread_t socket_thread;
-
 
 	pthread_create(&rfid_thread, NULL, rfid_i2c, NULL);
 

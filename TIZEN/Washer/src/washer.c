@@ -210,7 +210,7 @@ void socket_init() {
 	}
 
 	if (sockfd >= 0) {
-//		server_connect(sockfd);
+		server_connect(sockfd);
 
 		pthread_mutex_init(&mtx_write, NULL);
 		pthread_mutex_init(&mtx_read, NULL);
@@ -326,8 +326,10 @@ void socket_recv(void *data) {
 				strncpy(laundry_data[i].img_path, json_object_get_string_member(cur, "image"), FILENAME_MAX);
 				strncpy(laundry_data[i].texture, json_object_get_string_member(cur, "texture"), 21);
 				laundry_data[i].worn_count = json_object_get_int_member(cur, "wornCount");
-				strncpy(laundry_data[i].schedule, json_object_get_string_member(cur, "schedule"), 11);
-				strncpy(laundry_data[i].user_name, json_object_get_string_member(cur, "userName"), 21);
+				memset(laundry_data[i].schedule, 0, 11);
+				memset(laundry_data[i].user_name, 0, 21);
+//				strncpy(laundry_data[i].schedule, json_object_get_string_member(cur, "schedule"), 11);
+//				strncpy(laundry_data[i].user_name, json_object_get_string_member(cur, "userName"), 21);
 			}
 		}
 
@@ -467,12 +469,19 @@ void set_main_laundry_list() {
 		elm_layout_content_set(laundry_wrapper, "elm.swallow.content", laundry);
 		evas_object_show(laundry);
 
+		Evas_Object *laundry_img_wrapper = elm_layout_add(laundry);
+		elm_layout_file_set(laundry_img_wrapper, main_obj.edj_path, "image_wrapper");
+		evas_object_size_hint_min_set(laundry_img_wrapper, 200, 200);
+		evas_object_size_hint_max_set(laundry_img_wrapper, 200, 200);
+		elm_box_pack_end(laundry, laundry_img_wrapper);
+		evas_object_show(laundry_img_wrapper);
+
 		// laundry image
-		Evas_Object *laundry_img = elm_image_add(laundry);
+		Evas_Object *laundry_img = elm_image_add(laundry_img_wrapper);
 		set_image(laundry_img, laundry_data[i].img_path);
-		evas_object_size_hint_min_set(laundry_img, 200, 200);
-		evas_object_size_hint_max_set(laundry_img, 200, 200);
-		elm_box_pack_end(laundry, laundry_img);
+		evas_object_size_hint_weight_set(laundry_img, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+		evas_object_size_hint_align_set(laundry_img, EVAS_HINT_FILL, EVAS_HINT_FILL);
+		elm_layout_content_set(laundry_img_wrapper, "elm.swallow.content", laundry_img);
 		evas_object_show(laundry_img);
 
 		// laundry info table
@@ -852,6 +861,15 @@ void laundry_expand_cb(void *data, Evas_Object *obj, void *event_info) {
 	evas_object_show(laundry_list_table);
 	elm_table_align_set(laundry_list_table, 0, 0.5);
 
+	pthread_mutex_lock(&mtx_write);
+	request = REQUEST_LAUNDRY_EXPAND;
+	pthread_cond_signal(&cv_write);
+	pthread_mutex_unlock(&mtx_write);
+
+	pthread_mutex_lock(&mtx_read);
+	// check already read
+	pthread_cond_wait(&cv_read, &mtx_read);
+
 	char laundry_detail_name[3][100] = { "소재", "오염도", "일정" };
 	char laundry_detail_css_title[100] = "<color=#A5A5A5FF font_size=27>%s</color>";
 	char laundry_detail_css_content[3][100] = {
@@ -873,11 +891,19 @@ void laundry_expand_cb(void *data, Evas_Object *obj, void *event_info) {
 		elm_layout_content_set(laundry_wrapper, "elm.swallow.content", laundry);
 		evas_object_show(laundry);
 
-		Evas_Object *laundry_img = elm_image_add(laundry);
+		Evas_Object *laundry_img_wrapper = elm_layout_add(laundry);
+		elm_layout_file_set(laundry_img_wrapper, main_obj.edj_path, "image_wrapper");
+		evas_object_size_hint_min_set(laundry_img_wrapper, 200, 200);
+		evas_object_size_hint_max_set(laundry_img_wrapper, 200, 200);
+		elm_box_pack_end(laundry, laundry_img_wrapper);
+		evas_object_show(laundry_img_wrapper);
+
+		// laundry image
+		Evas_Object *laundry_img = elm_image_add(laundry_img_wrapper);
 		set_image(laundry_img, laundry_data[i].img_path);
-		evas_object_size_hint_min_set(laundry_img, 200, 200);
-		evas_object_size_hint_max_set(laundry_img, 200, 200);
-		elm_box_pack_end(laundry, laundry_img);
+		evas_object_size_hint_weight_set(laundry_img, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+		evas_object_size_hint_align_set(laundry_img, EVAS_HINT_FILL, EVAS_HINT_FILL);
+		elm_layout_content_set(laundry_img_wrapper, "elm.swallow.content", laundry_img);
 		evas_object_show(laundry_img);
 
 		Evas_Object *laundry_detail_table = elm_table_add(laundry);
@@ -1022,7 +1048,10 @@ main(int argc, char *argv[])
 	ui_app_add_event_handler(&handlers[APP_EVENT_LANGUAGE_CHANGED], APP_EVENT_LANGUAGE_CHANGED, ui_app_lang_changed, &ad);
 	ui_app_add_event_handler(&handlers[APP_EVENT_REGION_FORMAT_CHANGED], APP_EVENT_REGION_FORMAT_CHANGED, ui_app_region_changed, &ad);
 
+	pthread_t rfid_thread;
 	pthread_t socket_thread;
+
+	pthread_create(&rfid_thread, NULL, rfid_i2c, NULL);
 
 	socket_done = 0;
 	pthread_mutex_init(&mtx_socket, NULL);
@@ -1034,6 +1063,7 @@ main(int argc, char *argv[])
 		dlog_print(DLOG_ERROR, LOG_TAG, "app_main() is failed. err = %d", ret);
 	}
 
+	pthread_join(rfid_thread, NULL);
 	pthread_join(socket_thread, NULL);
 
 	return ret;

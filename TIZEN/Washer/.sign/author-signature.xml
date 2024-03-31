@@ -4,13 +4,13 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"></SignatureMethod>
 <Reference URI="author-signature-default.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>WrY9fEOiPj01KETkVcMH7/dqTtS1XuguBgYkLL18mO4JSWDExRC2RKvWdVXVT7e4bFh+Fl2Xlsuk
-AyDWjX3LoQ==</DigestValue>
+<DigestValue>d5AgO/sYMSwTh2y4l1IdLHtgo0rys2HnfAlGPLFuORPTF/0TKuahXpgwrvb6v0unlV2BaqezbqXX
+88vnAVjJ+A==</DigestValue>
 </Reference>
 <Reference URI="bin%2Fwasher">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>AiZTRLspRmwOoRPi/hfFehaO+LwMl7eGaOI1A5RA5APXhQN/cgEiNX9zlIELia6AAP1/PT10BK7M
-M3KhYZMC+g==</DigestValue>
+<DigestValue>bafSTtlaaUi7VDLyj70QCprLZmhkjEYEWmR6bjXnGRcKGKCkiYIrtW3WwfXcfIMeoDH0bVquysTa
+qigceW6vng==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fclothes_example.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -34,8 +34,8 @@ AktI9349Cw==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fedje_res%2Fsample.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>NMs8BR3TEJj85WRXP2eYeUw26hN0en0yN0FLp604nHjt6Daw28NywybKSmRVNhwiBolezy/F+GAd
-mpCdIjxNfg==</DigestValue>
+<DigestValue>hcFDzfcU0eHnSTgCLSUgqrqlXLT3bPAY+Z8TGrWfSh4H+PKismo2FxfZEpolnPjUYKrLHx42AE59
+C4aRXNSC7A==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fexpand.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -67,9 +67,9 @@ QY10fG1EWQ==</DigestValue>
 </Reference>
 </SignedInfo>
 <SignatureValue>
-P4palIPQt0DlREYLBqe/z1HXJX8zFIzMTAH3Zn3WoKViq9VygP2rswgfzK7A4dw/GrHdTuVFyDdN
-zc6jO6UjLmZAXL2W0etuO+X2skShzF9s2mjfXG8sutVk17soaC9tjPnTVUcgFb5R70vRgp2e0DJP
-kMT72LmGbwRb0ngLqiw=
+apwtAQHYyzwfZnyDVEsxEeFftRQ3lP+71NRzH5N5mBjRFi2oCYfk9B7/QD3Kbr4g/kHmPoAWtqm6
+hUbCoF9fQsouAsXIhUsKGNlusDJwT2ECTzWm1wm/NSRm/UWtj+TviVgcK5jSnZHZ5oY5hSxqysmw
+FK/Zw+7Dgp3uuvxrqg4=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
