@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
+import sueprtizen.smartclothing.global.fcm.FCMService;
 import sueprtizen.smartclothing.socket.machine.dto.AirdresserResponseDTO;
 import sueprtizen.smartclothing.socket.machine.repository.AirdresserRepository;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class AirdresserServiceImpl implements AirdresserService {
     private final AirdresserRepository airdresserRepository;
     private final ClothingService clothingService;
+    private final FCMService fcmService;
 
     LocalDate today = LocalDate.now();
 
@@ -69,8 +71,9 @@ public class AirdresserServiceImpl implements AirdresserService {
         return jsonArray;
     }
 
-    public void addCareClothes(String rfid) {
+    public void addCareClothes(String rfid,Long userId) {
         clothingService.putClothingIntoAirdresser(rfid);
+        fcmService.sendMessageTo(userId,"옷이 에어드레서에 들어갔습니다.","케어 알림");
     }
 
 }
