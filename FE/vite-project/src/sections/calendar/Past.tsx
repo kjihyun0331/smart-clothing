@@ -82,7 +82,7 @@ function Past() {
 
   async function handleEdit() {
     try {
-      const response = await axios.get(
+      const response = await axios(
         `${BASE_URL}/outfit/recommended/pastOutfit?scheduleId=${selectedPast.schedule.scheduleId}`,
         {
           headers: {

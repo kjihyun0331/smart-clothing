@@ -6,6 +6,9 @@ import styled from "styled-components";
 import { situationcolor, stateColor } from "./config-schedule";
 import IconTrash from "@/assets/ui/IconTrash";
 import { useDeleteSchedule } from "@/hooks/useDeleteSchedule";
+import { useState, useRef, ReactNode } from "react";
+import { BASE_URL } from "@/config/config";
+import axios from "axios";
 
 type OutfitResponseType = {
   scheduleId: number;
@@ -39,6 +42,40 @@ const HaveOutfit = ({ date }) => {
     deletemutate(selected);
   };
 
+  const [dialogContent, setDialogContent] = useState<ReactNode>(null);
+  const dialogRef = useRef(null);
+
+  const handleDialogOpen = async (clothingId) => {
+    try {
+      const response = await axios(`${BASE_URL}/clothing/${clothingId}/info`, {
+        headers: {
+          "User-ID": localStorage.getItem("token"),
+        },
+      });
+      const responseClothingInfo = response.data.dataBody;
+      console.log("responseClothingInfo", responseClothingInfo);
+      // const responseMessage = `마지막으로 세탁한 날짜는 : ${responseClothingInfo.lastWashDate}, 마지막 세탁 이후 착용 횟수는 : ${responseClothingInfo.wornCount} 입니다.`;
+
+      const responseMessage = (
+        <p>
+          {/* 마지막으로 세탁한 날짜는 {moment(responseClothingInfo.lastWashDate).format("")},<br /> */}
+          마지막으로 세탁한 날짜 : {responseClothingInfo.lastWashDate}
+          <br />
+          마지막 세탁 이후 착용 횟수 : {responseClothingInfo.wornCount} 회
+        </p>
+      );
+
+      setDialogContent(responseMessage);
+      dialogRef.current?.showModal();
+    } catch (error) {
+      console.error("옷 세부 정보 가져오기 실패", error);
+    }
+  };
+
+  const handleDialogClose = () => {
+    dialogRef.current.close();
+  };
+
   if (isLoading) return <Loader />;
 
   return (
@@ -68,9 +105,8 @@ const HaveOutfit = ({ date }) => {
             <div className="textarea">
               <p className="clothingname">{item.clothingName}</p>
               <p
-                style={{
-                  color: stateColor[item.state],
-                }}
+                style={{ color: stateColor[item.state] }}
+                onClick={() => handleDialogOpen(item.clothingId)}
               >
                 {item.state}
               </p>
@@ -78,6 +114,10 @@ const HaveOutfit = ({ date }) => {
           </div>
         );
       })}
+      <StyledDialog ref={dialogRef}>
+        {dialogContent}
+        <button onClick={handleDialogClose}>확인</button>
+      </StyledDialog>
     </HaveOutfitContainer>
   );
 };
@@ -162,5 +202,27 @@ const HaveOutfitContainer = styled.div`
   .clothingname {
     font-size: 1.2rem;
     font-weight: bold;
+  }
+`;
+
+const StyledDialog = styled.dialog`
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+
+  p {
+    line-height: 210%;
+  }
+
+  & button {
+    display: block;
+    margin: 20px auto 0;
+    border: none;
+    padding: 4px 10px;
+    background-color: #45ba8c;
+    color: white;
+    border-radius: 5px;
+    box-sizing: border-box;
   }
 `;

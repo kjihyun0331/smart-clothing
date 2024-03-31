@@ -6,7 +6,6 @@ import Layout from "@/components/Layout";
 // import { useQueryClient } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
 
-
 function Home() {
   // const {LocateInfo} = useLocateStore()
   // const mounted = useRef<boolean>(false)
@@ -25,16 +24,33 @@ function Home() {
   //   }
   //   mounted.current = true
   // }, [LocateInfo]);
-  
-  
+
   // 날이 바뀔 때 schedule API 캐싱데이터 초기화 필요
 
+  // useEffect(() => {
+  //   const userToken = localStorage.getItem("token");
+  //   const data = {
+  //     token: localStorage.getItem("FCMtoken"),
+  //   };
+  //   try {
+  //     axios({
+  //       method: "post",
+  //       url: `${BASE_URL}/notifications`,
+  //       headers: {
+  //         "User-ID": userToken,
+  //       },
+  //       data: data,
+  //     }).then((res) => res.data);
+  //     console.log("token post 성공");
+  //   } catch (error) {
+  //     console.log("token post 실패", error);
+  //   }
+  // }, []);
 
   return (
     <Layout>
       <Outlet />
     </Layout>
-
   );
 }
 
