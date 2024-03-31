@@ -1,5 +1,6 @@
 package sueprtizen.smartclothing.global.fcm;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.users.entity.User;
@@ -17,10 +18,14 @@ import java.util.Optional;
 public class FCMServiceImpl implements FCMService {
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public void saveFCMToken(Integer userId, String token) {
         Optional<User> user = userRepository.findByUserId(userId);
-        user.get().updateToken(token);
+        if(user.isPresent()){
+            user.get().updateToken(token);
+        }
+
     }
 
     @Override
