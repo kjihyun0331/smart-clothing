@@ -6,7 +6,7 @@ import { useSelectedItemsStore } from "@/store/ClothesStore";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
 import { DUMMY } from "./recommend-test";
-import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
+// import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
 
 type userResponseType = {
   age: number;
@@ -18,12 +18,12 @@ interface userQuery {
   data: userResponseType;
 }
 
-type dataType = {
-  rate: string;
-  date: string;
-  locate: string;
-  schedule: string;
-};
+// type dataType = {
+//   rate: string;
+//   date: string;
+//   locate: string;
+//   schedule: string;
+// };
 
 function Recommend() {
   const navigate = useNavigate();
@@ -31,23 +31,23 @@ function Recommend() {
   const { selectedItems, toggleItem } = useSelectedItemsStore();
 
   const { isLoading, data }: userQuery = useApi("get", "users");
-  const { recommenddata, mutate } = usePostRecommendedOutfit();
+  // const { recommenddata, mutate } = usePostRecommendedOutfit();
 
-  const example: dataType = {
-    rate: "0",
-    date: "2024-03-28",
-    locate: "223680",
-    schedule: "졸업식",
-  };
+  // const example: dataType = {
+  //   rate: "0",
+  //   date: "2024-03-28",
+  //   locate: "223680",
+  //   schedule: "졸업식",
+  // };
 
-  mutate(example);
+  // mutate(example);
 
   if (isLoading) return <Loader />;
   const userAge = Math.floor(data.age);
   const userGender = data?.gender;
 
-  console.log("recommenddata");
-  console.log(recommenddata);
+  // console.log("recommenddata");
+  // console.log(recommenddata);
   return (
     <>
       <Header style={{ height: "8dvh" }}>
