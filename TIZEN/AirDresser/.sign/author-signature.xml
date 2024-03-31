@@ -4,13 +4,13 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"></SignatureMethod>
 <Reference URI="author-signature-default.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>KS3vDGLF/bh3pDfAkU/qdzTdo75cUOqZfhnthHxbDkR10Y7XcTs2MZz/1exoZzifclJM6sNN7kQM
-DzElWDEkow==</DigestValue>
+<DigestValue>cBMdupGQ96mjHNQ1yPdLeaggZXenPAM2qlZ1mgEE+j33Fxcmst67zXRmYUMZAbokD0AXplr/Pafd
+GC6sRJeAhA==</DigestValue>
 </Reference>
 <Reference URI="bin%2Fairdresser">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>l+4R0KK8ivPxBVjugIUrlwgIrhdwBrT8BPfHBfX8MRRzYb6YdtKU2BVjgyQL+dzyJ3TEFfUosaFe
-b1UyiRSW6w==</DigestValue>
+<DigestValue>K+f+hbE89nwZLVgS7G1uQxUprWIMIvXIMvs+ejO6XlCeMlIUJG8g0kjTK+iLsKqhraWNtk9Q6DHj
+GuLujfMK3A==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fback_button.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -34,8 +34,8 @@ AktI9349Cw==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fedje_res%2Fairdresser.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>P9bZG4m4n33aox2HvX3jbPjP+GghAgYx4N2333i1vTsT88mEdZ+ZtThE7Sjd/3n6QmUqe0WVvXfo
-oKJDB1LCQA==</DigestValue>
+<DigestValue>Yl0jjy6cqKzaJIzzAdDarmdd18nEyD1jK72ypj8Ac359zbMGue7Hdxsml/9M/wqyW5urycc7Jk+2
+csJi5u45sg==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fexpand.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -92,9 +92,9 @@ QY10fG1EWQ==</DigestValue>
 </Reference>
 </SignedInfo>
 <SignatureValue>
-gXwIwe4dQS63yT1U7c6vU6YtEkMH7+5KD2qN4LWxCiOQ6kEDhhV6YdWyWEFGiEOS+eQhcVwoDYtv
-CCVyme0tfBTRXw5lMKMn8ieRs127vDq1T9Fv3dPtvTA7U88lGF9OpFB1Rmxrjsclu1PqxloKk7l0
-gG5rfHBqOGNpdF8BWq0=
+g+wfVmW4P4+TTQMAGrdzTidrA/sp2nFvcgGR2ziJC2UOk0EPW8ZGTm8ig925sLz8n7GIT8X+9TJL
+e6JFOMHtxpuF8+PaWB+vX2bLOjZZA6QRWaSZjA18bsy0SctaK506cNHaENVqNA3GdHGaVz8NJjYQ
+LMTvEdB3Y5w/Q5wlfEw=
 </SignatureValue>
 <KeyInfo>
 <X509Data>

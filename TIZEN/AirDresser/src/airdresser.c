@@ -31,9 +31,16 @@ typedef enum _REQUEST_TYPE {
 	REQUEST_ADD_CLOTHES
 } REQUEST_TYPE;
 
+typedef enum _RFID_STATE {
+	RFID_MAIN,
+	RFID_DAILY_OUTFIT,
+	RFID_ADD_CLOTHES
+} RFID_STATE;
+
 struct PathData {
 	Evas_Object *nf;
 	char *edj_path;
+	Evas_Object *outfit_list;
 } main_obj;
 
 typedef struct _UserProfile {
@@ -102,7 +109,11 @@ typedef struct _ClothesData {
 	char texture[21];
 } ClothesData;
 
+Evas_Object *delete_layout;
+
+int socket_done;
 int family_id;
+char care_clothes_rfid[RFID_SIZE];
 OutfitData outfit_data[MAX_OUTFIT];
 int outfit_count;
 UserData user_data[MAX_PROFILE];
@@ -115,38 +126,44 @@ bool valid_clothes;
 int selectProfileCount = 0;
 int selectedIndex = -1;
 
+pthread_mutex_t mtx_socket;
 pthread_mutex_t mtx_write;
 pthread_mutex_t mtx_read;
+pthread_cond_t cv_socket;
 pthread_cond_t cv_write;
 pthread_cond_t cv_read;
 
-pthread_mutex_t mtx_img_load;
-pthread_cond_t cv_img_load;
-
 REQUEST_TYPE request;
+RFID_STATE rfid_state;
 
 void server_connect(int);
 void socket_init();
 void socket_send(void*);
 void socket_recv(void*);
-int testRfid();
+void rfid_i2c();
 void encodeToEuc(char*, char*);
 void decodeToUtf(char*, char*);
 size_t write_data(void*, size_t, size_t, FILE*);
-void preload_ready_cb(void*, Evas_Object*, void*);
 void set_image(Evas_Object*, char*);
+void add_care_clothes_rfid(char*);
+void set_main_outfit_list();
+static void create_base_gui(appdata_s*);
+void naviframe_transition_cb(void*, Evas_Object*, void*);
 void back_to_main_cb(void*, Evas_Object*, void*);
 void outfit_expand_cb(void*, Evas_Object*, void*);
 void check_daily_outfit_cb(void*, Evas_Object*, void*);
 void check_daily_outfit_select_person_cb(void*, Evas_Object*, void*);
 void check_daily_outfit_select_profile_cb(void*, Evas_Object*, void*);
 void check_daily_outfit_check_outfit_cb(void*, Evas_Object*, void*);
-void daily_outfit_rfid_test(void*, Evas_Object*, void*);
+void check_daily_outfit_submit_cb(void*, Evas_Object*, void*);
+void check_daily_outfit_rfid(char*);
 void add_clothes_cb(void*, Evas_Object*, void*);
 void add_clothes_select_person_cb(void*, Evas_Object*, void*);
 void add_clothes_select_profile_cb(void*, Evas_Object*, void*);
 void add_clothes_register_clothes_cb(void*, Evas_Object*, void*);
-void clothes_register_rfid_test(void*, Evas_Object*, void*);
+void add_clothes_register_extra_submit_cb(void*, Evas_Object*, void*);
+void add_clothes_register_submit_cb(void*, Evas_Object*, void*);
+void add_clothes_register_rfid(char*);
 
 void server_connect(int sockfd) {
 	JsonObject *root = json_object_new();
@@ -161,8 +178,8 @@ void server_connect(int sockfd) {
 	char *json_str = json_to_string(node, FALSE);
 	int len = strlen(json_str);
 	strncpy(buf, json_str, BUF_SIZE);
-	send_buf[len] = '\n';
-	send_buf[len + 1] = 0;
+	buf[len] = '\n';
+	buf[len + 1] = 0;
 	write(sockfd, buf, strlen(buf));
 	json_object_unref(root);
 	json_node_free(node);
@@ -172,7 +189,7 @@ void server_connect(int sockfd) {
 
 	JsonParser *parser = json_parser_new();
 	gboolean ret = json_parser_load_from_data(parser, buf, -1, NULL);
-	JsonObject *root = json_node_get_object(json_parser_get_root(parser));
+	root = json_node_get_object(json_parser_get_root(parser));
 
 	family_id = json_object_get_int_member(root, "familyId");
 	json_object_unref(root);
@@ -243,8 +260,6 @@ void socket_init() {
 	hints.ai_protocol = IPPROTO_TCP;
 
 	dlog_print(DLOG_INFO, LOG_TAG, "hints : %d", hints.ai_flags);
-//	if (getaddrinfo("10.0.2.2", "12346", &hints, &result) != 0) {	// emulator host ip
-//	if (getaddrinfo("192.168.84.174", "65432", &hints, &result) != 0) {	// server ip
 	if (getaddrinfo("52.78.199.11", "65432", &hints, &result) != 0) {	// server ip
 		dlog_print(DLOG_INFO, LOG_TAG, "getaddrinfo() error\n");
 		connection_profile_destroy(profile_h);
@@ -287,15 +302,18 @@ void socket_init() {
 	}
 
 	if (sockfd >= 0) {
-//		request_queue_init();
+		server_connect(sockfd);
 
 		pthread_mutex_init(&mtx_write, NULL);
 		pthread_mutex_init(&mtx_read, NULL);
-		pthread_mutex_init(&mtx_img_load, NULL);
 
 		pthread_cond_init(&cv_write, NULL);
 		pthread_cond_init(&cv_read, NULL);
-		pthread_cond_init(&cv_img_load, NULL);
+
+		pthread_mutex_lock(&mtx_socket);
+		socket_done = 1;
+		pthread_cond_signal(&cv_socket);
+		pthread_mutex_unlock(&mtx_socket);
 
 		pthread_t send_thread;
 		pthread_t recv_thread;
@@ -325,8 +343,6 @@ void socket_send(void *data) {
 	pthread_mutex_lock(&mtx_write);
 	while(true){
 		pthread_cond_wait(&cv_write, &mtx_write);
-
-		dlog_print(DLOG_INFO, LOG_TAG, "write");
 
 		JsonObject *root = json_object_new();
 		request_number++;
@@ -412,8 +428,6 @@ void socket_recv(void *data) {
 		if(recv_len == 0){
 			break;
 		}
-		dlog_print(DLOG_INFO, LOG_TAG, "%s", recv_buf);
-		dlog_print(DLOG_INFO, LOG_TAG, "read");
 
 		pthread_mutex_lock(&mtx_read);
 
@@ -484,41 +498,50 @@ static int i2c_init() {
 		dlog_print(DLOG_INFO, "MY_TAG", "OPEN");
 	}
 
-
-
 	return true;
 }
 
-int testRfid() {
+void rfid_i2c() {
 	if(!i2c_init()) {
 		dlog_print(DLOG_INFO, LOG_TAG, "i2c fail");
 		peripheral_i2c_close(i2c_h);
-		return false;
+		return;
 	}
 
-	int ret;
+	rfid_state = RFID_MAIN;
 
-//	uint8_t datas[1] = {0x04};
-//	uint32_t length = 1;
-//	ret = peripheral_i2c_write(i2c_h, datas, length);
-//	if(ret != PERIPHERAL_ERROR_NONE) {
-//		dlog_print(DLOG_ERROR, "MY_TAG", "WRITE ERROR %d", ret);
-//	}
-//	else {
-//		dlog_print(DLOG_INFO, "MY_TAG", "SEND OK");
-//	}
+	int ret;
 
 	uint8_t recv[4] = {0x05, 0x05, 0x05, 0x05};
 	uint32_t recv_len = 4;
 
+	unsigned long long before = 16843009ull;
 	while(1) {
 		int step = 0;
+		memset(recv, 0, recv_len);
 		ret = peripheral_i2c_read(i2c_h, recv, recv_len);
-		if(ret != PERIPHERAL_ERROR_NONE) {
-			dlog_print(DLOG_ERROR, "MY_TAG", "%d: READ ERROR %d", step, ret);
-		}
-		else {
-			dlog_print(DLOG_INFO, LOG_TAG, "%d: READ 0x%x, 0x%x, 0x%x, 0x%x", step, recv[0], recv[1], recv[2], recv[3]);
+		if(ret == PERIPHERAL_ERROR_NONE){
+			unsigned long long ruid = 0ull;
+			for(int i = 0; i < recv_len; i++){
+				ruid = (ruid << 8) | recv[i];
+			}
+
+			if(before != ruid){
+				char rfid_uid[RFID_SIZE] = { 0, };
+				snprintf(rfid_uid, RFID_SIZE, "%llu", ruid);
+
+				if(rfid_state == RFID_MAIN){
+					ecore_main_loop_thread_safe_call_sync(add_care_clothes_rfid, &rfid_uid);
+				}
+				else if(rfid_state == RFID_DAILY_OUTFIT){
+					ecore_main_loop_thread_safe_call_sync(check_daily_outfit_rfid, &rfid_uid);
+				}
+				else if(rfid_state == RFID_ADD_CLOTHES){
+					ecore_main_loop_thread_safe_call_sync(add_clothes_register_rfid, &rfid_uid);
+				}
+
+				before = ruid;
+			}
 		}
 		usleep(1000000);
 	}
@@ -550,20 +573,14 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
     return fwrite(ptr, size, nmemb, stream);
 }
 
-void preload_ready_cb(void *data, Evas_Object *obj, void *event_info) {
-    dlog_print(DLOG_INFO, LOG_TAG, "load!");
-	pthread_mutex_lock(&mtx_img_load);
-	pthread_cond_signal(&cv_img_load);
-	pthread_mutex_unlock(&mtx_img_load);
-}
-
 void set_image(Evas_Object *img, char *url) {
     CURL *curl;
     FILE *fp;
     CURLcode res;
 
+    static int img_num = 1;
     char outfilename[FILENAME_MAX] = {0};
-    snprintf(outfilename, FILENAME_MAX, "%s%s", app_get_data_path(), "test.png");
+    snprintf(outfilename, FILENAME_MAX, "%s%s%d%s", app_get_data_path(), "test", img_num++, ".png");
 
     curl = curl_easy_init();
     if (curl) {
@@ -575,19 +592,389 @@ void set_image(Evas_Object *img, char *url) {
         curl_easy_cleanup(curl);
         fclose(fp);
 
-        dlog_print(DLOG_INFO, LOG_TAG, "load?");
-//        elm_image_preload_disabled_set(img, EINA_FALSE);
-//        evas_object_smart_callback_add(img, "preload,ready", preload_ready_cb, NULL);
-//        pthread_mutex_lock(&mtx_img_load);
-        elm_image_prescale_set(img, 200);
     	elm_image_file_set(img, outfilename, NULL);
-//    	pthread_cond_wait(&cv_img_load, &mtx_img_load);
-//    	pthread_mutex_unlock(&mtx_img_load);
-//        evas_object_smart_callback_del(img, "preload,ready", preload_ready_cb);
     }
 }
 
+void add_care_clothes_rfid(char *rfid_uid) {
+	pthread_mutex_lock(&mtx_write);
+	request = REQUEST_ADD_CARE_CLOTHES;
+	strncpy(care_clothes_rfid, rfid_uid, RFID_SIZE);
+	pthread_cond_signal(&cv_write);
+	pthread_mutex_unlock(&mtx_write);
+
+	pthread_mutex_lock(&mtx_read);
+	// wait socket
+	pthread_cond_wait(&cv_read, &mtx_read);
+	pthread_mutex_unlock(&mtx_read);
+}
+
+void set_main_outfit_list() {
+	elm_box_clear(main_obj.outfit_list);
+
+	pthread_mutex_lock(&mtx_write);
+	request = REQUEST_OUTFIT_MAIN;
+	pthread_cond_signal(&cv_write);
+	pthread_mutex_unlock(&mtx_write);
+
+	pthread_mutex_lock(&mtx_read);
+	// check already read
+	pthread_cond_wait(&cv_read, &mtx_read);
+
+	char outfit_detail_name[2][100] = { "일정", "사용자" };
+	char outfit_detail_css[2][100] = {
+			"<color=#A5A5A5FF font_size=27>%s</color>",
+			"<color=#EFEFEFFF font_size=32>%s</color>"
+	};
+
+	for(int i = 0; i < outfit_count; i++){
+		// outfit wrapper
+		Evas_Object *outfit_wrapper = elm_layout_add(main_obj.outfit_list);
+		evas_object_size_hint_weight_set(outfit_wrapper, 0, EVAS_HINT_EXPAND);
+		evas_object_size_hint_align_set(outfit_wrapper, 0, EVAS_HINT_FILL);
+		evas_object_size_hint_min_set(outfit_wrapper, 300, 0);
+		elm_layout_file_set(outfit_wrapper, main_obj.edj_path, "outfit_wrapper");
+		elm_box_pack_end(main_obj.outfit_list, outfit_wrapper);
+		evas_object_show(outfit_wrapper);
+
+		// outfit box
+		Evas_Object *outfit = elm_box_add(outfit_wrapper);
+		elm_box_align_set(outfit, 0.5, 0);
+		elm_box_padding_set(outfit, 0, 40);
+		elm_layout_content_set(outfit_wrapper, "elm.swallow.content", outfit);
+		evas_object_show(outfit);
+
+		Evas_Object *outfit_img_wrapper = elm_layout_add(outfit);
+		elm_layout_file_set(outfit_img_wrapper, main_obj.edj_path, "image_wrapper");
+		evas_object_size_hint_min_set(outfit_img_wrapper, 200, 200);
+		evas_object_size_hint_max_set(outfit_img_wrapper, 200, 200);
+		elm_box_pack_end(outfit, outfit_img_wrapper);
+		evas_object_show(outfit_img_wrapper);
+
+		// outfit image
+		Evas_Object *outfit_img = elm_image_add(outfit_img_wrapper);
+		set_image(outfit_img, outfit_data[i].img_path);
+		evas_object_size_hint_weight_set(outfit_img, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+		evas_object_size_hint_align_set(outfit_img, EVAS_HINT_FILL, EVAS_HINT_FILL);
+		elm_layout_content_set(outfit_img_wrapper, "elm.swallow.content", outfit_img);
+		evas_object_show(outfit_img);
+
+		// outfit info table
+		Evas_Object *outfit_detail_table = elm_table_add(outfit);
+		evas_object_size_hint_weight_set(outfit_detail_table, EVAS_HINT_EXPAND, 0);
+		evas_object_size_hint_align_set(outfit_detail_table, 0, 0);
+		elm_table_padding_set(outfit_detail_table, 15, 10);
+		elm_box_pack_end(outfit, outfit_detail_table);
+		evas_object_show(outfit_detail_table);
+
+		for (int row = 0; row < 2; row++) {
+			for (int col = 0; col < 2; col++) {
+				// outfit data - title or data
+				Evas_Object *outfit_detail_label = elm_label_add(outfit_detail_table);
+				evas_object_size_hint_align_set(outfit_detail_label, 0, 0.5);
+				char content[200];
+				if(col == 0){
+					snprintf(content, 200, outfit_detail_css[col], outfit_detail_name[row]);
+				}
+				else{
+					switch(row){
+					case 0:
+						snprintf(content, 200, outfit_detail_css[col], outfit_data[i].schedule);
+						break;
+					case 1:
+						snprintf(content, 200, outfit_detail_css[col], outfit_data[i].user_name);
+						break;
+					}	// end switch-case
+				}
+				elm_object_text_set(outfit_detail_label, content);
+				elm_table_pack(outfit_detail_table, outfit_detail_label, col, row, 1, 1);
+				evas_object_show(outfit_detail_label);
+			}
+		}
+	}
+
+	pthread_mutex_unlock(&mtx_read);
+}
+
+static void
+create_base_gui(appdata_s *ad)
+{
+	/* Window */
+	/* Create and initialize elm_win.
+	   elm_win is mandatory to manipulate window. */
+	ad->win = elm_win_util_standard_add(PACKAGE, PACKAGE);
+	elm_win_autodel_set(ad->win, EINA_TRUE);
+
+	if (elm_win_wm_rotation_supported_get(ad->win)) {
+		int rots[4] = { 0, 90, 180, 270 };
+		elm_win_wm_rotation_available_rotations_set(ad->win, (const int *)(&rots), 4);
+	}
+
+	evas_object_smart_callback_add(ad->win, "delete,request", win_delete_request_cb, NULL);
+	eext_object_event_callback_add(ad->win, EEXT_CALLBACK_BACK, win_back_cb, ad);
+
+	/* Conformant */
+	/* Create and initialize elm_conformant.
+	   elm_conformant is mandatory for base gui to have proper size
+	   when indicator or virtual keypad is visible. */
+	ad->conform = elm_conformant_add(ad->win);
+	elm_win_indicator_mode_set(ad->win, ELM_WIN_INDICATOR_HIDE);
+	evas_object_size_hint_weight_set(ad->conform, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	elm_win_resize_object_add(ad->win, ad->conform);
+	evas_object_show(ad->conform);
+
+	// get edc resource
+	char *edj_path = NULL;
+	app_resource_manager_get(APP_RESOURCE_TYPE_LAYOUT, "edje_res/airdresser.edj", &edj_path);
+	elm_theme_extension_add(NULL, edj_path);
+	main_obj.edj_path = edj_path;
+
+	// naviframe
+	Evas_Object *nf = elm_naviframe_add(ad->conform);
+	elm_object_content_set(ad->conform, nf);
+	evas_object_smart_callback_add(nf, "transition,finished", naviframe_transition_cb, NULL);
+	evas_object_show(nf);
+	main_obj.nf = nf;
+
+	// default background layout
+	Evas_Object *main_layout = elm_layout_add(nf);
+	elm_layout_file_set(main_layout, edj_path, "main_layout");
+	elm_naviframe_item_push(nf, NULL, NULL, NULL, main_layout, NULL);
+	Elm_Object_Item *main_item = elm_naviframe_top_item_get(nf);
+	elm_naviframe_item_title_enabled_set(main_item, EINA_FALSE, EINA_FALSE);
+
+	Evas_Object *menu_scroller = elm_scroller_add(main_layout);
+	elm_layout_content_set(main_layout, "elm.swallow.content", menu_scroller);
+	evas_object_show(menu_scroller);
+
+	Evas_Object *menu_box = elm_box_add(menu_scroller);
+	elm_box_horizontal_set(menu_box, EINA_TRUE);
+	elm_box_padding_set(menu_box, 100, 0);
+	evas_object_size_hint_weight_set(menu_box, 0, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(menu_box, 0, EVAS_HINT_FILL);
+	elm_layout_content_set(menu_scroller, "elm.swallow.content", menu_box);
+	elm_box_align_set(menu_box, 0, 0.5);
+	evas_object_show(menu_box);
+
+	/*
+	 * 	course menu
+	 */
+	Evas_Object *course_menu_box_wrapper = elm_layout_add(menu_box);
+	elm_layout_file_set(course_menu_box_wrapper, edj_path, "main_menu_wrapper");
+	evas_object_size_hint_weight_set(course_menu_box_wrapper, 0, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(course_menu_box_wrapper, 0, EVAS_HINT_FILL);
+	evas_object_size_hint_min_set(course_menu_box_wrapper, 750, 0);
+	elm_box_pack_end(menu_box, course_menu_box_wrapper);
+	evas_object_show(course_menu_box_wrapper);
+
+	Evas_Object *course_menu_box = elm_box_add(course_menu_box_wrapper);
+	elm_box_padding_set(course_menu_box, 0, 25);
+	elm_box_align_set(course_menu_box, 0.5, 0);
+	evas_object_size_hint_weight_set(course_menu_box, EVAS_HINT_EXPAND, 0);
+	evas_object_size_hint_align_set(course_menu_box, EVAS_HINT_FILL, 0);
+	elm_layout_content_set(course_menu_box_wrapper, "elm.swallow.content", course_menu_box);
+	evas_object_show(course_menu_box);
+
+	Evas_Object *course_menu_top_menu = elm_box_add(course_menu_box);
+	evas_object_size_hint_weight_set(course_menu_top_menu, EVAS_HINT_EXPAND, 0);
+	evas_object_size_hint_align_set(course_menu_top_menu, EVAS_HINT_FILL, 0);
+	elm_box_horizontal_set(course_menu_top_menu, EINA_TRUE);
+	elm_box_pack_end(course_menu_box, course_menu_top_menu);
+	evas_object_show(course_menu_top_menu);
+
+	Evas_Object *course_menu_top_menu_label = elm_label_add(course_menu_top_menu);
+	elm_object_text_set(course_menu_top_menu_label, "<color=#ABABABFF font_size=55 font_weight=BOLD>코스</color>");
+	elm_box_pack_end(course_menu_top_menu, course_menu_top_menu_label);
+	evas_object_show(course_menu_top_menu_label);
+
+	Evas_Object *course_menu_top_menu_empty = elm_layout_add(course_menu_top_menu);
+	evas_object_size_hint_weight_set(course_menu_top_menu_empty, EVAS_HINT_EXPAND, 0);
+	evas_object_size_hint_align_set(course_menu_top_menu_empty, EVAS_HINT_FILL, 0);
+	elm_box_pack_end(course_menu_top_menu, course_menu_top_menu_empty);
+	evas_object_show(course_menu_top_menu_empty);
+
+	Evas_Object *course_menu_top_menu_expand_btn = elm_button_add(course_menu_top_menu);
+	elm_object_style_set(course_menu_top_menu_expand_btn, "image_button");
+	evas_object_size_hint_min_set(course_menu_top_menu_expand_btn, 80, 80);
+	elm_box_pack_end(course_menu_top_menu, course_menu_top_menu_expand_btn);
+	evas_object_show(course_menu_top_menu_expand_btn);
+
+	char *course_expand_img_path = NULL;
+	app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, "expand.png", &course_expand_img_path);
+	Evas_Object *course_expand_btn_img = elm_image_add(course_menu_top_menu_expand_btn);
+	elm_image_file_set(course_expand_btn_img, course_expand_img_path, NULL);
+	elm_object_part_content_set(course_menu_top_menu_expand_btn, "icon", course_expand_btn_img);
+
+	Evas_Object *course_list_box = elm_box_add(course_menu_box);
+	evas_object_size_hint_weight_set(course_list_box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(course_list_box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	elm_box_horizontal_set(course_list_box, EINA_TRUE);
+	elm_box_padding_set(course_list_box, 50, 0);
+	elm_box_pack_end(course_menu_box, course_list_box);
+	evas_object_show(course_list_box);
+
+	char course_img_names[2][100] = { "course_ai.png", "course_standard.png" };
+	char course_names[2][100] = { "RFID 태그", "표준" };
+	char course_css[100] = "<color=#CFCFCF font_size=45 font_weight=BOLD>%s</color>";
+
+	for(int i = 0; i < 2; i++){
+		// course wrapper
+		Evas_Object *course_wrapper = elm_layout_add(course_list_box);
+		evas_object_size_hint_weight_set(course_wrapper, 0, EVAS_HINT_EXPAND);
+		evas_object_size_hint_align_set(course_wrapper, 0, EVAS_HINT_FILL);
+		evas_object_size_hint_min_set(course_wrapper, 300, 0);
+		elm_layout_file_set(course_wrapper, edj_path, "course_wrapper");
+		elm_box_pack_end(course_list_box, course_wrapper);
+		evas_object_show(course_wrapper);
+
+		// course box
+		Evas_Object *course = elm_box_add(course_wrapper);
+		elm_box_align_set(course, 0.5, 0);
+		elm_box_padding_set(course, 0, 20);
+		elm_layout_content_set(course_wrapper, "elm.swallow.content", course);
+		evas_object_show(course);
+
+		// course image wrapper
+		Evas_Object *course_image_wrapper = elm_layout_add(course);
+		elm_layout_file_set(course_image_wrapper, edj_path, "course_image_wrapper");
+		elm_box_pack_end(course, course_image_wrapper);
+		evas_object_size_hint_align_set(course_image_wrapper, 0, 0.5);
+		evas_object_show(course_image_wrapper);
+
+		// course image
+		char *course_img_path = NULL;
+		app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, course_img_names[i], &course_img_path);
+		Evas_Object *course_image = elm_image_add(course_image_wrapper);
+		evas_object_size_hint_min_set(course_image, 60, 60);
+		evas_object_size_hint_max_set(course_image, 60, 60);
+		elm_image_file_set(course_image, course_img_path, NULL);
+		elm_layout_content_set(course_image_wrapper, "elm.swallow.content", course_image);
+		evas_object_show(course_image);
+
+		// course name
+		Evas_Object *course_label = elm_label_add(course);
+		evas_object_size_hint_align_set(course_label, 0, 0.5);
+		char content[200];
+		snprintf(content, 200, course_css, course_names[i]);
+		elm_object_text_set(course_label, content);
+		elm_box_pack_end(course, course_label);
+		evas_object_show(course_label);
+	}
+
+	/*
+	 * 	outfit menu
+	 */
+	Evas_Object *outfit_menu_box_wrapper = elm_layout_add(menu_box);
+	elm_layout_file_set(outfit_menu_box_wrapper, edj_path, "main_menu_wrapper");
+	evas_object_size_hint_weight_set(outfit_menu_box_wrapper, 0, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(outfit_menu_box_wrapper, 0, EVAS_HINT_FILL);
+	evas_object_size_hint_min_set(outfit_menu_box_wrapper, 750, 0);
+	elm_box_pack_end(menu_box, outfit_menu_box_wrapper);
+	evas_object_show(outfit_menu_box_wrapper);
+
+	Evas_Object *outfit_menu_box = elm_box_add(outfit_menu_box_wrapper);
+	elm_box_padding_set(outfit_menu_box, 0, 25);
+	elm_box_align_set(outfit_menu_box, 0.5, 0);
+	evas_object_size_hint_weight_set(outfit_menu_box, EVAS_HINT_EXPAND, 0);
+	evas_object_size_hint_align_set(outfit_menu_box, EVAS_HINT_FILL, 0);
+	elm_layout_content_set(outfit_menu_box_wrapper, "elm.swallow.content", outfit_menu_box);
+	evas_object_show(outfit_menu_box);
+
+	Evas_Object *outfit_menu_top_menu = elm_box_add(outfit_menu_box);
+	elm_box_padding_set(outfit_menu_top_menu, 15, 0);
+	evas_object_size_hint_weight_set(outfit_menu_top_menu, EVAS_HINT_EXPAND, 0);
+	evas_object_size_hint_align_set(outfit_menu_top_menu, EVAS_HINT_FILL, 0);
+	elm_box_horizontal_set(outfit_menu_top_menu, EINA_TRUE);
+	elm_box_pack_end(outfit_menu_box, outfit_menu_top_menu);
+	evas_object_show(outfit_menu_top_menu);
+
+	Evas_Object *outfit_menu_top_menu_label = elm_label_add(outfit_menu_top_menu);
+	elm_object_text_set(outfit_menu_top_menu_label, "<color=#ABABABFF font_size=55 font_weight=BOLD>코디</color>");
+	elm_box_pack_end(outfit_menu_top_menu, outfit_menu_top_menu_label);
+	evas_object_show(outfit_menu_top_menu_label);
+
+	Evas_Object *outfit_menu_top_menu_empty = elm_layout_add(outfit_menu_top_menu);
+	evas_object_size_hint_weight_set(outfit_menu_top_menu_empty, EVAS_HINT_EXPAND, 0);
+	evas_object_size_hint_align_set(outfit_menu_top_menu_empty, EVAS_HINT_FILL, 0);
+	elm_box_pack_end(outfit_menu_top_menu, outfit_menu_top_menu_empty);
+	evas_object_show(outfit_menu_top_menu_empty);
+
+	Evas_Object *check_daily_outfit_btn = elm_button_add(outfit_menu_top_menu);
+	elm_object_style_set(check_daily_outfit_btn, "text_button");
+	evas_object_size_hint_min_set(check_daily_outfit_btn, 160, 80);
+	elm_object_text_set(check_daily_outfit_btn, "착용확인");
+	elm_box_pack_end(outfit_menu_top_menu, check_daily_outfit_btn);
+	evas_object_show(check_daily_outfit_btn);
+	evas_object_smart_callback_add(check_daily_outfit_btn, "clicked", check_daily_outfit_cb, NULL);
+
+	Evas_Object *add_clothes_btn = elm_button_add(outfit_menu_top_menu);
+	elm_object_style_set(add_clothes_btn, "text_button");
+	evas_object_size_hint_min_set(add_clothes_btn, 140, 80);
+	elm_object_text_set(add_clothes_btn, "옷 등록");
+	elm_box_pack_end(outfit_menu_top_menu, add_clothes_btn);
+	evas_object_show(add_clothes_btn);
+	evas_object_smart_callback_add(add_clothes_btn, "clicked", add_clothes_cb, NULL);
+
+	Evas_Object *outfit_menu_top_menu_expand_btn = elm_button_add(outfit_menu_top_menu);
+	elm_object_style_set(outfit_menu_top_menu_expand_btn, "image_button");
+	evas_object_size_hint_min_set(outfit_menu_top_menu_expand_btn, 80, 80);
+	elm_box_pack_end(outfit_menu_top_menu, outfit_menu_top_menu_expand_btn);
+	evas_object_show(outfit_menu_top_menu_expand_btn);
+	// button image
+	char *outfit_expand_img_path = NULL;
+	app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, "expand.png", &outfit_expand_img_path);
+	Evas_Object *outfit_expand_btn_img = elm_image_add(outfit_menu_top_menu_expand_btn);
+	elm_image_file_set(outfit_expand_btn_img, outfit_expand_img_path, NULL);
+	elm_object_part_content_set(outfit_menu_top_menu_expand_btn, "icon", outfit_expand_btn_img);
+	evas_object_smart_callback_add(outfit_menu_top_menu_expand_btn, "clicked", outfit_expand_cb, NULL);
+
+	Evas_Object *outfit_list_box = elm_box_add(outfit_menu_box);
+	evas_object_size_hint_weight_set(outfit_list_box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(outfit_list_box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	elm_box_horizontal_set(outfit_list_box, EINA_TRUE);
+	elm_box_padding_set(outfit_list_box, 50, 0);
+	elm_box_align_set(outfit_list_box, 0, 0);
+	elm_box_pack_end(outfit_menu_box, outfit_list_box);
+	evas_object_show(outfit_list_box);
+	main_obj.outfit_list = outfit_list_box;
+
+	set_main_outfit_list();
+
+	/*
+	 *	notification(empty) box
+	 */
+	Evas_Object *notification_menu_box_wrapper = elm_layout_add(menu_box);
+	elm_layout_file_set(notification_menu_box_wrapper, edj_path, "main_menu_wrapper");
+	evas_object_size_hint_weight_set(notification_menu_box_wrapper, 0, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(notification_menu_box_wrapper, 0, EVAS_HINT_FILL);
+	evas_object_size_hint_min_set(notification_menu_box_wrapper, 750, 0);
+	elm_box_pack_end(menu_box, notification_menu_box_wrapper);
+	evas_object_show(notification_menu_box_wrapper);
+
+	// notification - label
+	Evas_Object *notification_menu_label = elm_label_add(notification_menu_box_wrapper);
+	elm_object_text_set(notification_menu_label, "<color=#ABABABFF font_size=55 font_weight=BOLD>알림</color>");
+	elm_layout_content_set(notification_menu_box_wrapper, "elm.swallow.content", notification_menu_label);
+	evas_object_size_hint_align_set(notification_menu_label, 0.5, 0);
+	evas_object_show(notification_menu_label);
+
+	/* Show window after base gui is set up */
+	evas_object_show(ad->win);
+}
+
+void naviframe_transition_cb(void *data, Evas_Object *obj, void *event_info) {
+	if(delete_layout != NULL){
+		evas_object_del(delete_layout);
+		delete_layout = NULL;
+	}
+}
+
 void back_to_main_cb(void *data, Evas_Object *obj, void *event_info) {
+	set_main_outfit_list();
+
+	rfid_state = RFID_MAIN;
+	Elm_Object_Item *top_item = elm_naviframe_top_item_get(main_obj.nf);
+	delete_layout = elm_object_item_content_get(top_item);
 	elm_naviframe_item_pop(main_obj.nf);
 }
 
@@ -637,7 +1024,7 @@ void outfit_expand_cb(void *data, Evas_Object *obj, void *event_info) {
 
 	Evas_Object *check_daily_outfit_btn = elm_button_add(outfit_menu_top_menu);
 	elm_object_style_set(check_daily_outfit_btn, "text_button");
-	evas_object_size_hint_min_set(check_daily_outfit_btn, 140, 60);
+	evas_object_size_hint_min_set(check_daily_outfit_btn, 160, 80);
 	elm_object_text_set(check_daily_outfit_btn, "착용확인");
 	elm_box_pack_end(outfit_menu_top_menu, check_daily_outfit_btn);
 	evas_object_show(check_daily_outfit_btn);
@@ -645,7 +1032,7 @@ void outfit_expand_cb(void *data, Evas_Object *obj, void *event_info) {
 
 	Evas_Object *add_clothes_btn = elm_button_add(outfit_menu_top_menu);
 	elm_object_style_set(add_clothes_btn, "text_button");
-	evas_object_size_hint_min_set(add_clothes_btn, 120, 60);
+	evas_object_size_hint_min_set(add_clothes_btn, 140, 80);
 	elm_object_text_set(add_clothes_btn, "옷 등록");
 	elm_box_pack_end(outfit_menu_top_menu, add_clothes_btn);
 	evas_object_show(add_clothes_btn);
@@ -843,8 +1230,6 @@ void check_daily_outfit_cb(void *data, Evas_Object *obj, void *event_info) {
 	evas_object_show(person_list_box);
 	profile_select_obj.person_list_box = person_list_box;
 
-	dlog_print(DLOG_INFO, LOG_TAG, "start");
-
 	pthread_mutex_lock(&mtx_write);
 	request = REQUEST_USER_LIST;
 	pthread_cond_signal(&cv_write);
@@ -948,16 +1333,18 @@ void check_daily_outfit_cb(void *data, Evas_Object *obj, void *event_info) {
 
 	Evas_Object *submit_btn = elm_button_add(submit_button_box);
 	elm_object_style_set(submit_btn, "text_green_button");
-	evas_object_size_hint_min_set(submit_btn, 150, 60);
+	evas_object_size_hint_min_set(submit_btn, 170, 80);
 	elm_object_part_text_set(submit_btn, "default", "등록 완료");
 	elm_box_pack_end(submit_button_box, submit_btn);
 	evas_object_show(submit_btn);
-	evas_object_smart_callback_add(submit_btn, "clicked", daily_outfit_rfid_test, NULL);
+	evas_object_smart_callback_add(submit_btn, "clicked", check_daily_outfit_submit_cb, NULL);
 
 	check_daily_outfit_select_person_cb(NULL, NULL, NULL);
 }
 
 void check_daily_outfit_select_person_cb(void *data, Evas_Object *obj, void *event_info) {
+	rfid_state = RFID_MAIN;
+
 	evas_object_event_callback_del(profile_select_obj.main_wrapper, EVAS_CALLBACK_MOUSE_UP, check_daily_outfit_select_person_cb);
 	evas_object_size_hint_weight_set(profile_select_obj.main_wrapper, EVAS_HINT_EXPAND, 0);
 	evas_object_size_hint_align_set(profile_select_obj.main_wrapper, EVAS_HINT_FILL, 0);
@@ -1023,6 +1410,8 @@ void check_daily_outfit_select_profile_cb(void *data, Evas_Object *obj, void *ev
 }
 
 void check_daily_outfit_check_outfit_cb(void *data, Evas_Object *obj, void *event_info) {
+	rfid_state = RFID_DAILY_OUTFIT;
+
 	evas_object_event_callback_add(profile_select_obj.main_wrapper, EVAS_CALLBACK_MOUSE_UP, check_daily_outfit_select_person_cb, NULL);
 	evas_object_size_hint_weight_set(profile_select_obj.main_wrapper, 0, 0);
 	evas_object_size_hint_align_set(profile_select_obj.main_wrapper, 0, 0);
@@ -1059,23 +1448,35 @@ void check_daily_outfit_check_outfit_cb(void *data, Evas_Object *obj, void *even
 	evas_object_show(outfit_check_obj.data_box);
 }
 
-void daily_outfit_rfid_test(void *data, Evas_Object *obj, void *event_info) {
-	char rfid_list[MAX_CLOTHES][RFID_SIZE] = {
-			"2312163194",
-			"4080237070",
-			"2307780474",
-			"1234-1234-5555",
-			"1234-1234-6666",
-			"1234-1234-7777",
-			"1234-1234-8888",
-			"1234-1234-9999",
-			"2312163194",
-			"4080237070"
-	};
+void check_daily_outfit_submit_cb(void *data, Evas_Object *obj, void *event_info) {
+	pthread_mutex_lock(&mtx_write);
+	request = REQUEST_DAILY_OUTFIT;
+	pthread_cond_signal(&cv_write);
+	pthread_mutex_unlock(&mtx_write);
+
+	pthread_mutex_lock(&mtx_read);
+	// wait socket
+	pthread_cond_wait(&cv_read, &mtx_read);
+	pthread_mutex_unlock(&mtx_read);
+
+	set_main_outfit_list();
+
+	rfid_state = RFID_MAIN;
+	Elm_Object_Item *top_item = elm_naviframe_top_item_get(main_obj.nf);
+	delete_layout = elm_object_item_content_get(top_item);
+	elm_naviframe_item_pop(main_obj.nf);
+}
+
+void check_daily_outfit_rfid(char *rfid_uid) {
+	for(int i = 0; i < daily_outfit_count; i++){
+		if(strcmp(daily_outfit_data[i].rfid_uid, rfid_uid) == 0){
+			return;
+		}
+	}
 
 	pthread_mutex_lock(&mtx_write);
 	request = REQUEST_CLOTHES_IMAGE;
-	strncpy(daily_outfit_data[daily_outfit_count].rfid_uid, rfid_list[daily_outfit_count], RFID_SIZE);
+	strncpy(daily_outfit_data[daily_outfit_count].rfid_uid, rfid_uid, RFID_SIZE);
 	daily_outfit_count++;
 	pthread_cond_signal(&cv_write);
 	pthread_mutex_unlock(&mtx_write);
@@ -1301,7 +1702,6 @@ void add_clothes_cb(void *data, Evas_Object *obj, void *event_info) {
 	elm_object_part_text_set(clothes_img_btn, "default", "사진 촬영");
 	elm_box_pack_end(clothes_image_box, clothes_img_btn);
 	evas_object_show(clothes_img_btn);
-	evas_object_smart_callback_add(clothes_img_btn, "clicked", clothes_register_rfid_test, NULL);
 
 	Evas_Object *clothes_desc_box = elm_box_add(clothes_info_box);
 	evas_object_size_hint_weight_set(clothes_desc_box, 0, EVAS_HINT_EXPAND);
@@ -1311,23 +1711,16 @@ void add_clothes_cb(void *data, Evas_Object *obj, void *event_info) {
 	elm_box_pack_end(clothes_info_box, clothes_desc_box);
 	evas_object_show(clothes_desc_box);
 
-	Evas_Object *clothes_category_wrapper = elm_layout_add(clothes_desc_box);
-//	elm_layout_file_set(clothes_category_wrapper, main_obj.edj_path, "description_text");
-	elm_box_pack_end(clothes_desc_box, clothes_category_wrapper);
-	evas_object_size_hint_min_set(clothes_category_wrapper, 600, 100);
-	evas_object_show(clothes_category_wrapper);
-
-	Evas_Object *clothes_category = elm_label_add(clothes_category_wrapper);
-	evas_object_size_hint_weight_set(clothes_category, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(clothes_category, EVAS_HINT_FILL, EVAS_HINT_FILL);
-	elm_layout_content_set(clothes_category_wrapper, "elm.swallow.content", clothes_category);
+	Evas_Object *clothes_category = elm_label_add(clothes_desc_box);
+	elm_object_style_set(clothes_category, "description_text");
+	elm_object_text_set(clothes_category, "");
+	elm_box_pack_end(clothes_desc_box, clothes_category);
 	evas_object_show(clothes_category);
 	clothes_register_obj.clothes_category = clothes_category;
 
-	Evas_Object *clothes_texture = elm_layout_add(clothes_desc_box);
-	elm_layout_file_set(clothes_texture, main_obj.edj_path, "description_text");
-	evas_object_size_hint_min_set(clothes_texture, 600, 100);
-	evas_object_size_hint_max_set(clothes_texture, 600, 100);
+	Evas_Object *clothes_texture = elm_label_add(clothes_desc_box);
+	elm_object_style_set(clothes_texture, "description_text");
+	elm_object_text_set(clothes_texture, "");
 	elm_box_pack_end(clothes_desc_box, clothes_texture);
 	evas_object_show(clothes_texture);
 	clothes_register_obj.clothes_texture = clothes_texture;
@@ -1343,22 +1736,26 @@ void add_clothes_cb(void *data, Evas_Object *obj, void *event_info) {
 
 	Evas_Object *extra_submit_btn = elm_button_add(submit_button_box);
 	elm_object_style_set(extra_submit_btn, "text_green_button");
-	evas_object_size_hint_min_set(extra_submit_btn, 150, 60);
+	evas_object_size_hint_min_set(extra_submit_btn, 170, 80);
 	elm_object_part_text_set(extra_submit_btn, "default", "추가 등록");
 	elm_box_pack_end(submit_button_box, extra_submit_btn);
 	evas_object_show(extra_submit_btn);
+	evas_object_smart_callback_add(extra_submit_btn, "clicked", add_clothes_register_extra_submit_cb, NULL);
 
 	Evas_Object *submit_btn = elm_button_add(submit_button_box);
 	elm_object_style_set(submit_btn, "text_green_button");
-	evas_object_size_hint_min_set(submit_btn, 150, 60);
+	evas_object_size_hint_min_set(submit_btn, 170, 80);
 	elm_object_part_text_set(submit_btn, "default", "등록 완료");
 	elm_box_pack_end(submit_button_box, submit_btn);
 	evas_object_show(submit_btn);
+	evas_object_smart_callback_add(submit_btn, "clicked", add_clothes_register_submit_cb, NULL);
 
 	add_clothes_select_person_cb(NULL, NULL, NULL);
 }
 
 void add_clothes_select_person_cb(void *data, Evas_Object *obj, void *event_info) {
+	rfid_state = RFID_MAIN;
+
 	evas_object_event_callback_del(profile_select_obj.main_wrapper, EVAS_CALLBACK_MOUSE_UP, add_clothes_select_person_cb);
 	evas_object_size_hint_weight_set(profile_select_obj.main_wrapper, EVAS_HINT_EXPAND, 0);
 	evas_object_size_hint_align_set(profile_select_obj.main_wrapper, EVAS_HINT_FILL, 0);
@@ -1421,6 +1818,8 @@ void add_clothes_select_profile_cb(void *data, Evas_Object *obj, void *event_inf
 }
 
 void add_clothes_register_clothes_cb(void *data, Evas_Object *obj, void *event_info) {
+	rfid_state = RFID_ADD_CLOTHES;
+
 	evas_object_event_callback_add(profile_select_obj.main_wrapper, EVAS_CALLBACK_MOUSE_UP, add_clothes_select_person_cb, NULL);
 	evas_object_size_hint_weight_set(profile_select_obj.main_wrapper, 0, 0);
 	evas_object_size_hint_align_set(profile_select_obj.main_wrapper, 0, 0);
@@ -1457,9 +1856,42 @@ void add_clothes_register_clothes_cb(void *data, Evas_Object *obj, void *event_i
 	evas_object_show(clothes_register_obj.data_layout);
 }
 
-void clothes_register_rfid_test(void *data, Evas_Object *obj, void *event_info) {
-	char rfid_uid[RFID_SIZE] = "2312163194";
+void add_clothes_register_extra_submit_cb(void *data, Evas_Object *obj, void *event_info) {
+	pthread_mutex_lock(&mtx_write);
+	request = REQUEST_ADD_CLOTHES;
+	pthread_cond_signal(&cv_write);
+	pthread_mutex_unlock(&mtx_write);
 
+	pthread_mutex_lock(&mtx_read);
+	// wait socket
+	pthread_cond_wait(&cv_read, &mtx_read);
+	pthread_mutex_unlock(&mtx_read);
+
+	evas_object_hide(clothes_register_obj.clothes_img);
+	elm_object_text_set(clothes_register_obj.clothes_category, "");
+	elm_object_text_set(clothes_register_obj.clothes_texture, "");
+}
+
+void add_clothes_register_submit_cb(void *data, Evas_Object *obj, void *event_info) {
+	pthread_mutex_lock(&mtx_write);
+	request = REQUEST_ADD_CLOTHES;
+	pthread_cond_signal(&cv_write);
+	pthread_mutex_unlock(&mtx_write);
+
+	pthread_mutex_lock(&mtx_read);
+	// wait socket
+	pthread_cond_wait(&cv_read, &mtx_read);
+	pthread_mutex_unlock(&mtx_read);
+
+	set_main_outfit_list();
+
+	rfid_state = RFID_MAIN;
+	Elm_Object_Item *top_item = elm_naviframe_top_item_get(main_obj.nf);
+	delete_layout = elm_object_item_content_get(top_item);
+	elm_naviframe_item_pop(main_obj.nf);
+}
+
+void add_clothes_register_rfid(char *rfid_uid) {
 	pthread_mutex_lock(&mtx_write);
 	request = REQUEST_CLOTHES_INFO;
 	strncpy(clothes_data.rfid_uid, rfid_uid, RFID_SIZE);
@@ -1470,356 +1902,18 @@ void clothes_register_rfid_test(void *data, Evas_Object *obj, void *event_info) 
 	// check already read
 	pthread_cond_wait(&cv_read, &mtx_read);
 
-	dlog_print(DLOG_INFO, LOG_TAG, "register");
-
 	set_image(clothes_register_obj.clothes_img, clothes_data.img_path);
-	elm_object_text_set(clothes_register_obj.clothes_category, "<color=#000000FF font_size=40>테스트</color>");
-	elm_object_part_text_set(clothes_register_obj.clothes_texture, "default", "<color=#000000FF font_size=40>테스트2</color>");
+	evas_object_show(clothes_register_obj.clothes_img);
+
+	char buf[50];
+	memset(buf, 0, 50);
+	snprintf(buf, 50, "Type : %s", clothes_data.category);
+	elm_object_text_set(clothes_register_obj.clothes_category, buf);
+	memset(buf, 0, 50);
+	snprintf(buf, 50, "Texture : %s", clothes_data.texture);
+	elm_object_text_set(clothes_register_obj.clothes_texture, buf);
 
 	pthread_mutex_unlock(&mtx_read);
-}
-
-static void
-create_base_gui(appdata_s *ad)
-{
-	/* Window */
-	/* Create and initialize elm_win.
-	   elm_win is mandatory to manipulate window. */
-	ad->win = elm_win_util_standard_add(PACKAGE, PACKAGE);
-	elm_win_autodel_set(ad->win, EINA_TRUE);
-
-	if (elm_win_wm_rotation_supported_get(ad->win)) {
-		int rots[4] = { 0, 90, 180, 270 };
-		elm_win_wm_rotation_available_rotations_set(ad->win, (const int *)(&rots), 4);
-	}
-
-	evas_object_smart_callback_add(ad->win, "delete,request", win_delete_request_cb, NULL);
-	eext_object_event_callback_add(ad->win, EEXT_CALLBACK_BACK, win_back_cb, ad);
-
-	/* Conformant */
-	/* Create and initialize elm_conformant.
-	   elm_conformant is mandatory for base gui to have proper size
-	   when indicator or virtual keypad is visible. */
-	ad->conform = elm_conformant_add(ad->win);
-	elm_win_indicator_mode_set(ad->win, ELM_WIN_INDICATOR_HIDE);
-	evas_object_size_hint_weight_set(ad->conform, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	elm_win_resize_object_add(ad->win, ad->conform);
-	evas_object_show(ad->conform);
-
-	// get edc resource
-	char *edj_path = NULL;
-	app_resource_manager_get(APP_RESOURCE_TYPE_LAYOUT, "edje_res/airdresser.edj", &edj_path);
-	elm_theme_extension_add(NULL, edj_path);
-	main_obj.edj_path = edj_path;
-
-	// naviframe
-	Evas_Object *nf = elm_naviframe_add(ad->conform);
-	elm_object_content_set(ad->conform, nf);
-	evas_object_show(nf);
-	main_obj.nf = nf;
-
-	// default background layout
-	Evas_Object *main_layout = elm_layout_add(nf);
-	elm_layout_file_set(main_layout, edj_path, "main_layout");
-	elm_naviframe_item_push(nf, NULL, NULL, NULL, main_layout, NULL);
-	Elm_Object_Item *main_item = elm_naviframe_top_item_get(nf);
-	elm_naviframe_item_title_enabled_set(main_item, EINA_FALSE, EINA_FALSE);
-
-	Evas_Object *menu_scroller = elm_scroller_add(main_layout);
-	elm_layout_content_set(main_layout, "elm.swallow.content", menu_scroller);
-	evas_object_show(menu_scroller);
-
-	Evas_Object *menu_box = elm_box_add(menu_scroller);
-	elm_box_horizontal_set(menu_box, EINA_TRUE);
-	elm_box_padding_set(menu_box, 100, 0);
-	evas_object_size_hint_weight_set(menu_box, 0, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(menu_box, 0, EVAS_HINT_FILL);
-	elm_layout_content_set(menu_scroller, "elm.swallow.content", menu_box);
-	elm_box_align_set(menu_box, 0, 0.5);
-	evas_object_show(menu_box);
-
-	/*
-	 * 	course menu
-	 */
-	Evas_Object *course_menu_box_wrapper = elm_layout_add(menu_box);
-	elm_layout_file_set(course_menu_box_wrapper, edj_path, "main_menu_wrapper");
-	evas_object_size_hint_weight_set(course_menu_box_wrapper, 0, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(course_menu_box_wrapper, 0, EVAS_HINT_FILL);
-	evas_object_size_hint_min_set(course_menu_box_wrapper, 750, 0);
-	elm_box_pack_end(menu_box, course_menu_box_wrapper);
-	evas_object_show(course_menu_box_wrapper);
-
-	Evas_Object *course_menu_box = elm_box_add(course_menu_box_wrapper);
-	elm_box_padding_set(course_menu_box, 0, 25);
-	elm_box_align_set(course_menu_box, 0.5, 0);
-	evas_object_size_hint_weight_set(course_menu_box, EVAS_HINT_EXPAND, 0);
-	evas_object_size_hint_align_set(course_menu_box, EVAS_HINT_FILL, 0);
-	elm_layout_content_set(course_menu_box_wrapper, "elm.swallow.content", course_menu_box);
-	evas_object_show(course_menu_box);
-
-	Evas_Object *course_menu_top_menu = elm_box_add(course_menu_box);
-	evas_object_size_hint_weight_set(course_menu_top_menu, EVAS_HINT_EXPAND, 0);
-	evas_object_size_hint_align_set(course_menu_top_menu, EVAS_HINT_FILL, 0);
-	elm_box_horizontal_set(course_menu_top_menu, EINA_TRUE);
-	elm_box_pack_end(course_menu_box, course_menu_top_menu);
-	evas_object_show(course_menu_top_menu);
-
-	Evas_Object *course_menu_top_menu_label = elm_label_add(course_menu_top_menu);
-	elm_object_text_set(course_menu_top_menu_label, "<color=#ABABABFF font_size=55 font_weight=BOLD>코스</color>");
-	elm_box_pack_end(course_menu_top_menu, course_menu_top_menu_label);
-	evas_object_show(course_menu_top_menu_label);
-
-	Evas_Object *course_menu_top_menu_empty = elm_layout_add(course_menu_top_menu);
-	evas_object_size_hint_weight_set(course_menu_top_menu_empty, EVAS_HINT_EXPAND, 0);
-	evas_object_size_hint_align_set(course_menu_top_menu_empty, EVAS_HINT_FILL, 0);
-	elm_box_pack_end(course_menu_top_menu, course_menu_top_menu_empty);
-	evas_object_show(course_menu_top_menu_empty);
-
-	Evas_Object *course_menu_top_menu_expand_btn = elm_button_add(course_menu_top_menu);
-	elm_object_style_set(course_menu_top_menu_expand_btn, "image_button");
-	evas_object_size_hint_min_set(course_menu_top_menu_expand_btn, 80, 80);
-	elm_box_pack_end(course_menu_top_menu, course_menu_top_menu_expand_btn);
-	evas_object_show(course_menu_top_menu_expand_btn);
-
-	char *course_expand_img_path = NULL;
-	app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, "expand.png", &course_expand_img_path);
-	Evas_Object *course_expand_btn_img = elm_image_add(course_menu_top_menu_expand_btn);
-	elm_image_file_set(course_expand_btn_img, course_expand_img_path, NULL);
-	elm_object_part_content_set(course_menu_top_menu_expand_btn, "icon", course_expand_btn_img);
-
-	Evas_Object *course_list_box = elm_box_add(course_menu_box);
-	evas_object_size_hint_weight_set(course_list_box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(course_list_box, EVAS_HINT_FILL, EVAS_HINT_FILL);
-	elm_box_horizontal_set(course_list_box, EINA_TRUE);
-	elm_box_padding_set(course_list_box, 50, 0);
-	elm_box_pack_end(course_menu_box, course_list_box);
-	evas_object_show(course_list_box);
-
-	char course_img_names[2][100] = { "course_ai.png", "course_standard.png" };
-	char course_names[2][100] = { "RFID 태그", "표준" };
-	char course_css[100] = "<color=#CFCFCF font_size=45 font_weight=BOLD>%s</color>";
-
-	for(int i = 0; i < 2; i++){
-		// course wrapper
-		Evas_Object *course_wrapper = elm_layout_add(course_list_box);
-		evas_object_size_hint_weight_set(course_wrapper, 0, EVAS_HINT_EXPAND);
-		evas_object_size_hint_align_set(course_wrapper, 0, EVAS_HINT_FILL);
-		evas_object_size_hint_min_set(course_wrapper, 300, 0);
-		elm_layout_file_set(course_wrapper, edj_path, "course_wrapper");
-		elm_box_pack_end(course_list_box, course_wrapper);
-		evas_object_show(course_wrapper);
-
-		// course box
-		Evas_Object *course = elm_box_add(course_wrapper);
-		elm_box_align_set(course, 0.5, 0);
-		elm_box_padding_set(course, 0, 20);
-		elm_layout_content_set(course_wrapper, "elm.swallow.content", course);
-		evas_object_show(course);
-
-		// course image wrapper
-		Evas_Object *course_image_wrapper = elm_layout_add(course);
-		elm_layout_file_set(course_image_wrapper, edj_path, "course_image_wrapper");
-		elm_box_pack_end(course, course_image_wrapper);
-		evas_object_size_hint_align_set(course_image_wrapper, 0, 0.5);
-		evas_object_show(course_image_wrapper);
-
-		// course image
-		char *course_img_path = NULL;
-		app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, course_img_names[i], &course_img_path);
-		Evas_Object *course_image = elm_image_add(course_image_wrapper);
-		evas_object_size_hint_min_set(course_image, 60, 60);
-		evas_object_size_hint_max_set(course_image, 60, 60);
-		elm_image_file_set(course_image, course_img_path, NULL);
-		elm_layout_content_set(course_image_wrapper, "elm.swallow.content", course_image);
-		evas_object_show(course_image);
-
-		// course name
-		Evas_Object *course_label = elm_label_add(course);
-		evas_object_size_hint_align_set(course_label, 0, 0.5);
-		char content[200];
-		snprintf(content, 200, course_css, course_names[i]);
-		elm_object_text_set(course_label, content);
-		elm_box_pack_end(course, course_label);
-		evas_object_show(course_label);
-	}
-
-	/*
-	 * 	outfit menu
-	 */
-	Evas_Object *outfit_menu_box_wrapper = elm_layout_add(menu_box);
-	elm_layout_file_set(outfit_menu_box_wrapper, edj_path, "main_menu_wrapper");
-	evas_object_size_hint_weight_set(outfit_menu_box_wrapper, 0, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(outfit_menu_box_wrapper, 0, EVAS_HINT_FILL);
-	evas_object_size_hint_min_set(outfit_menu_box_wrapper, 750, 0);
-	elm_box_pack_end(menu_box, outfit_menu_box_wrapper);
-	evas_object_show(outfit_menu_box_wrapper);
-
-	Evas_Object *outfit_menu_box = elm_box_add(outfit_menu_box_wrapper);
-	elm_box_padding_set(outfit_menu_box, 0, 25);
-	elm_box_align_set(outfit_menu_box, 0.5, 0);
-	evas_object_size_hint_weight_set(outfit_menu_box, EVAS_HINT_EXPAND, 0);
-	evas_object_size_hint_align_set(outfit_menu_box, EVAS_HINT_FILL, 0);
-	elm_layout_content_set(outfit_menu_box_wrapper, "elm.swallow.content", outfit_menu_box);
-	evas_object_show(outfit_menu_box);
-
-	Evas_Object *outfit_menu_top_menu = elm_box_add(outfit_menu_box);
-	elm_box_padding_set(outfit_menu_top_menu, 15, 0);
-	evas_object_size_hint_weight_set(outfit_menu_top_menu, EVAS_HINT_EXPAND, 0);
-	evas_object_size_hint_align_set(outfit_menu_top_menu, EVAS_HINT_FILL, 0);
-	elm_box_horizontal_set(outfit_menu_top_menu, EINA_TRUE);
-	elm_box_pack_end(outfit_menu_box, outfit_menu_top_menu);
-	evas_object_show(outfit_menu_top_menu);
-
-	Evas_Object *outfit_menu_top_menu_label = elm_label_add(outfit_menu_top_menu);
-	elm_object_text_set(outfit_menu_top_menu_label, "<color=#ABABABFF font_size=55 font_weight=BOLD>코디</color>");
-	elm_box_pack_end(outfit_menu_top_menu, outfit_menu_top_menu_label);
-	evas_object_show(outfit_menu_top_menu_label);
-
-	Evas_Object *outfit_menu_top_menu_empty = elm_layout_add(outfit_menu_top_menu);
-	evas_object_size_hint_weight_set(outfit_menu_top_menu_empty, EVAS_HINT_EXPAND, 0);
-	evas_object_size_hint_align_set(outfit_menu_top_menu_empty, EVAS_HINT_FILL, 0);
-	elm_box_pack_end(outfit_menu_top_menu, outfit_menu_top_menu_empty);
-	evas_object_show(outfit_menu_top_menu_empty);
-
-	Evas_Object *check_daily_outfit_btn = elm_button_add(outfit_menu_top_menu);
-	elm_object_style_set(check_daily_outfit_btn, "text_button");
-	evas_object_size_hint_min_set(check_daily_outfit_btn, 140, 60);
-	elm_object_text_set(check_daily_outfit_btn, "착용확인");
-	elm_box_pack_end(outfit_menu_top_menu, check_daily_outfit_btn);
-	evas_object_show(check_daily_outfit_btn);
-	evas_object_smart_callback_add(check_daily_outfit_btn, "clicked", check_daily_outfit_cb, NULL);
-
-	Evas_Object *add_clothes_btn = elm_button_add(outfit_menu_top_menu);
-	elm_object_style_set(add_clothes_btn, "text_button");
-	evas_object_size_hint_min_set(add_clothes_btn, 120, 60);
-	elm_object_text_set(add_clothes_btn, "옷 등록");
-	elm_box_pack_end(outfit_menu_top_menu, add_clothes_btn);
-	evas_object_show(add_clothes_btn);
-	evas_object_smart_callback_add(add_clothes_btn, "clicked", add_clothes_cb, NULL);
-
-	Evas_Object *outfit_menu_top_menu_expand_btn = elm_button_add(outfit_menu_top_menu);
-	elm_object_style_set(outfit_menu_top_menu_expand_btn, "image_button");
-	evas_object_size_hint_min_set(outfit_menu_top_menu_expand_btn, 80, 80);
-	elm_box_pack_end(outfit_menu_top_menu, outfit_menu_top_menu_expand_btn);
-	evas_object_show(outfit_menu_top_menu_expand_btn);
-	// button image
-	char *outfit_expand_img_path = NULL;
-	app_resource_manager_get(APP_RESOURCE_TYPE_IMAGE, "expand.png", &outfit_expand_img_path);
-	Evas_Object *outfit_expand_btn_img = elm_image_add(outfit_menu_top_menu_expand_btn);
-	elm_image_file_set(outfit_expand_btn_img, outfit_expand_img_path, NULL);
-	elm_object_part_content_set(outfit_menu_top_menu_expand_btn, "icon", outfit_expand_btn_img);
-	evas_object_smart_callback_add(outfit_menu_top_menu_expand_btn, "clicked", outfit_expand_cb, NULL);
-
-	Evas_Object *outfit_list_box = elm_box_add(outfit_menu_box);
-	evas_object_size_hint_weight_set(outfit_list_box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(outfit_list_box, EVAS_HINT_FILL, EVAS_HINT_FILL);
-	elm_box_horizontal_set(outfit_list_box, EINA_TRUE);
-	elm_box_padding_set(outfit_list_box, 50, 0);
-	elm_box_pack_end(outfit_menu_box, outfit_list_box);
-	evas_object_show(outfit_list_box);
-
-	pthread_mutex_lock(&mtx_write);
-	request = REQUEST_OUTFIT_MAIN;
-	pthread_cond_signal(&cv_write);
-	pthread_mutex_unlock(&mtx_write);
-
-	pthread_mutex_lock(&mtx_read);
-	// check already read
-	pthread_cond_wait(&cv_read, &mtx_read);
-
-	char outfit_detail_name[2][100] = { "일정", "사용자" };
-	char outfit_detail_css[2][100] = {
-			"<color=#A5A5A5FF font_size=27>%s</color>",
-			"<color=#EFEFEFFF font_size=32>%s</color>"
-	};
-
-	for(int i = 0; i < outfit_count; i++){
-		// outfit wrapper
-		Evas_Object *outfit_wrapper = elm_layout_add(outfit_list_box);
-		evas_object_size_hint_weight_set(outfit_wrapper, 0, EVAS_HINT_EXPAND);
-		evas_object_size_hint_align_set(outfit_wrapper, 0, EVAS_HINT_FILL);
-		evas_object_size_hint_min_set(outfit_wrapper, 300, 0);
-		elm_layout_file_set(outfit_wrapper, edj_path, "outfit_wrapper");
-		elm_box_pack_end(outfit_list_box, outfit_wrapper);
-		evas_object_show(outfit_wrapper);
-
-		// outfit box
-		Evas_Object *outfit = elm_box_add(outfit_wrapper);
-		elm_box_align_set(outfit, 0.5, 0);
-		elm_box_padding_set(outfit, 0, 30);
-		elm_layout_content_set(outfit_wrapper, "elm.swallow.content", outfit);
-		evas_object_show(outfit);
-
-		Evas_Object *outfit_img_wrapper = elm_layout_add(outfit);
-		elm_layout_file_set(outfit_img_wrapper, main_obj.edj_path, "image_wrapper");
-		evas_object_size_hint_min_set(outfit_img_wrapper, 200, 200);
-		evas_object_size_hint_max_set(outfit_img_wrapper, 200, 200);
-		elm_box_pack_end(outfit, outfit_img_wrapper);
-		evas_object_show(outfit_img_wrapper);
-
-		// outfit image
-		Evas_Object *outfit_img = elm_image_add(outfit_img_wrapper);
-		set_image(outfit_img, outfit_data[i].img_path);
-		evas_object_size_hint_weight_set(outfit_img, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-		evas_object_size_hint_align_set(outfit_img, EVAS_HINT_FILL, EVAS_HINT_FILL);
-		elm_layout_content_set(outfit_img_wrapper, "elm.swallow.content", outfit_img);
-		evas_object_show(outfit_img);
-
-		// outfit info table
-		Evas_Object *outfit_detail_table = elm_table_add(outfit);
-		evas_object_size_hint_weight_set(outfit_detail_table, EVAS_HINT_EXPAND, 0);
-		evas_object_size_hint_align_set(outfit_detail_table, 0, 0);
-		elm_table_padding_set(outfit_detail_table, 15, 10);
-		elm_box_pack_end(outfit, outfit_detail_table);
-		evas_object_show(outfit_detail_table);
-
-		for (int row = 0; row < 2; row++) {
-			for (int col = 0; col < 2; col++) {
-				// outfit data - title or data
-				Evas_Object *outfit_detail_label = elm_label_add(outfit_detail_table);
-				evas_object_size_hint_align_set(outfit_detail_label, 0, 0.5);
-				char content[200];
-				if(col == 0){
-					snprintf(content, 200, outfit_detail_css[col], outfit_detail_name[row]);
-				}
-				else{
-					switch(row){
-					case 0:
-						snprintf(content, 200, outfit_detail_css[col], outfit_data[i].schedule);
-						break;
-					case 1:
-						snprintf(content, 200, outfit_detail_css[col], outfit_data[i].user_name);
-						break;
-					}	// end switch-case
-				}
-				elm_object_text_set(outfit_detail_label, content);
-				elm_table_pack(outfit_detail_table, outfit_detail_label, col, row, 1, 1);
-				evas_object_show(outfit_detail_label);
-			}
-		}
-	}
-	pthread_mutex_unlock(&mtx_read);
-
-	/*
-	 *	notification(empty) box
-	 */
-	Evas_Object *notification_menu_box_wrapper = elm_layout_add(menu_box);
-	elm_layout_file_set(notification_menu_box_wrapper, edj_path, "main_menu_wrapper");
-	evas_object_size_hint_weight_set(notification_menu_box_wrapper, 0, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(notification_menu_box_wrapper, 0, EVAS_HINT_FILL);
-	evas_object_size_hint_min_set(notification_menu_box_wrapper, 750, 0);
-	elm_box_pack_end(menu_box, notification_menu_box_wrapper);
-	evas_object_show(notification_menu_box_wrapper);
-
-	// notification - label
-	Evas_Object *notification_menu_label = elm_label_add(notification_menu_box_wrapper);
-	elm_object_text_set(notification_menu_label, "<color=#ABABABFF font_size=55 font_weight=BOLD>알림</color>");
-	elm_layout_content_set(notification_menu_box_wrapper, "elm.swallow.content", notification_menu_label);
-	evas_object_size_hint_align_set(notification_menu_label, 0.5, 0);
-	evas_object_show(notification_menu_label);
-
-	/* Show window after base gui is set up */
-	evas_object_show(ad->win);
 }
 
 static bool
@@ -1830,6 +1924,12 @@ app_create(void *data)
 		If this function returns true, the main loop of application starts
 		If this function returns false, the application is terminated */
 	appdata_s *ad = data;
+
+	pthread_mutex_lock(&mtx_socket);
+	if(!socket_done){
+		pthread_cond_wait(&cv_socket, &mtx_socket);
+	}
+	pthread_mutex_unlock(&mtx_socket);
 
 	create_base_gui(ad);
 
@@ -1926,9 +2026,15 @@ main(int argc, char *argv[])
 	ui_app_add_event_handler(&handlers[APP_EVENT_LANGUAGE_CHANGED], APP_EVENT_LANGUAGE_CHANGED, ui_app_lang_changed, &ad);
 	ui_app_add_event_handler(&handlers[APP_EVENT_REGION_FORMAT_CHANGED], APP_EVENT_REGION_FORMAT_CHANGED, ui_app_region_changed, &ad);
 
-//	testRfid();
-
+	pthread_t rfid_thread;
 	pthread_t socket_thread;
+
+
+	pthread_create(&rfid_thread, NULL, rfid_i2c, NULL);
+
+	socket_done = 0;
+	pthread_mutex_init(&mtx_socket, NULL);
+	pthread_cond_init(&cv_socket, NULL);
 	pthread_create(&socket_thread, NULL, socket_init, NULL);
 
 	ret = ui_app_main(argc, argv, &event_callback, &ad);
@@ -1936,6 +2042,7 @@ main(int argc, char *argv[])
 		dlog_print(DLOG_ERROR, LOG_TAG, "app_main() is failed. err = %d", ret);
 	}
 
+	pthread_join(rfid_thread, NULL);
 	pthread_join(socket_thread, NULL);
 
 	return ret;

@@ -24,8 +24,6 @@
 
 #include <app_resource_manager.h>
 
-#include "datastructure.h"
-
 #define BUF_SIZE 1024
 #define RFID_SIZE 20
 #define MAX_OUTFIT 40
