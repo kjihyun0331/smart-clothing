@@ -29,7 +29,7 @@ public class FCMServiceImpl implements FCMService {
     }
 
     @Override
-    public void sendMessageTo(Long userId, String body, String title) {
+    public void sendMessageTo(Long userId, String body, String title,String image) {
         // token 찾고
         User user = userRepository.findByUserId(userId.intValue()).orElseThrow(()
                 -> new UserException(UserErrorCode.NOT_FOUND_MEMBER));
@@ -39,6 +39,7 @@ public class FCMServiceImpl implements FCMService {
         Message message = Message.builder()
                 .setToken(token)
                 .setNotification(Notification.builder()
+                        .setImage(image)
                         .setTitle(title)
                         .setBody(body)
                         .build())
