@@ -14,11 +14,12 @@ public class FCMController {
 
     /**
      * FCM Token 저장
+     *
      * @param fcmTokenDto FCM Token
      * @return
      */
-    @PostMapping("/")
-    public ResponseEntity saveFCMToken(@RequestHeader("User-Id") @Valid int userId,@RequestBody FCMTokenDTO fcmTokenDto) {
+    @PostMapping()
+    public ResponseEntity saveFCMToken(@RequestHeader("User-Id") @Valid int userId, @RequestBody FCMTokenDTO fcmTokenDto) {
 
         fcmService.saveFCMToken(userId, fcmTokenDto.getToken());
 

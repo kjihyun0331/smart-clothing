@@ -1,6 +1,7 @@
 package sueprtizen.smartclothing.domain.users.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import sueprtizen.smartclothing.global.entity.BaseEntity;
 @Entity
 @Table(name = "user")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +42,7 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String fcmToken;
+
 
     public void updateToken(String token){
         this.fcmToken=token;

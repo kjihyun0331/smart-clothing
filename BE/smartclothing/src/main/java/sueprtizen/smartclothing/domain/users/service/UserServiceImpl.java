@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getPassword().equals(userRequestDTO.password())) {
             throw new UserException(UserErrorCode.NOT_MATCH_PASSWORD);
         }
+
         return new UserResponseDTO(user.getUserId());
     }
 
