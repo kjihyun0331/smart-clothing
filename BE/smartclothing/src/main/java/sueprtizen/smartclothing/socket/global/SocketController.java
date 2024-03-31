@@ -135,7 +135,7 @@ public class SocketController {
                                 pastOutfitService.addTodayOutfit((Long) requestDTO.get("userId"), (JSONArray) requestDTO.get("clothes"));
                                 break;
                             case "addLaundry":
-                                washerService.addLaundry((String) requestDTO.get("rfidUid"));
+                                washerService.addLaundry((String) requestDTO.get("rfidUid"),(Long)requestDTO.get("userId"));
                                 break;
                             case "addCareClothes":
                                 airdresserService.addCareClothes((String) requestDTO.get("rfidUid"));
