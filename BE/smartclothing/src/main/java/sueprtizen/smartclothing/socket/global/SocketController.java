@@ -7,8 +7,6 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingImageDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingInfoDTO;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
 import sueprtizen.smartclothing.domain.outfit.past.service.PastOutfitService;
 import sueprtizen.smartclothing.socket.clothes.service.SocketUserService;
@@ -131,10 +129,16 @@ public class SocketController {
                                 responseJson.put("result", path);
                                 break;
                             case "addClothes":
-                                clothingService.addClothes((String)requestDTO.get("rfidUid"),(JSONArray) requestDTO.get("users"),(Long)requestDTO.get("clothesDetailId"));
+                                clothingService.addClothes((String) requestDTO.get("rfidUid"), (JSONArray) requestDTO.get("users"), (Long) requestDTO.get("clothesDetailId"));
                                 break;
                             case "addDailyOutfit":
-                                pastOutfitService.addTodayOutfit((Long)requestDTO.get("userId"),(JSONArray)requestDTO.get("clothes"));
+                                pastOutfitService.addTodayOutfit((Long) requestDTO.get("userId"), (JSONArray) requestDTO.get("clothes"));
+                                break;
+                            case "addLaundry":
+                                washerService.addLaundry((String) requestDTO.get("rfidUid"));
+                                break;
+                            case "addCareClothes":
+                                airdresserService.addCareClothes((String) requestDTO.get("rfidUid"));
                                 break;
                         }
                         writer.println(responseJson);

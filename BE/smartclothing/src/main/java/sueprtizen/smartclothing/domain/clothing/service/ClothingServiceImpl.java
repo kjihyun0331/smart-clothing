@@ -187,7 +187,7 @@ public class ClothingServiceImpl implements ClothingService {
 
     public JSONObject getClothingInfo(String rfidUid) {
         Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
-        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingId());
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingDetail().getClothingDetailId());
 
         JSONObject jsonObject = new JSONObject();
         List<ClothingTexture> texture = detail.getClothingTextures();
