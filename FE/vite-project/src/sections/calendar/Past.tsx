@@ -10,18 +10,19 @@ import { BASE_URL } from "@/config/config";
 import IconEdit from "@/assets/ui/IconEdit";
 import { useState } from "react";
 import IconCheck from "@/assets/ui/IconCheck";
+import IconSmallWeather from "@/assets/weather/IconSmallWeather";
 
 type PastResponseItem = {
   schedule: {
-    scheduleId: 0;
-    date: "string";
-    scheduleCategory: "string";
-    outfitImagePath: "string";
+    scheduleId: number;
+    date: string;
+    scheduleCategory: string;
+    outfitImagePath: string;
   };
   weather: {
-    icon: 0;
-    lowestTemperature: 0;
-    highestTemperature: 0;
+    icon: number;
+    lowestTemperature: number;
+    highestTemperature: number;
   };
 };
 
@@ -128,7 +129,8 @@ function Past() {
               </span>
               <div className="keyword">{item.schedule.scheduleCategory}</div>
               <div className="weather">
-                [icon] {item.weather.highestTemperature}°C /{" "}
+                <IconSmallWeather id={item.weather.icon} />
+                {item.weather.highestTemperature}°C /{" "}
                 {item.weather.lowestTemperature}°C
               </div>
               <div
@@ -203,7 +205,9 @@ const Item = styled.div`
   .weather {
     font-size: 0.8rem;
     color: gray;
-    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
   }
 
   .imgarea {
