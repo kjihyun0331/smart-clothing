@@ -150,7 +150,7 @@ public class ClothingServiceImpl implements ClothingService {
         if (clothing.getOwnerId() == currentUser.getUserId()) {
             //기존 옷 사용자 연결
             Set<Integer> userClothingSet = userClothingRepository.findSharedUsersByClothingIdAndUserId(
-                    currentUser.getUserId(), clothing.getClothingId()
+                    clothing.getClothingId(), currentUser.getUserId()
             );
 
             //새로운 옷 사용자 연결
