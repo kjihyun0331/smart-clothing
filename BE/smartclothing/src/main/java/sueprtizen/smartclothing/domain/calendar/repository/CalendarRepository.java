@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface CalendarRepository extends JpaRepository<Schedule, Integer> {
 
-    @Query("select s from Schedule s where s.user = :user and s.scheduleDisabled = false order by s.date asc")
-    List<Schedule> findAllByUserOrderByDateAsc(User user);
+    @Query("select s from Schedule s where s.user = :user and s.scheduleDisabled = false and s.date < :date order by s.date asc")
+    List<Schedule> findAllByUserOrderByDateAsc(User user, LocalDate date);
 
     @Query("select s from Schedule s where s.user = :user and s.scheduleDisabled = false and s.date between :startDate and :endDate order by s.date asc")
     List<Schedule> findSchedulesByUserAndDateBetweenOrderByDateAsc(User user, LocalDate startDate, LocalDate endDate);
