@@ -41,4 +41,8 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String fcmToken;
+
+    public void updateToken(String token){
+        this.fcmToken=token;
+    }
 }
