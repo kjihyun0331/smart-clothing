@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sueprtizen.smartclothing.domain.calendar.repository.CalendarRepository;
 import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
 import sueprtizen.smartclothing.socket.machine.dto.WasherResponseDTO;
 import sueprtizen.smartclothing.socket.machine.repository.WasherRepository;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WasherServiceImpl implements WasherService {
     private final WasherRepository washerRepository;
+    private final CalendarRepository calendarRepository;
 
     @Transactional(readOnly = true)
     public List<JSONObject> getAllLaundryList() {
@@ -62,5 +64,10 @@ public class WasherServiceImpl implements WasherService {
         }
 
         return jsonArray;
+    }
+
+    public void addLaundry(String rfid) {
+        //위치 에어드레서로 바꾸기
+        //location changed at 바꾸기
     }
 }

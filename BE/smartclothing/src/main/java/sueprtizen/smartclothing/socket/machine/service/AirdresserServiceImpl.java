@@ -6,7 +6,6 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
-import sueprtizen.smartclothing.socket.clothes.dto.SocketUserResponseDTO;
 import sueprtizen.smartclothing.socket.machine.dto.AirdresserResponseDTO;
 import sueprtizen.smartclothing.socket.machine.repository.AirdresserRepository;
 
@@ -66,6 +65,11 @@ public class AirdresserServiceImpl implements AirdresserService {
         }
 
         return jsonArray;
+    }
+
+    public void addCareClothes(String rfid) {
+        //위치 에어드레서로 바꾸기
+        //location changed at 바꾸기
     }
 
 }
