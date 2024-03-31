@@ -30,4 +30,6 @@ public interface ClothingService {
 
     void putClothingIntoAirdresser(String rfid);
 
+    Integer getClothingOwner(String rfid);
+
 }

@@ -10,5 +10,5 @@ public interface WasherService {
 
     List<JSONObject> getMainLaundryList();
 
-    void addLaundry(String rfid,Long userId);
+    void addLaundry(String rfid);
 }

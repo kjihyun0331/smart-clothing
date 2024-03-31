@@ -69,9 +69,9 @@ public class WasherServiceImpl implements WasherService {
         return jsonArray;
     }
 
-    public void addLaundry(String rfid,Long userId) {
+    public void addLaundry(String rfid) {
         clothingService.putClothingIntoWasher(rfid);
         String image = clothingService.getClothingImage(rfid).get("image").toString();
-        fcmService.sendMessageTo(userId,"옷이 세탁기에 들어갔습니다.","세탁 알림",image);
+        fcmService.sendMessageTo(Long.valueOf(clothingService.getClothingOwner(rfid)),"옷이 세탁기에 들어갔습니다.","세탁 알림",image);
     }
 }

@@ -9,5 +9,5 @@ public interface AirdresserService {
 
     List<JSONObject> getMainOutfitList();
 
-    void addCareClothes(String rfid,Long userId);
+    void addCareClothes(String rfid);
 }
