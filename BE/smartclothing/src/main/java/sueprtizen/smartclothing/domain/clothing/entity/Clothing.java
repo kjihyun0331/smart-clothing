@@ -63,4 +63,8 @@ public class Clothing {
         this.nowAt="옷장";
         this.washedAt=LocalDateTime.now().toString();
     }
+
+    public void updateNowat(String machine){
+        this.nowAt=machine;
+    }
 }

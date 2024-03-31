@@ -87,13 +87,15 @@ public class WeatherServiceImpl implements WeatherService {
                 JSONObject solar = (JSONObject) dayTime.get("SolarIrradiance");
                 JSONObject air = (JSONObject) ((JSONArray) (jsonDay.get("AirAndPollen"))).get(5);
 
+                Weather newWeather = new Weather(
+                        key, date, Integer.parseInt(dayTime.get("Icon").toString()), changeToDouble(minTemp.get("Value")), changeToDouble(maxTemp.get("Value")), changeToDouble(realMinTem.get("Value")), changeToDouble(realMaxTem.get("Value")), changeToDouble(rain.get("Value")), changeToDouble(snow.get("Value")), changeToDouble(humidity.get("Average")), changeToDouble(speed.get("Value")), changeToDouble(solar.get("Value")), changeToDouble(air.get("Value")), (String) air.get("Category")
+                );
+
                 Optional<Weather> weather = weatherRepository.findByLocationKeyAndDate(key, date);
                 if (weather.isPresent()) {
-                    weather.get().updateValue(weather.get());
+                    weather.get().updateValue(newWeather);
                 } else {
-                    Weather newWeather = new Weather(
-                            key, date, Integer.parseInt(dayTime.get("Icon").toString()), changeToDouble(minTemp.get("Value")), changeToDouble(maxTemp.get("Value")), changeToDouble(realMinTem.get("Value")), changeToDouble(realMaxTem.get("Value")), changeToDouble(rain.get("Value")), changeToDouble(snow.get("Value")), changeToDouble(humidity.get("Average")), changeToDouble(speed.get("Value")), changeToDouble(solar.get("Value")), changeToDouble(air.get("Value")), (String) air.get("Category")
-                    );
+
                     weatherRepository.save(newWeather);
                 }
 

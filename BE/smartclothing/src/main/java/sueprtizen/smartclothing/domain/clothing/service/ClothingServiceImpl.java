@@ -205,7 +205,7 @@ public class ClothingServiceImpl implements ClothingService {
 
     public JSONObject getClothingInfo(String rfidUid) {
         Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
-        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingId());
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingDetail().getClothingDetailId());
 
         JSONObject jsonObject = new JSONObject();
         List<ClothingTexture> texture = detail.getClothingTextures();
@@ -239,6 +239,16 @@ public class ClothingServiceImpl implements ClothingService {
             UserClothing uc = new UserClothing(newUser, newClothing);
             userClothingRepository.save(uc);
         }
+    }
+
+    public void putClothingIntoWasher(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        clothing.updateNowat("세탁기");
+    }
+
+    public void putClothingIntoAirdresser(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        clothing.updateNowat("에어드레서");
     }
 
 
