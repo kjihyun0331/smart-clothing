@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingPositionResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.*;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
 import sueprtizen.smartclothing.global.dto.Message;
 
@@ -69,6 +66,15 @@ public class ClothingController {
     ) {
         List<ClothingPositionResponseDTO> clothingPosition = clothingService.getClothingPosition(userId);
         return ResponseEntity.ok(Message.success(clothingPosition));
+    }
+
+    @GetMapping("/{clothingId}/info")
+    public ResponseEntity<Message<ClothingWashInfoResponseDTO>> getClothingWashInfo(
+            @RequestHeader("User-ID") int userId,
+            @PathVariable int clothingId
+    ) {
+        ClothingWashInfoResponseDTO clothingInfo = clothingService.getClothingWashInfo(userId, clothingId);
+        return ResponseEntity.ok(Message.success(clothingInfo));
     }
 
 }

@@ -2,10 +2,7 @@ package sueprtizen.smartclothing.domain.clothing.service;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import sueprtizen.smartclothing.domain.clothing.dto.ClosetConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingConfirmResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingPositionResponseDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.ClothingUpdateRequestDTO;
+import sueprtizen.smartclothing.domain.clothing.dto.*;
 
 import java.util.List;
 
@@ -19,6 +16,8 @@ public interface ClothingService {
     void updateClothing(int userId, ClothingUpdateRequestDTO clothingUpdateRequestDTO);
 
     List<ClothingPositionResponseDTO> getClothingPosition(int userId);
+
+    ClothingWashInfoResponseDTO getClothingWashInfo(int userId, int clothingId);
 
     JSONObject getClothingInfo(String rfidUid);
 

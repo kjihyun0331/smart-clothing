@@ -203,6 +203,17 @@ public class ClothingServiceImpl implements ClothingService {
         ).toList();
     }
 
+    public ClothingWashInfoResponseDTO getClothingWashInfo(int userId, int clothingId) {
+        Clothing clothing = clothingRepository.findById(clothingId)
+                .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
+
+        return new ClothingWashInfoResponseDTO(
+                clothing.getClothingId(),
+                clothing.getWornCount(),
+                clothing.getWashedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+        );
+    }
+
     public JSONObject getClothingInfo(String rfidUid) {
         Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingDetail().getClothingDetailId());
@@ -243,12 +254,14 @@ public class ClothingServiceImpl implements ClothingService {
 
     public void putClothingIntoWasher(String rfid){
         Clothing clothing = clothingRepository.findByRfidUid(rfid);
-        clothing.updateNowat("세탁기");
+        clothing.updateNowAt("세탁기");
+        clothing.updateWashedAt();
     }
 
     public void putClothingIntoAirdresser(String rfid){
         Clothing clothing = clothingRepository.findByRfidUid(rfid);
-        clothing.updateNowat("에어드레서");
+        clothing.updateNowAt("에어드레서");
+        clothing.updateWashedAt();
     }
 
 
