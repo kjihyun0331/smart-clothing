@@ -24,9 +24,12 @@ import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 import sueprtizen.smartclothing.domain.weather.entity.Weather;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -80,6 +83,19 @@ public class CalendarServiceImpl implements CalendarService {
         );
 
         //TODO: file 저장 후 file 위치 저장
+        String uploadDir = "/home/ubuntu/clothes_images";
+        String fileName = UUID.randomUUID()+".png";
+        // 파일 객체 생성
+        File outfitPNG = new File(uploadDir + fileName);
+
+        try {
+            // 파일 저장
+            file.transferTo(outfitPNG);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
         Schedule newScheDule;
 
         if (weather.isEmpty()) {
@@ -87,7 +103,7 @@ public class CalendarServiceImpl implements CalendarService {
                     .scheduleName(scheduleSaveRequestDTO.title())
                     .scheduleCategory(scheduleSaveRequestDTO.category())
                     .user(currentUser)
-                    .outfitImagePath("https://j10s006.p.ssafy.io/images/8fb97a55-1a04-4f82-a4a5-eb85b1f1a7c4.png")
+                    .outfitImagePath("https://j10s006.p.ssafy.io/images/"+fileName) //url
                     .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
                     .locationKey(scheduleSaveRequestDTO.locationKey())
                     .build();
@@ -96,7 +112,7 @@ public class CalendarServiceImpl implements CalendarService {
                     .scheduleName(scheduleSaveRequestDTO.title())
                     .scheduleCategory(scheduleSaveRequestDTO.category())
                     .user(currentUser)
-                    .outfitImagePath("https://j10s006.p.ssafy.io/images/8fb97a55-1a04-4f82-a4a5-eb85b1f1a7c4.png")
+                    .outfitImagePath("https://j10s006.p.ssafy.io/images/"+fileName)
                     .weather(weather.get())
                     .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
                     .locationKey(scheduleSaveRequestDTO.locationKey())
