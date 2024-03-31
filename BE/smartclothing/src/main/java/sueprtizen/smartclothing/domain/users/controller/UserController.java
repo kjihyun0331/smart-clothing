@@ -5,12 +5,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sueprtizen.smartclothing.domain.users.dto.FamilyMembersResponseDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserDetailResponseDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserRequestDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserResponseDTO;
 import sueprtizen.smartclothing.domain.users.service.UserService;
 import sueprtizen.smartclothing.global.dto.Message;
 import sueprtizen.smartclothing.global.fcm.FCMService;
+
+import java.util.List;
 
 @RequestMapping("/users")
 @RestController
@@ -34,4 +37,14 @@ public class UserController {
         UserDetailResponseDTO userDetailResponse = userService.getUserDetail(userId);
         return ResponseEntity.ok(Message.success(userDetailResponse));
     }
+
+    @Operation(summary = "가족 구성원 조회", description = "본인제외 가족 구성원을 조회합니다.")
+    @GetMapping("/family")
+    public ResponseEntity<Message<List<FamilyMembersResponseDTO>>> getFamilyMembers(
+            @RequestHeader("User-Id") @Valid int userId,
+            @RequestParam(required = false, defaultValue = "true") boolean includeSelf
+    ) {
+        return ResponseEntity.ok(Message.success(userService.getFamilyMembers(userId, includeSelf)));
+    }
+
 }

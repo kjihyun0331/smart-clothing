@@ -19,7 +19,8 @@ const MyCalendar = () => {
   const today = new Date();
   const { isLoading, data } = useApi(
     "get",
-    `calendar?startDate=2023-01-01&endDate=2025-12-12`
+    `calendar?startDate=2023-01-01&endDate=2025-12-12`,
+    "calendarData"
   );
   const [mySchedule, setMySchedule] = useState([]);
 
@@ -52,7 +53,7 @@ const MyCalendar = () => {
 
   return (
     <>
-      <div style={{ height: "7dvh" }}></div>
+      {/* <div style={{ height: "7dvh" }}></div> */}
       <StyledCalendarWrapper>
         <StyledCalendar
           value={date}

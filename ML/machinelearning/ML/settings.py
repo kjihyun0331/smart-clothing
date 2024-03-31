@@ -25,7 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# 추후 제거하기!!
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -33,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'knn',
     'mlp',
+    'django_apscheduler',
     'corsheaders',
     'rest_framework',
     'django.contrib.admin',
@@ -55,9 +57,18 @@ MIDDLEWARE = [
 ]
 
 # CORS 설정
+from corsheaders.defaults import default_headers
+
+
 CORS_ALLOWED_ORIGINS = [
     'https://j10s006.p.ssafy.io',
+    'http://localhost:5173'
 ]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+	'userid',
+]
+
 
 ROOT_URLCONF = 'ML.urls'
 
@@ -110,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'UTC'
 
@@ -128,3 +139,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+SCHEDULER_DEFAULT = True
+
+SECURE_SSL_REDIRECT = False
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

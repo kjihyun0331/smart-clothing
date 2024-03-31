@@ -20,11 +20,7 @@ public class FCMServiceImpl implements FCMService {
     @Override
     public void saveFCMToken(Integer userId, String token) {
         Optional<User> user = userRepository.findByUserId(userId);
-        user.ifPresent(t->{
-            if(token!=null){
-
-            }
-        });
+        user.get().updateToken(token);
     }
 
     @Override

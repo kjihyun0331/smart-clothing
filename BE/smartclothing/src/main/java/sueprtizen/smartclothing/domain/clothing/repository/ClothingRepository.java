@@ -7,4 +7,7 @@ import sueprtizen.smartclothing.domain.clothing.entity.Clothing;
 @Repository
 public interface ClothingRepository extends JpaRepository<Clothing, Integer> {
     Clothing findByRfidUid(String rfid);
+
+    Clothing findByClothingId(Integer id);
+
 }

@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('knn/', include('knn.urls')),
-    path('mlp/', include('mlp.urls'))
+    path('ML-api/testtest/', include('knn.urls')),
+    path('ML-api/', include('mlp.urls'))
 ]

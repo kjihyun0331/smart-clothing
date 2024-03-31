@@ -13,6 +13,7 @@ import {
   initialState,
   clothesreducer,
 } from "@/reducers/updateClothesReducer";
+import { usePatchClothes } from "@/hooks/usePatchClothes";
 interface DetailClothesResponseType {
   isLoading: boolean;
   data: DetailClothesResponseDataType;
@@ -22,17 +23,12 @@ const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const UpdateClothes = () => {
   const { id } = useParams();
+  const { mutate } = usePatchClothes();
   const [value, dispatch] = useReducer(clothesreducer, initialState);
   const { isLoading, data }: DetailClothesResponseType = useApi(
     "get",
     `clothing/${id}`
   );
-
-  useEffect(() => {
-    if (data) {
-      dispatch({ type: ACTION_TYPES.set, payload: data });
-    }
-  }, [data]);
 
   const [viewCategory, setViewCategory] = useState(false);
   const [viewTexture, setViewTexture] = useState(false);
@@ -40,8 +36,14 @@ const UpdateClothes = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (data) {
+      dispatch({ type: ACTION_TYPES.set, payload: data });
+    }
+  }, [data]);
+
   const handleGoBack = () => {
-    window.history.back();
+    navigate(`/closet/${id}`);
   };
 
   const handleKeyUp = (event) => {
@@ -55,13 +57,26 @@ const UpdateClothes = () => {
     }
   };
 
+  const handleBlur = (event) => {
+    const { value } = event.target;
+    dispatch({ type: ACTION_TYPES.updateClothingName, payload: value });
+  };
+
+  // const { mutate } = usePatchClothes();
   const handleDispatch = (actionType, value) => {
     dispatch({ type: actionType, payload: value });
   };
 
   const handleFinish = () => {
-    console.log(value);
-    navigate(`/closet/${id}`);
+    const putData = {
+      clothingId: value.clothingId,
+      clothingName: value.clothingName,
+      category: value.category,
+      styles: value.styles,
+      seasons: value.seasons,
+      sharedUserIds: value.sharedUsers.map((user) => user.userId),
+    };
+    mutate({ id, putData });
   };
   if (isLoading) return <Loader />;
 
@@ -79,6 +94,7 @@ const UpdateClothes = () => {
           type="text"
           defaultValue={value.clothingName}
           onKeyUp={handleKeyUp}
+          onBlur={handleBlur}
         />
         <div className="titlearea">
           <span className="title">카테고리</span>

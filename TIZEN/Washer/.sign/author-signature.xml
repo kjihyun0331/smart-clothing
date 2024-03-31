@@ -4,13 +4,13 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"></SignatureMethod>
 <Reference URI="author-signature-default.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>NGlrjujdzsVqZIUmlbo3nVP0lq6+VnQdBHYpxj+gf9f7HmsWl72AY+/oN7gBB5A13Dr1gCeV3IpE
-Ow+JiGGfqw==</DigestValue>
+<DigestValue>d5AgO/sYMSwTh2y4l1IdLHtgo0rys2HnfAlGPLFuORPTF/0TKuahXpgwrvb6v0unlV2BaqezbqXX
+88vnAVjJ+A==</DigestValue>
 </Reference>
 <Reference URI="bin%2Fwasher">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>/iUdgwM8yI/3WxQjoIdRgwyAp25CgFRaK6U1Ve+eV/UM8zS6sscqKlYLSd6eVF35n0RjEuivc4yJ
-KlxyS3BT8A==</DigestValue>
+<DigestValue>bafSTtlaaUi7VDLyj70QCprLZmhkjEYEWmR6bjXnGRcKGKCkiYIrtW3WwfXcfIMeoDH0bVquysTa
+qigceW6vng==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fclothes_example.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -34,18 +34,13 @@ AktI9349Cw==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fedje_res%2Fsample.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>25B03v/FoOaySNYi1HIMlA4B0aWLhCXqtr0oqX1H0pmVJbSWmVA170Z7ZTsWPXQaEW89oUSK5LXY
-dXixV5XsPg==</DigestValue>
+<DigestValue>hcFDzfcU0eHnSTgCLSUgqrqlXLT3bPAY+Z8TGrWfSh4H+PKismo2FxfZEpolnPjUYKrLHx42AE59
+C4aRXNSC7A==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fexpand.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
 <DigestValue>HwsYBU0NcX15sHmuOunEKrEdlGt57V3xOz28DsQ+cHI3fZGG7nlzEMVfO9vFNxhk2nYVDGZPiYHl
 kaa0SK3DQA==</DigestValue>
-</Reference>
-<Reference URI="res%2Fcontents%2Ftest.jpg">
-<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>dbnkvViRg3dmRQykhAjvjWjU+8ybKnhpoVJ81UDmEkpSD8bSSDbEhR3HAqORctqSYA4WAELiWpbj
-6O/SyxYaNA==</DigestValue>
 </Reference>
 <Reference URI="res%2Fres.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -59,8 +54,8 @@ bNc/wgCuGg==</DigestValue>
 </Reference>
 <Reference URI="tizen-manifest.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>+Pafm4b8u3h/mh9voKPIFDZuI/hlKzLn+XZj3oYe5+fegxSoOjv0KBiG29h1RgST9JIGUQwTZJBK
-j2oI5HVXUQ==</DigestValue>
+<DigestValue>nUx0D6k+0c6m3EaWX+n2cAMKOkj2aVMgFYhZmycrIVeKQ3es4Eto5TvIaVJIl8YPspbSUfnNFxVo
+p+PGfOeZgQ==</DigestValue>
 </Reference>
 <Reference URI="#prop">
 <Transforms>
@@ -72,25 +67,25 @@ QY10fG1EWQ==</DigestValue>
 </Reference>
 </SignedInfo>
 <SignatureValue>
-mpa/8Dk2d/xTBTj5y/EZ8bmbUehyaUXbMi/mS+jYv5WhyOVjpfj9sAjM3K+WZwdbvNo1HMXIFEKm
-O7mXmYdTCXuHZMQYk+nDKQ+6mvM8TBwmrMD42JQpaxnMknjov1UEILUDXnkYYU237LbJv6po8UML
-Dh9MFj7PLhLp77S6rzA=
+apwtAQHYyzwfZnyDVEsxEeFftRQ3lP+71NRzH5N5mBjRFi2oCYfk9B7/QD3Kbr4g/kHmPoAWtqm6
+hUbCoF9fQsouAsXIhUsKGNlusDJwT2ECTzWm1wm/NSRm/UWtj+TviVgcK5jSnZHZ5oY5hSxqysmw
+FK/Zw+7Dgp3uuvxrqg4=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
 <X509Certificate>
-MIICkTCCAXmgAwIBAgIGAY474ibzMA0GCSqGSIb3DQEBDQUAMFYxGjAYBgNVBAoMEVRpemVuIEFz
+MIICkDCCAXigAwIBAgIGAY6JfgpXMA0GCSqGSIb3DQEBDQUAMFYxGjAYBgNVBAoMEVRpemVuIEFz
 c29jaWF0aW9uMRowGAYDVQQLDBFUaXplbiBBc3NvY2lhdGlvbjEcMBoGA1UEAwwTVGl6ZW4gRGV2
-ZWxvcGVycyBDQTAeFw0yNDAzMTQwNzM0MjBaFw0yNzAxMDEwMDAwMDBaMA0xCzAJBgNVBAMMAmFh
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+ZhuO8PO5EvdOX5qO+1b6mQupSZLcCLsNhtME
-ggE2GUSGB/cYEfzuqqlabIFjwGoT9Az/x0xZ6nkizH+rLtJg0/mtVGHPBngR9wZtRVwUxTOrc5X/
-hc7Pl8AoayI6e/vAJJ1xtuojde2q0Jgpjj/VOlAKsquXs55oxkWYl0irpQIDAQABozIwMDAMBgNV
-HRMBAf8EAjAAMAsGA1UdDwQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDAzANBgkqhkiG9w0BAQ0F
-AAOCAQEAV2qtOBhTzzdD9ys3ka0PPdUCwD4S0pJz+gN/fUS5KGUePNvgDyFISsObjVOOPII+n0Bk
-P6leFEyeBK/yR7lPcDav3SjxKHsuawtjVQa77O4Ywd7AOqCX7uFU1J4n8iDB2MsU8u89tBfAKeSg
-syS9Z53CU17KX6DTPj3NJXKzpvAbsmnAY03Y+JUW2HjH6z9qXjC7F64HqwIufp6UkDwZmTTDW0/M
-ROXFmayzttljF87Tu8oDBEANhVeqIpaX0YhwP9l5YezUs+18lFgpHWaSMNC2tImRosDH1XCbOjSy
-VL6HoEsH0YtCkj3D+sEaEJBlzEvyUKD+Ru1T8sNiWNLxZw==
+ZWxvcGVycyBDQTAeFw0yNDAzMjkwOTE1MjJaFw0yNzAxMDEwMDAwMDBaMAwxCjAIBgNVBAMMAWEw
+gZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAJKZfeuV0Z21NcCOTgPUKpdXxRisGqmj7S7zlsre
+4m6rF3yDCimeR+78qPFdffA2RaQjp2sp0gOWCOdVQ1k/BtSgNfuEVLQBZxTlQ5kz4sFCBeNs5Y9M
+IgASW4knZVqlKT4Xzsif7thn+9Efev2TXgeEMl+C7G6iu5OdOixCVtrPAgMBAAGjMjAwMAwGA1Ud
+EwEB/wQCMAAwCwYDVR0PBAQDAgeAMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA0GCSqGSIb3DQEBDQUA
+A4IBAQBCNQE7aC275pGxuIsK6Npp2cPEgYmNyWC41lJYi8NwzbCRueUNs7VWueXMv3VVfJA6fpcb
+pmoVJtmlKEx1KgnDzXRLosDzxuMzk1mxD3JZiYAlolD83vqxL4kvlEHTCva329XwauB05n9wjOHL
+Sr2Oyzt4GKMSkhYGNNcEWwFheB81AaRIeAKYyDof3wIQvFmZiUfPlk6m1kxLNYlmGRD9svlV0nSp
+ldFT9fIEI3uSBVP6Jo5tbiPOEQSmTDwKwqyPG7KJXniJlFaIHlp99LTxebFcO0FncMjqjwKiMAf9
+lOnQSfMiCsWhyk2Q6ODkkxebMxqXdzkwfGtS7uYiVBnL
 </X509Certificate>
 <X509Certificate>
 MIIDOTCCAiGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBYMRowGAYDVQQKDBFUaXplbiBBc3NvY2lh

@@ -3,6 +3,8 @@ package sueprtizen.smartclothing.domain.clothing.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.*;
 import sueprtizen.smartclothing.domain.clothing.entity.*;
@@ -14,6 +16,7 @@ import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -162,15 +165,72 @@ public class ClothingServiceImpl implements ClothingService {
 
     }
 
-    public SocketClothingInfoDTO getClothingInfo(String rfidUid) {
-        Clothing info = clothingRepository.findByRfidUid(rfidUid);
-        return new SocketClothingInfoDTO(info.getCategory(), info.getWornCount());
+    @Override
+    public List<ClothingPositionResponseDTO> getClothingPosition(int userId) {
+        User currentUser = getUser(userId);
+        List<UserClothing> userClothing = userClothingRepository.findAllByUser(currentUser);
+        return userClothing.stream().filter(uc ->
+                !uc.getClothing().getNowAt().equals("옷장")
+        ).map(uc ->
+                {
+                    Clothing clothing = uc.getClothing();
+                    return new ClothingPositionResponseDTO(
+                            clothing.getClothingId(),
+                            clothing.getNowAt(),
+                            uc.getClothingName(),
+                            clothing.getLocationModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
+                            clothing.getClothingDetail().getClothingImgPath()
+                    );
+                }
+        ).toList();
     }
 
-    public SocketClothingImageDTO getClothingImage(String rfid) {
+    public JSONObject getClothingInfo(String rfidUid) {
+        Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingDetail().getClothingDetailId());
+
+        JSONObject jsonObject = new JSONObject();
+        List<ClothingTexture> texture = detail.getClothingTextures();
+        jsonObject.put("texture", texture.get(0).getTexture().getTextureName());
+        jsonObject.put("image", detail.getClothingImgPath());
+        jsonObject.put("category", clothing.getCategory());
+
+        return jsonObject;
+    }
+
+    public JSONObject getClothingImage(String rfid) {
         Integer detailId = clothingRepository.findByRfidUid(rfid).getClothingDetail().getClothingDetailId();
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId);
-        return new SocketClothingImageDTO(detail.getClothingImgPath());
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("image", detail.getClothingImgPath());
+
+        return jsonObject;
+    }
+
+    public void addClothes(String rfid, JSONArray users, Long detailId) {
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId.intValue());
+        new Clothing();
+        Clothing newClothing = Clothing.builder()
+                .rfidUid(rfid)
+                .detail(detail)
+                .build();
+        clothingRepository.save(newClothing);
+        for (Object user : users) {
+            User newUser = getUser(Integer.valueOf(String.valueOf(user)));
+            UserClothing uc = new UserClothing(newUser, newClothing);
+            userClothingRepository.save(uc);
+        }
+    }
+
+    public void putClothingIntoWasher(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        clothing.updateNowat("세탁기");
+    }
+
+    public void putClothingIntoAirdresser(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        clothing.updateNowat("에어드레서");
     }
 
 
