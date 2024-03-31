@@ -54,12 +54,14 @@ gender_dict = {
     '여자' : 'female'
 }
 
-clothes_type = ['상의', '아우터', '바지', '원피스', '스커트', '하의', '외투', '기타']
+clothes_type = []
 
 
 
 @api_view(['POST'])
 def mlp(request):
+    global clothes_type
+    clothes_type = Clothing.objects.values_list('category', flat=True).distinct()
     if request.method == 'POST':
         rate = int(request.data['rate'])       
         pre_schedule_date = request.data['date']
