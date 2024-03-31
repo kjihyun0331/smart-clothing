@@ -24,6 +24,8 @@ services:
       context: ./BE/smartclothing
       dockerfile: Dockerfile
     image: supertizen_backend_img
+    volumes:
+      - /home/ubuntu/outfit_images/:/app/outfit_images/
     ports:
       - "8080:8080"
       - "65432:65432"
