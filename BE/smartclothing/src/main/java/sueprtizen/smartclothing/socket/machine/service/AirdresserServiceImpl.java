@@ -71,10 +71,10 @@ public class AirdresserServiceImpl implements AirdresserService {
         return jsonArray;
     }
 
-    public void addCareClothes(String rfid,Long userId) {
+    public void addCareClothes(String rfid) {
         clothingService.putClothingIntoAirdresser(rfid);
         String image = clothingService.getClothingImage(rfid).get("image").toString();
-        fcmService.sendMessageTo(userId,"옷이 에어드레서에 들어갔습니다.","케어 알림",image);
+        fcmService.sendMessageTo(Long.valueOf(clothingService.getClothingOwner(rfid)),"옷이 에어드레서에 들어갔습니다.","케어 알림",image);
     }
 
 }
