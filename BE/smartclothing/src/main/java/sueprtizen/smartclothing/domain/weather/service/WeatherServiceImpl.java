@@ -71,7 +71,7 @@ public class WeatherServiceImpl implements WeatherService {
             JSONArray daily = (JSONArray) body.get("DailyForecasts");
             for (Object day : daily) {
                 JSONObject jsonDay = (JSONObject) day;
-                LocalDate date = LocalDate.parse((String) jsonDay.get("Date"));
+                LocalDate date = LocalDate.parse(((String) jsonDay.get("Date")).split("T")[0]);
                 JSONObject dayTime = (JSONObject) jsonDay.get("Day");
                 JSONObject temp = (JSONObject) jsonDay.get("Temperature");
                 JSONObject real = (JSONObject) jsonDay.get("RealFeelTemperature");
