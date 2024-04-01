@@ -34,8 +34,10 @@ const DetailClothes = () => {
     }
   }, [data]);
   const { deletemutate } = useDeleteClothes();
+
   const handleGoBack = () => {
-    deletemutate(id);
+    navigate("/closet");
+    // deletemutate(id);
   };
 
   const handleDelete = () => {
