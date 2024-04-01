@@ -1,21 +1,37 @@
 import {create} from 'zustand';
 
+interface Clothes {
+  clothingId: number,
+  clothingImagePath: string,
+  clothingName: string,
+}
+
 
 interface CurrentClothesState {
-  CurrentClothesList: number[];
-  ChangeCurrentClothesList: (newList:number[]) => void;
-  DeleteCurrentClothes: (deleteClotehs:number) => void;
-  AddClothesList: number[]
-  AddCurrentClothes: (addClothes:number) => void;
-  DeleteAddCurrentClothes: (addDeleteClotehs:number) => void;
+  CurrentClothesList: Clothes[];
+  ChangeCurrentClothesList: (newList:Clothes[]) => void;
+  DeleteCurrentClothes: (deleteClotehs:Clothes) => void;
+  AddClothesList: Clothes[]
+  AddCurrentClothes: (addClothes:Clothes) => void;
+  DeleteAddCurrentClothes: (addDeleteClotehs:Clothes) => void;
 }
 
 export const useCurrentClothesStore = create<CurrentClothesState>((set) => ({
     CurrentClothesList: [],
-    ChangeCurrentClothesList: (newList:number[]) => set({CurrentClothesList:newList}),
-    DeleteCurrentClothes: (deleteClothes) => set({}),
+    ChangeCurrentClothesList: (newList:Clothes[]) => set({CurrentClothesList:newList}),
+    DeleteCurrentClothes: (deleteClothes: Clothes) =>
+      set((state) => ({
+          CurrentClothesList: state.CurrentClothesList.filter(
+              (clothes) => clothes.clothingId !== deleteClothes.clothingId
+          ),
+      })),
     AddClothesList: [],
-    AddCurrentClothes: (addClothes) => set({}),
-    DeleteAddCurrentClothes: (addDeleteClotehs) => set({}),
+    AddCurrentClothes: (addClothes: Clothes) => set((state) => ({
+      AddClothesList: [...state.AddClothesList, addClothes],
+    })),
+    DeleteAddCurrentClothes: (addDeleteClothes:Clothes) => set((state) => ({
+      AddClothesList: state.AddClothesList.filter(
+          (clothes) => clothes.clothingId !== addDeleteClothes.clothingId
+      ),
+  })),
 }));
-
