@@ -34,5 +34,7 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.body,
     // icon: payload.icon
   };
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  if (notificationTitle.length > 0 && notificationTitle != undefined) {
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  }
 });

@@ -74,8 +74,10 @@ function requestPermission() {
           body: payload.notification.body,
         };
 
-        if (Notification.permission === "granted") {
-          new Notification(notificationTitle, notificationOptions);
+        if (notificationTitle.length > 0 && notificationTitle != undefined) {
+          if (Notification.permission === "granted") {
+            new Notification(notificationTitle, notificationOptions);
+          }
         }
       });
     } else {
