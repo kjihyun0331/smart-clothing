@@ -4,7 +4,10 @@ import { SimpleClothesResponseDataType } from "@/types/ClothesTypes";
 import styled from "styled-components";
 import ClothesImage from "@/components/CLothesImage";
 import { useCurrentClothesStore } from "@/store/CurrentClothesStore";
-import { useState } from 'react';
+import IconDelete from "@/assets/ui/IconDelete";
+import IconBack from "@/assets/ui/IconBack";
+import ClothesDetail from "./DetailClothes";
+import { useState } from "react";
 
 
 const CATEGORY = ["전체", "상의", "하의", "아우터", "치마", "바지"];
@@ -34,41 +37,19 @@ interface ItemListProps {
   $isItmeList : boolean
 }
 
+interface ModalProps {
+  onClick: () => void;
+}
 
-const AddCurrentClothesPage = () => {
-    const {AddClothesList, CurrentClothesList, AddCurrentClothes, ChangeCurrentClothesList} = useCurrentClothesStore()
+
+const AddCurrentClothesPage = ({ onClick }: ModalProps) => {
+    const {AddClothesList, CurrentClothesList, AddCurrentClothes, ChangeCurrentClothesList, DeleteAddCurrentClothes} = useCurrentClothesStore()
 
     const isItmeList = (0 !== AddClothesList.length)
 
     const handleDetailClick = (clothes: Clothes) => {
       AddCurrentClothes(clothes)
     };
-    const [nfcData, setNfcData] = useState('');
-
-  const readNFC = async () => {
-    console.log('들어옴?')
-    if ('NDEFReader' in window) {
-      try {
-        console.log('들어옴!')
-        const reader = new NDEFReader();
-        await reader.scan();
-        reader.onreading = event => {
-          const decoder = new TextDecoder();
-          for (const record of event.message.records) {
-            console.log(`Record type: ${record.recordType}`);
-            console.log(`MIME type: ${record.mediaType}`);
-            console.log(`Data: ${decoder.decode(record.data)}`);
-            setNfcData(decoder.decode(record.data)); // NFC 태그 데이터를 상태에 저장
-          }
-        };
-      } catch (error) {
-        console.log('에러!')
-        console.error(`Error: ${error.message}`);
-      }
-    } else {
-      console.log('Web NFC is not supported.');
-    }
-  };
 
     const isItemBlinded = (item:Clothes) => {
       const isCurrent = CurrentClothesList.find(findItem => findItem.clothingId === item.clothingId);
@@ -78,7 +59,31 @@ const AddCurrentClothesPage = () => {
 
     const confirmed = () => {
       ChangeCurrentClothesList([...CurrentClothesList, ...AddClothesList])
+      onClick()
     }
+
+    const deleteItem = (item:Clothes) => {
+      DeleteAddCurrentClothes(item)
+    }
+    const [showDetail, setShowDetail] = useState(true);
+    const [timerId, setTimerId] = useState(null);
+
+    const handleMouseDown = () => {
+      const id = setTimeout(() => {
+        setShowDetail(true)
+        console.log('test')
+      }, 1200)
+      setTimerId(id)
+    };
+  
+    const handleMouseUp = () => {
+      clearTimeout(timerId);
+      setTimerId(null);
+    };
+  
+    const closeModal = () => {
+      setShowDetail(false);
+    };
 
 
     const handleItemClick = (event, item:Clothes) => {
@@ -103,10 +108,10 @@ const AddCurrentClothesPage = () => {
     return (
       <>
         <Header>
-        <div>
-          <button onClick={readNFC}>Read NFC Tag</button>
-          {nfcData && <p>NFC Data: {nfcData}</p>}
-        </div>
+        <button onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>sadfd</button>
+          <Back>
+            <IconBack onClick={onClick}/>
+          </Back>
           <p className="title">추가하기</p>
           <Filter>
             <select className="category" name="category">
@@ -136,14 +141,15 @@ const AddCurrentClothesPage = () => {
             </select>
           </Filter>
         </Header>
+        
 
-  
+        {showDetail && <ClothesDetail item={{clothingId:1, clothingName:'', clothingImagePath:''}} onClose={closeModal}/>}
         <ClosetContent $isItmeList={isItmeList}>
           {data.map((item) => { 
             return (
-              <div>
+              <div key={item.clothingId} >
                 
-                <Item key={item.clothingId} 
+                <Item
                 onClick={(event) => handleItemClick(event, item)}>
                     {isItemBlinded(item) && <Blinder></Blinder>}
                     <ImgArea>
@@ -158,8 +164,7 @@ const AddCurrentClothesPage = () => {
           })}
         </ClosetContent>
         {
-        3 ? <AddList>
-        {/* AddClothesList.length ? <AddList> */}
+        AddClothesList.length ? <AddList>
           <Container>
             <InfoContainer>
                 <ClothesList>
@@ -169,13 +174,16 @@ const AddCurrentClothesPage = () => {
                           return (
                               <Clothes key={index} $isLastItem={isLastItem}>
                                   <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/>
+                                  <DeleteIconContainer>
+                                      <IconDelete onClick={() => deleteItem(item)}/>
+                                  </DeleteIconContainer>
                               </Clothes>
                           )
                       })
                   }
                 </ClothesList>
             </InfoContainer>
-            <button onClick={confirmed}>추가하기</button>
+            <GreenButton onClick={confirmed}>추가하기</GreenButton>
           </Container>
         </AddList> : <div></div>
         }
@@ -205,6 +213,13 @@ margin: 0;
 overflow-x: auto
 `
 
+const DeleteIconContainer = styled.div`
+position: absolute;
+top: 0;
+right: 0;
+transform: translate(10%, -10%);
+`
+
 const Blinder = styled.div`
   position: absolute;
   width: 100%;
@@ -218,12 +233,13 @@ const Blinder = styled.div`
 const Clothes = styled.div<LastItemProps>`
   height: 13vh;
   min-width: 13vh;
-  margin: 0.5rem ${({ $isLastItem }) => ($isLastItem ? '0' : '1rem')} 0.5rem 0;
+  margin: 0.5rem ${({ $isLastItem }) => ($isLastItem ? '0.2rem' : '1rem')} 0.5rem 0;
+  position: relative;
 `
 
 
 const ClosetContent = styled.div<ItemListProps>`
-  padding: 3rem 0.7rem ${({ $isItmeList }) => ($isItmeList ? '32dvh' : '12dvh')} 0.7rem;
+  padding: 3rem 0.7rem ${({ $isItmeList }) => ($isItmeList ? '45dvh' : '12dvh')} 0.7rem;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -231,6 +247,14 @@ const ClosetContent = styled.div<ItemListProps>`
   gap: 0.3rem;
   position: relative;
 `;
+
+const Back = styled.div`
+  position: fixed;
+  z-index: 2;
+  top: 3vh;
+  left: 0;
+  transform: translate(0, -50%);
+`
 
 const Header = styled.div`
   width: 100%;
@@ -307,3 +331,16 @@ const AddList = styled.div`
   width: 100%;
   background-color: #ffffff;
 `
+
+const GreenButton = styled.button`
+    border: none;
+    background-color: #45ba8c;
+    color: white;
+    border-radius: 40px;
+    box-sizing: border-box;
+    opacity: 0.7;
+    width: 50%;
+    padding: 1rem 1rem;
+    margin: 0.5rem 0 1rem 0;
+    
+`;
