@@ -592,7 +592,7 @@ def update(request):
                 # 전처리
                 pre_data = np.empty((data_count, 11), dtype=np.float32)
                 for i, schedule in enumerate(schedule_datas):
-                    if schedule.weather == NULL:
+                    if schedule.weather == None:
                         schedule.weather = {
                             'lowest_temperature': 0,
                             'highest_temperature': 0,
