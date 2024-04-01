@@ -243,10 +243,11 @@ public class ClothingServiceImpl implements ClothingService {
                 .rfidUid(rfid)
                 .detail(detail)
                 .build();
+        String defaultClothingName = detail.getColor()+detail.getCategory();
         clothingRepository.save(newClothing);
         for (Object user : users) {
             User newUser = getUser(Integer.parseInt(String.valueOf(user)));
-            UserClothing uc = new UserClothing(newUser, newClothing);
+            UserClothing uc = new UserClothing(newUser, newClothing,defaultClothingName);
             userClothingRepository.save(uc);
         }
     }
