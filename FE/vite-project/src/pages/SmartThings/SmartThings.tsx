@@ -87,12 +87,10 @@ function requestPermission() {
   });
 }
 
-requestPermission();
-
 function SmartThings() {
   const navigate = useNavigate();
   useEffect(() => {
-    // 페이지나 컴포넌트가 마운트될 때 색상을 변경
+    requestPermission();
     document
       .querySelector('meta[name="theme-color"]')
       .setAttribute("content", "#648FBA");
