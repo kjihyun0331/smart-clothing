@@ -1,14 +1,6 @@
 import styled from "styled-components";
 import CoordiImage from "@/components/CoordiImage";
-import { useApi } from "@/hooks/useApi";
 
-
-
-// interface Clothes {
-//     clothingId: number,
-//     clothingImagePath: string,
-//     clothingName: string,
-// }
 
 interface ScheduleProps {
     schedule:string;
@@ -53,4 +45,5 @@ const TodayCoordi = styled.div`
 height: 23vh;
 width: 23vh;
 margin: 0 auto;
+padding: 0.2rem;
 `
