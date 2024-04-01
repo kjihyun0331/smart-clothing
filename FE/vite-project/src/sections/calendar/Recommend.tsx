@@ -23,6 +23,7 @@ interface userQuery {
 //   date: string;
 //   locate: string;
 //   schedule: string;
+//   count: string;
 // };
 
 function Recommend() {
@@ -38,6 +39,7 @@ function Recommend() {
   //   date: "2024-03-28",
   //   locate: "223680",
   //   schedule: "졸업식",
+  //   count: "2"
   // };
 
   // mutate(example);

@@ -31,7 +31,7 @@ path = os.path.dirname(os.path.abspath(__file__))
 
 
 schedule_list = ['면접', '졸업식', '데이트', '업무', '여행', '운동', 
-                 '휴식', '결혼식', '소개팅', '경조사', '일상', '기타']
+                 '휴식', '결혼식', '소개팅', '경조사', '일상', '기타', '없음']
 
 schedule_dict = {
     '면접' : 'Interview', 
@@ -45,7 +45,8 @@ schedule_dict = {
     '소개팅' : 'Meeting', 
     '경조사' : 'Event', 
     '일상' : 'Daily', 
-    '기타' : 'ETC'
+    '기타' : 'ETC',
+    '없음' : 'Nothing'
 }
 
 gender_list = ['남자', '여자']
@@ -67,7 +68,7 @@ def mlp(request):
         rate = int(request.data['rate'])       
         pre_schedule_date = request.data['date']
         schedule_date = datetime.strptime(pre_schedule_date, '%Y-%m-%d').date()
-        
+        recommend_count = request.data['count']
         schedule = request.data['schedule']
         user = get_object_or_404(User, user_id=request.META['HTTP_USERID'])
         user_age = user.age // 10
@@ -288,7 +289,7 @@ def mlp(request):
             knn = KNeighborsClassifier(n_neighbors=1, weights='distance', metric='euclidean')
             knn.fit(knn_data, knn_label)
             
-            knn_n_neighbors = 2
+            knn_n_neighbors = recommend_count
             
             if len(knn_data) <= 1:
                 knn_n_neighbors = 1
@@ -460,6 +461,8 @@ def update(request):
     global model_dir
     model_dir = 'backup'
 
+    
+    # 초기화
     delete_path = f'{path}/ML_models/current'
 
     for file in os.listdir(delete_path):
@@ -563,6 +566,14 @@ def update(request):
 		"label_list": []
 	},
 	"female_ETC": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Nothing": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Nothing": {
 		"count": 0,
 		"label_list": []
 	}

@@ -95,5 +95,13 @@
 	"female_ETC": {
 		"count": 0,
 		"label_list": []
+	},
+	"male_Nothing": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Nothing": {
+		"count": 0,
+		"label_list": []
 	}
 }
