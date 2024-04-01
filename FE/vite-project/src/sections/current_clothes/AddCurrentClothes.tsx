@@ -34,13 +34,32 @@ interface ItemListProps {
 }
 
 
-const AddCurrentClothes = () => {
-    const {AddClothesList, CurrentClothesList, AddCurrentClothes} = useCurrentClothesStore()
+const AddCurrentClothesPage = () => {
+    const {AddClothesList, CurrentClothesList, AddCurrentClothes, ChangeCurrentClothesList} = useCurrentClothesStore()
 
     const isItmeList = (0 !== AddClothesList.length)
 
     const handleDetailClick = (clothes: Clothes) => {
       AddCurrentClothes(clothes)
+    };
+
+    const isItemBlinded = (item:Clothes) => {
+      const isCurrent = CurrentClothesList.find(findItem => findItem.clothingId === item.clothingId);
+      const isAdded = AddClothesList.find(findItem => findItem.clothingId === item.clothingId);
+      return !!isCurrent || !!isAdded;
+    };
+
+    const confirmed = () => {
+      ChangeCurrentClothesList([...CurrentClothesList, ...AddClothesList])
+    }
+
+
+    const handleItemClick = (event, item:Clothes) => {
+      if (isItemBlinded(item)) {
+        event.stopPropagation();
+        return;
+      }
+      handleDetailClick(item);
     };
   
     const { isLoading, data }: ApiResponseType = useApi("get", "clothing");
@@ -66,6 +85,7 @@ const AddCurrentClothes = () => {
               {CATEGORY.map((item) => {
                 return (
                   <option value={item} key={item}>
+                    <p>check</p>
                     {item}
                   </option>
                 );
@@ -88,14 +108,13 @@ const AddCurrentClothes = () => {
 
   
         <ClosetContent $isItmeList={isItmeList}>
-          {data.map((item) => {
-            const check = CurrentClothesList.find((find_item) => find_item.clothingId === item.clothingId);
+          {data.map((item) => { 
             return (
               <div>
-                <Item
-                    key={item.clothingId}
-                    onClick={() => handleDetailClick(item)}>
-                    {check && <Blinder></Blinder>}
+                
+                <Item key={item.clothingId} 
+                onClick={(event) => handleItemClick(event, item)}>
+                    {isItemBlinded(item) && <Blinder></Blinder>}
                     <ImgArea>
                         <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName} backgroundColor="rgba(69, 186, 140, 0)"/>
                     </ImgArea>
@@ -107,7 +126,9 @@ const AddCurrentClothes = () => {
             );
           })}
         </ClosetContent>
-        {AddClothesList.length && <AddList>
+        {
+        true ? <AddList>
+        {/* AddClothesList.length ? <AddList> */}
           <Container>
             <InfoContainer>
                 <ClothesList>
@@ -123,15 +144,15 @@ const AddCurrentClothes = () => {
                   }
                 </ClothesList>
             </InfoContainer>
-            <button>추가하기</button>
+            <button onClick={confirmed}>추가하기</button>
           </Container>
-        </AddList>
+        </AddList> : <div></div>
         }
       </>
     );
   };
 
-export default AddCurrentClothes;
+export default AddCurrentClothesPage;
 
 const Container = styled.div`
 width: 95%;
@@ -249,6 +270,7 @@ const Filter = styled.div`
 `
 
 const AddList = styled.div`
+  padding: 1rem;  
   position: fixed;
   bottom: 12dvh;
   width: 100%;

@@ -63,6 +63,7 @@ const icons = {
 };
 
 const IconLargeWeather = (id) => {
+  console.log('아이디 확인  ',id)
   const iconPath = icons[id.id.toString()];
   if (!iconPath) {
     return <div>Icon not found</div>;
