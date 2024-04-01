@@ -47,7 +47,7 @@ const AddCurrentClothesPage = () => {
 
   const readNFC = async () => {
     console.log('들어옴?')
-    // if ('NDEFReader' in window) {
+    if ('NDEFReader' in window) {
       try {
         console.log('들어옴!')
         const reader = new NDEFReader();
@@ -65,9 +65,9 @@ const AddCurrentClothesPage = () => {
         console.log('에러!')
         console.error(`Error: ${error.message}`);
       }
-    // } else {
-    //   console.log('Web NFC is not supported.');
-    // }
+    } else {
+      console.log('Web NFC is not supported.');
+    }
   };
 
     const isItemBlinded = (item:Clothes) => {
