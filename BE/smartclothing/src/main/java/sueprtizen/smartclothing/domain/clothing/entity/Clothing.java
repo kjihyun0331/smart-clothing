@@ -57,23 +57,12 @@ public class Clothing {
     }
 
     @Builder
-    public Clothing(String rfidUid, ClothingDetail detail) {
-        this.rfidUid = rfidUid;
-        this.clothingDetail = detail;
-        this.category = "없음";
-        this.nowAt = "옷장";
-    }
-
-    public void updateNowAt(String machine) {
-        this.nowAt = machine;
-        locationModifiedAt = LocalDateTime.now();
-    }
-
-    public void updateWashedAt() {
-        this.washedAt = LocalDateTime.now();
-    }
-
-    public void updateNowat(String machine){
-        this.nowAt=machine;
+    public Clothing(String rfidUid, ClothingDetail detail,Integer ownerId){
+        this.rfidUid=rfidUid;
+        this.clothingDetail=detail;
+        this.category="없음";
+        this.nowAt="옷장";
+        this.washedAt=LocalDateTime.now().toString();
+        this.ownerId=ownerId;
     }
 }
