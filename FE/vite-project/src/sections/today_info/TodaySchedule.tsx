@@ -9,7 +9,7 @@ const TodaySchedule = () => {
 
     const today:Date = new Date()
     const formattedDate:string = today.toISOString().split('T')[0];
-    // const formattedDate:string = '2024-03-30'
+
 
     const {
         isLoading: isLoadingDetail,
@@ -17,7 +17,7 @@ const TodaySchedule = () => {
         data: dataDetail
     } = useApi(
         "get",
-        `calendar/detail?date=${formattedDate}`
+        `calendar/date?date=${formattedDate}`
     );
     
     const {
@@ -52,7 +52,7 @@ const TodaySchedule = () => {
 
             return (
                 <Container>
-                    {dataDetail && <HaveSchedule schedule={dataDetail.schedule.scheduleCategory} outfit={dataDetail.clothingList}/>}
+                    {dataDetail && <HaveSchedule schedule={dataDetail.scheduleCategory} outfit={dataDetail.outfitImagePath}/>}
                 </Container>
             )
         }

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 
 interface CoordiProps {
-    outfit: number[]; 
+    outfit: string; 
 }
 
 
@@ -10,7 +10,7 @@ const CoordiImage = ({outfit}: CoordiProps) => {
     // 옷 리스트를 보내면 여기서 옷 상세정보 api 호출
     return (
         <Container>
-            옷 모음            
+            <img src={outfit} alt="" />
         </Container>
     );
 };
@@ -24,5 +24,12 @@ box-sizing: border-box;
 width: 100%;
 height: 100%;
 border-radius: 1rem;
-
+display: flex;
+justify-content: center;
+align-items: center;
+img {
+    max-width: 90%;
+    max-height: 90%;
+    display: block;
+}
 `

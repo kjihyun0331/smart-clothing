@@ -1,6 +1,18 @@
 import styled from "styled-components";
 import CoordiImage from "@/components/CoordiImage";
+// import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
+import { useLocateStore } from "@/store/LocateStore";
+import { useState } from "react";
+import IconRe from "@/assets/ui/IconRe";
+import { Loader } from "@/components/Loader";
+import ClothesImage from "@/components/CLothesImage";
 
+
+interface Clothes {
+    clothingId: number,
+    clothingImagePath: string,
+    clothingName: string,
+}
 
 interface LastItemProps {
     isLastItem: boolean
@@ -8,21 +20,45 @@ interface LastItemProps {
 
 
 const HaveSchedule = () => {
-    // DL server로 api 요청 결과 => [[1, 2, 3], [2, 3, 4]]꼴로 응답
+    // const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
+    const {LocateInfo} = useLocateStore()
+    const today:Date = new Date()
+    const formattedDate:string = today.toISOString().split('T')[0]
+    const [rate, setRate] = useState<number>(0)
+    const addRate = () => {
+        setRate(rate + 1)
+    }
+    // const example: dataType = {
+        //   rate: rate,
+        //   date: formattedDate,
+        //   locate: LocateInfo.toString,
+        //   schedule: "없음",
+        //   count: "1"
+        // };
+        
+    // mutate(example);
     const testDLResponse = {isPending: false, isError: false, data:{outfit_list: [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8, 9], [9, 10, 11]]}}
     return (
         <Container>
+            <Re>
+                <IconRe onClick={addRate}/>
+            </Re>
             <Message>오늘 같은 날씨에 제안합니다</Message>
             <CoordiList>
                 {testDLResponse.isPending && <div>isLoding...</div>}
                 {testDLResponse.isError && <div>Error!</div>}
                 {!testDLResponse.isPending && !testDLResponse.isError && 
+                // {(isError || isPending) ? <Loader/> :  
                     (
+                        // const clothesData = recommenddata.data.map(item => itme[1])
+                        // clothesData.map((item:Clothes, index:number) => {)
                         testDLResponse.data.outfit_list.map((item:number[], index:number) => {
                             const isLastItem = (index === testDLResponse.data.outfit_list.length - 1)
                             return (
                                 <Coordi isLastItem={isLastItem}>
+                                    asdf
                                     <CoordiImage outfit={item}/>
+                                    {/* <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/> */}
                                 </Coordi>
                             )
                         })
@@ -39,6 +75,7 @@ export default HaveSchedule;
 
 
 const Container = styled.div`
+position : relative;
 
 `
 
@@ -57,6 +94,11 @@ margin: 0 auto;
 overflow-x: auto
 `
 
+const Re = styled.div`
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+`
 
 
 const Coordi = styled.div<LastItemProps>`

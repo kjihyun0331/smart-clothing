@@ -1,10 +1,18 @@
 import styled from "styled-components";
 import CoordiImage from "@/components/CoordiImage";
+import { useApi } from "@/hooks/useApi";
 
+
+
+// interface Clothes {
+//     clothingId: number,
+//     clothingImagePath: string,
+//     clothingName: string,
+// }
 
 interface ScheduleProps {
     schedule:string;
-    outfit: number[]; 
+    outfit: string; 
 }
 
 
@@ -15,6 +23,7 @@ const HaveSchedule = ({schedule, outfit}: ScheduleProps) => {
             :  <Message>오늘 <Schedule>{schedule}</Schedule>에 예약된 코디</Message>            
             }
             <TodayCoordi>
+
                 <CoordiImage outfit={outfit}/>
             </TodayCoordi>
         </Container>

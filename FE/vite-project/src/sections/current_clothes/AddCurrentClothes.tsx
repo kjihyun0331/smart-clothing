@@ -127,7 +127,7 @@ const AddCurrentClothesPage = () => {
           })}
         </ClosetContent>
         {
-        true ? <AddList>
+        3 ? <AddList>
         {/* AddClothesList.length ? <AddList> */}
           <Container>
             <InfoContainer>
