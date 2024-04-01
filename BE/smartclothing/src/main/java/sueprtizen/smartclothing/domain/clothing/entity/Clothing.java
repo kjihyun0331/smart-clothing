@@ -56,11 +56,12 @@ public class Clothing {
         this.category = category;
     }
     @Builder
-    public Clothing(String rfidUid, ClothingDetail detail){
+    public Clothing(String rfidUid, ClothingDetail detail,Integer ownerId){
         this.rfidUid=rfidUid;
         this.clothingDetail=detail;
         this.category="없음";
         this.nowAt="옷장";
         this.washedAt=LocalDateTime.now().toString();
+        this.ownerId=ownerId;
     }
 }
