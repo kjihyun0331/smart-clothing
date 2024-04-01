@@ -55,11 +55,12 @@ const HaveSchedule = () => {
                         testDLResponse.data.outfit_list.map((item:number[], index:number) => {
                             const isLastItem = (index === testDLResponse.data.outfit_list.length - 1)
                             return (
-                                <Coordi isLastItem={isLastItem}>
-                                    asdf
-                                    <CoordiImage outfit={item}/>
-                                    {/* <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/> */}
-                                </Coordi>
+                                <div>asdf</div>
+                                // <Coordi isLastItem={isLastItem}>
+                                //     asdf
+                                //     <CoordiImage outfit={item}/>
+                                //     {/* <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/> */}
+                                // </Coordi>
                             )
                         })
                      )
