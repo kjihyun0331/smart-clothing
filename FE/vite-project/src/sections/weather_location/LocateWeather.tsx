@@ -29,10 +29,7 @@ function LocateWeather() {
         "get",
         `weather?locationKey=${locatekey}&date=${date}`
     );
-
-    if (data) {
-        console.log('호가인',data)
-    }
+    // console.log('확인api!', data.icon)
 
 
     // modal controll
@@ -63,7 +60,7 @@ function LocateWeather() {
 
             {/* icon 영역 */}
             <IconContainer>
-                {isError || isLoading ? '--' : <IconLargeWeather id={data.WeatherIcon} />}
+                {isError || isLoading ? '--' : <IconLargeWeather id={data.icon} />}
             </IconContainer>
 
             {/* 현재 위치 */}
@@ -95,7 +92,7 @@ function LocateWeather() {
                     <DetailWeahterHeader>UV</DetailWeahterHeader>
                     <DetailWeahterInfo>
                         {isError || isLoading ? '--' : data.UV}
-                        <span>{isError || isLoading ? '' : '(' + data.UVMessage + ')'}</span>
+                        <span>{isError || isLoading ? '' : '(' + data.UVMessage.replace(/\s*\(.*?\)\s*/g, '') + ')'}</span>
                     </DetailWeahterInfo>
                 </div>
 
@@ -132,10 +129,9 @@ text-align: center;
 
 const IconContainer = styled.div`
 width: auto;
-height: 40%;
+height: 35%;
 margin: 0 auto 1rem auto;
 box-sizing: border-box;
-background-color: #ffffff;
 display: flex;
 align-items: center;
 justify-content: center;
