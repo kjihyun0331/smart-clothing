@@ -24,6 +24,8 @@ class ClothingDetail(models.Model):
     clothing_detail_id = models.BigAutoField(primary_key=True)
     clothing_img_path = models.CharField(max_length=200)
     color = models.CharField(max_length=20)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -34,6 +36,8 @@ class ClothingSeason(models.Model):
     season_id = models.AutoField(primary_key=True)
     clothing_connection = models.ForeignKey('UserClothing', models.DO_NOTHING)
     month = models.IntegerField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -44,6 +48,8 @@ class ClothingStyle(models.Model):
     style_connection_id = models.BigAutoField(primary_key=True)
     style = models.ForeignKey('Style', models.DO_NOTHING)
     clothing = models.ForeignKey(Clothing, models.DO_NOTHING)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -54,6 +60,8 @@ class ClothingTexture(models.Model):
     texture_connection_id = models.BigAutoField(primary_key=True)
     texture = models.ForeignKey('Texture', models.DO_NOTHING)
     clothing_detail = models.ForeignKey(ClothingDetail, models.DO_NOTHING)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -74,6 +82,8 @@ class PastOutfit(models.Model):
     past_outfit_id = models.BigAutoField(primary_key=True)
     schedule = models.ForeignKey('Schedule', models.DO_NOTHING)
     clothing = models.ForeignKey(Clothing, models.DO_NOTHING)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -88,6 +98,8 @@ class RecommendedOutfit(models.Model):
     y = models.IntegerField()
     width = models.IntegerField()
     height = models.IntegerField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -104,6 +116,8 @@ class Schedule(models.Model):
     location_key = models.IntegerField()
     outfit_image_path = models.CharField(max_length=200)
     schedule_disabled = models.IntegerField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -133,6 +147,8 @@ class SiGunGu(models.Model):
 class Style(models.Model):
     style_id = models.AutoField(primary_key=True)
     style_name = models.CharField(max_length=20)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -142,6 +158,8 @@ class Style(models.Model):
 class Texture(models.Model):
     texture_id = models.AutoField(primary_key=True)
     texture_name = models.CharField(max_length=20)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -172,6 +190,9 @@ class UserClothing(models.Model):
     clothing = models.ForeignKey(Clothing, models.DO_NOTHING)
     clothing_name = models.CharField(max_length=20)
     accrue_worn_count = models.IntegerField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    user_clothing_disabled = models.IntegerField()
 
     class Meta:
         managed = False
@@ -182,17 +203,19 @@ class Weather(models.Model):
     weather_id = models.BigAutoField(primary_key=True)
     location_key = models.IntegerField()
     icon = models.IntegerField()
-    lowest_temperature = models.IntegerField()
-    highest_temperature = models.IntegerField()
-    highest_real_feeling_temperature = models.IntegerField()
-    lowest_real_feeling_temperature = models.IntegerField()
-    precipitation = models.IntegerField()
-    snow_cover = models.IntegerField()
-    humidity = models.IntegerField()
-    wind_speed = models.IntegerField()
-    solar_irradiance = models.IntegerField(db_column='solar_Irradiance')  # Field name made lowercase.
-    uv = models.IntegerField()
+    lowest_temperature = models.FloatField()
+    highest_temperature = models.FloatField()
+    highest_real_feeling_temperature = models.FloatField()
+    lowest_real_feeling_temperature = models.FloatField()
+    precipitation = models.FloatField()
+    snow_cover = models.FloatField()
+    humidity = models.FloatField()
+    wind_speed = models.FloatField()
+    solar_irradiance = models.FloatField(db_column='solar_Irradiance')  # Field name made lowercase.
+    uv = models.FloatField()
     uv_message = models.CharField(max_length=20)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     date = models.DateTimeField()
 
     class Meta:
