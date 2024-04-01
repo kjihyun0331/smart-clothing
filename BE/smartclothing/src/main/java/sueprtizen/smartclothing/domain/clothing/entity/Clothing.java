@@ -62,7 +62,18 @@ public class Clothing {
         this.clothingDetail=detail;
         this.category="없음";
         this.nowAt="옷장";
-        this.washedAt=LocalDateTime.now().toString();
+        this.washedAt=LocalDateTime.now();
         this.ownerId=ownerId;
     }
+
+    public void updateNowAt(String machine) {
+        this.nowAt = machine;
+        locationModifiedAt = LocalDateTime.now();
+    }
+
+    public void updateWashedAt() {
+        this.washedAt = LocalDateTime.now();
+    }
+
+
 }
