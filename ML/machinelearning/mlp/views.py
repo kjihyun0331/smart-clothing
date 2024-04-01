@@ -18,6 +18,7 @@ from skimage.metrics import structural_similarity as ssim
 import requests
 from .serializers import ClothingSerializer
 import copy
+from datetime import timedelta
 # import time
 
 
@@ -319,7 +320,7 @@ def fine_tuning():
     model_dir = 'backup'
     
     # 추후 오늘 날짜 혹은 이틀 전 날짜로 바꾸기
-    target_date = datetime(2024, 3, 27)
+    target_date = datetime.now().date() - timedelta(1)
     new_schedules = Schedule.objects.select_related('user', 'weather').filter(date__date=target_date.date())
     for schedule_ in schedule_list:
         for gender in gender_list:
@@ -452,3 +453,118 @@ def test(request):
     test['label'] = label_infos
     
     return Response(test)
+
+
+@api_view(['GET'])
+def update(request):
+    global model_dir
+    model_dir = 'backup'
+    
+    # 추후 오늘 날짜 혹은 이틀 전 날짜로 바꾸기
+    target_date = datetime.now().date() - timedelta(2)
+    new_schedules = Schedule.objects.select_related('user', 'weather').filter(date__date__lt=target_date)
+    for schedule_ in schedule_list:
+        for gender in gender_list:
+            schedule_datas = new_schedules.filter(schedule_category=schedule_, user__gender=gender)
+            
+            data_count = len(schedule_datas)
+            
+            if data_count:
+                
+                # 라벨 데이터 읽기
+                with open(f'{path}/ML_models/current/label.json', 'r', encoding='utf-8') as file:
+                    label_infos = json.load(file)
+                
+                # 전처리
+                pre_data = np.empty((data_count, 11), dtype=np.float32)
+                for i, schedule in enumerate(schedule_datas):
+                    pre_data[i] = [
+                        schedule.user.age // 10,
+                        schedule.weather.lowest_temperature,
+                        schedule.weather.highest_temperature,
+                        schedule.weather.lowest_real_feeling_temperature,
+                        schedule.weather.highest_real_feeling_temperature,
+                        schedule.weather.precipitation,
+                        schedule.weather.snow_cover,
+                        schedule.weather.humidity,
+                        schedule.weather.wind_speed,
+                        schedule.weather.solar_irradiance,
+                        label_infos[f'{gender_dict[gender]}_{schedule_dict[schedule_]}']['count']
+                    ]
+                    
+                    label_infos[f'{gender_dict[gender]}_{schedule_dict[schedule_]}']['label_list'].append(schedule.schedule_id)
+                    
+                    label_infos[f'{gender_dict[gender]}_{schedule_dict[schedule_]}']['count'] += 1
+                
+                with open(f'{path}/ML_models/current/label.json', 'w', encoding='utf-8') as file:
+                    json.dump(label_infos, file, indent="\t", ensure_ascii=False)
+
+
+                # [[3 1 1 1 1 1 1 1 1 1]]
+                x_data = pre_data[:, :-1]
+                
+                # [0 1 2 3]
+                labels = pre_data[:, -1]
+                new_classes_count = len(labels)
+                
+                x_data = x_data.astype(np.float32)
+                labels = labels.astype(np.float32)
+                
+                # 확인 후 fine-tuning / make model
+                if os.path.exists(f'{path}/ML_models/current/{gender_dict[gender]}_{schedule_dict[schedule_]}.h5'):
+
+                    # fine-tuning
+                    model = tensorflow.keras.models.load_model(f'{path}/ML_models/current/{gender_dict[gender]}_{schedule_dict[schedule_]}.h5')
+                    model.summary()
+                    old_classes = model.layers[-1].units
+                    
+                    # categorical_crossentropy를 위한 categorical
+                    y_train = to_categorical(labels, num_classes=new_classes_count + old_classes)
+                    
+                    model.pop()
+                    
+                    # 고유성을 위한 time으로 이름 설정
+                    safe_name = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+                    
+                    model.add(Dense(new_classes_count + old_classes, activation='softmax', name=str(safe_name)))
+                    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+                    
+                    model.fit(
+                                x_data,
+                                y_train,
+                                epochs=10,
+                                callbacks=[
+                                        ModelCheckpoint(f'{path}/ML_models/current/{gender_dict[gender]}_{schedule_dict[schedule_]}.h5', monitor='acc', verbose=1, save_best_only=True, mode='auto'),
+                                        ReduceLROnPlateau(monitor='acc', factor=0.5, patience=50, verbose=1, mode='auto')
+                                ]
+                              )
+                    
+                else:
+                    # make new model
+                    y_train = to_categorical(labels, num_classes=new_classes_count)
+                    
+                    model = Sequential([
+                        Dense(64, activation='relu', input_shape=(10,)),
+                        Dense(32, activation='relu'),
+                        Dense(new_classes_count, activation='softmax')
+                    ])
+                    
+                    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+                    
+                    model.fit(
+                        x_data,
+                        y_train,
+                        epochs=10,
+                        callbacks=[
+                                    ModelCheckpoint(f'{path}/ML_models/current/{gender_dict[gender]}_{schedule_dict[schedule_]}.h5', monitor='acc', verbose=1, save_best_only=True, mode='auto'),
+                                    ReduceLROnPlateau(monitor='acc', factor=0.5, patience=50, verbose=1, mode='auto')
+                                ]
+                            )
+
+    # 완료 후 dir 바꾸기
+    model_dir = 'current'
+    
+    # 이후 backup에 복사
+    all_update_files_list = os.listdir(f'{path}/ML_models/current')
+    for file in all_update_files_list:
+        shutil.copy2(f'{path}/ML_models/current/{file}', f'{path}/ML_models/backup')
