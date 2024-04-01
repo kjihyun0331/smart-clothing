@@ -35,7 +35,11 @@ const HaveSchedule = () => {
     const formattedDate:string = today.toISOString().split('T')[0]
     const [rate, setRate] = useState<number>(0)
     const addRate = () => {
-        setRate(rate + 1)
+        if (recommenddata.data[0].length != 0) {
+            setRate(0)
+        } else {
+            setRate(rate + 1)
+        }
     }
     const example: dataType = {
           rate: rate.toString(),
@@ -47,33 +51,36 @@ const HaveSchedule = () => {
         
     useEffect(() => {
         // 조건을 추가하여 불필요한 호출을 방지
-        if (rate > 0 && LocateInfo) {
+        if (rate >= 0 && LocateInfo) {
         mutate(example);
-        console.log('데이터', recommenddata)
         }
     }, [rate, LocateInfo]);
 
-    const clothesData = recommenddata.data.map(item => item[1])
-    const testDLResponse = {isPending: false, isError: false, data:{outfit_list: [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8, 9], [9, 10, 11]]}}
-    return (
+    
+    if (isPending || isError) {
+        return (
+            <Loader/>
+        )
+    } else {
+        if (recommenddata) {
+            console.log('출력', recommenddata)
+            if (recommenddata.data[0].length != 0) {
+        const clothesData = recommenddata.data.map(item => item[1])
+        return (
         <Container>
             <Re>
                 <IconRe onClick={addRate}/>
             </Re>
             <Message>오늘 같은 날씨에 제안합니다</Message>
             <CoordiList>
-                {testDLResponse.isPending && <div>isLoding...</div>}
-                {testDLResponse.isError && <div>Error!</div>}
-                {/* {!testDLResponse.isPending && !testDLResponse.isError &&  */}
                 {(isError || isPending) ? <Loader/> :  
                     (
                         // 
                         clothesData.map((item:Clothes, index:number) => {
-                        // testDLResponse.data.outfit_list.map((item:number[], index:number) => {
-                            const isLastItem = (index === testDLResponse.data.outfit_list.length - 1)
+                            console.log(clothesData)
+                            const isLastItem = (index === recommenddata.data.length - 1)
                             return (
                                 <Coordi isLastItem={isLastItem}>
-                                    {/* <CoordiImage outfit={item}/> */}
                                     <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/>
                                 </Coordi>
                             )
@@ -84,7 +91,28 @@ const HaveSchedule = () => {
             <button>오늘 일정 등록하기</button>
  
         </Container>
-    );
+        )
+    } else {
+        return (
+            <Container>
+                <Re>
+                    <IconRe onClick={addRate}/>
+                </Re>
+                <Message>오늘 같은 날씨에 제안합니다</Message>
+                <CoordiList>
+                    <span>충분한 데이터가 없습니다!</span>
+                </CoordiList>
+                <button>오늘 일정 등록하기</button>
+    
+            </Container>
+        )
+    }
+    }
+    // const testDLResponse = {isPending: false, isError: false, data:{outfit_list: [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8, 9], [9, 10, 11]]}}
+    // return (
+        
+    // );
+}
 };
 
 export default HaveSchedule;
