@@ -14,6 +14,12 @@ interface ApiResponseType {
   data: SimpleClothesResponseDataType[];
 }
 
+interface Clothes {
+  clothingId: number,
+  clothingImagePath: string,
+  clothingName: string,
+}
+
 interface NameAreaProps {
     fontSize: string;
 }
@@ -29,13 +35,12 @@ interface ItemListProps {
 
 
 const AddCurrentClothes = () => {
-    const {AddClothesList} = useCurrentClothesStore()
+    const {AddClothesList, CurrentClothesList, AddCurrentClothes} = useCurrentClothesStore()
 
     const isItmeList = (0 !== AddClothesList.length)
 
-
-    const handleDetailClick = (id: number) => {
-      console.log('aaa')
+    const handleDetailClick = (clothes: Clothes) => {
+      AddCurrentClothes(clothes)
     };
   
     const { isLoading, data }: ApiResponseType = useApi("get", "clothing");
@@ -51,7 +56,6 @@ const AddCurrentClothes = () => {
 
     return (
       <>
-
         <Header>
           <p className="title">추가하기</p>
           <Filter>
@@ -85,10 +89,13 @@ const AddCurrentClothes = () => {
   
         <ClosetContent $isItmeList={isItmeList}>
           {data.map((item) => {
+            const check = CurrentClothesList.find((find_item) => find_item.clothingId === item.clothingId);
             return (
+              <div>
                 <Item
                     key={item.clothingId}
-                    onClick={() => handleDetailClick(item.clothingId)}>
+                    onClick={() => handleDetailClick(item)}>
+                    {check && <Blinder></Blinder>}
                     <ImgArea>
                         <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName} backgroundColor="rgba(69, 186, 140, 0)"/>
                     </ImgArea>
@@ -96,10 +103,11 @@ const AddCurrentClothes = () => {
                         {item.clothingName}
                     </NameArea>
                 </Item>
+              </div>
             );
           })}
         </ClosetContent>
-        <AddList>
+        {AddClothesList.length && <AddList>
           <Container>
             <InfoContainer>
                 <ClothesList>
@@ -115,9 +123,10 @@ const AddCurrentClothes = () => {
                   }
                 </ClothesList>
             </InfoContainer>
-            <button>확정하기</button>
+            <button>추가하기</button>
           </Container>
         </AddList>
+        }
       </>
     );
   };
@@ -139,9 +148,19 @@ margin: 0 0.5rem;
 
 const ClothesList = styled.div`
 display: flex;
-max-width: 85%;
-margin: 0 auto;
+max-width: 100%;
+margin: 0;
 overflow-x: auto
+`
+
+const Blinder = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1.2;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.4)
+
 `
 
 const Clothes = styled.div<LastItemProps>`
@@ -158,12 +177,14 @@ const ClosetContent = styled.div<ItemListProps>`
   grid-template-columns: repeat(3, 1fr);
   background-color: ${(props) => props.theme.colors.backgroundcolor};
   gap: 0.3rem;
+  position: relative;
 `;
 
 const Header = styled.div`
   width: 100%;
   height: 6dvh;
   position: sticky;
+  z-index: 1;
   top: 0;
   ${({ theme }) => theme.common.flexCenter};
   background-color: white;
@@ -183,7 +204,7 @@ const Item = styled.div`
   height: 100%;
   aspect-ratio: 1/1.2;
   border-radius: 10px;
-
+  position: relative;
   background-color: ${(props) =>
     `${props.theme.colors.pointcolor
       .replace("rgb", "rgba")
