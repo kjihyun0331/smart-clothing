@@ -1,10 +1,10 @@
-import HomeCurrentClothestsx from "./HomeCurrentClothes.tsx";
+import FixCurrentClothes from "./FixCurrentClothes";
 import { useApi } from "@/hooks/useApi.ts";
 import { useCurrentClothesStore } from "@/store/CurrentClothesStore";
 import { useEffect } from "react";
 
 
-const CurrentClothes = () => {
+const FixHomeCurrentClothes = () => {
     const { ChangeCurrentClothesList } = useCurrentClothesStore()
 
     const {isLoading, isError, data} = useApi(
@@ -21,10 +21,9 @@ const CurrentClothes = () => {
 
     return (
         <div>
-            <HomeCurrentClothestsx isloading={isLoading} iserror={isError}/>
+            <FixCurrentClothes isloading={isLoading} iserror={isError}/>
         </div>
     );
 }; 
 
-export default CurrentClothes;
-
+export default FixHomeCurrentClothes;

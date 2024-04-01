@@ -28,8 +28,8 @@ type dataType = {
 
 
 const HaveSchedule = () => {
-    const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
-    // const { mutate, isPending, isError } = usePostRecommendedOutfit();
+    // const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
+    const { mutate, isPending, isError } = usePostRecommendedOutfit();
     const {LocateInfo} = useLocateStore()
     const today = new Date();
     const formattedDate = today.toLocaleDateString('ko-KR', {
@@ -45,61 +45,61 @@ const HaveSchedule = () => {
             setRate(rate + 1)
         }
     }
-    // const recommenddata = {
-    //     "data": [
-    //         [
-    //             {
-    //                 "clothing_id": 1,
-    //                 "clothing_name": "나무지기1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
-    //             },
-    //             {
-    //                 "clothing_id": 1,
-    //                 "clothing_name": "나무지기1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(3).png"
-    //             },
-    //             {
-    //                 "clothing_id": 2,
-    //                 "clothing_name": "나무지기1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
-    //             }
-    //         ],
-    //         [
-    //             {
-    //                 "clothing_id": 4,
-    //                 "clothing_name": "아차모1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/d384eaf4-18e3-43fd-b8d7-789b3c9a3017.png"
-    //             },
-    //             {
-    //                 "clothing_id": 4,
-    //                 "clothing_name": "아차모1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
-    //             },
-    //             {
-    //                 "clothing_id": 7,
-    //                 "clothing_name": "불꽃숭이1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/92e60f21-1533-4a29-bff1-0487d6e00535.png"
-    //             }
-    //         ],
-    //         [
-    //             {
-    //                 "clothing_id": 5,
-    //                 "clothing_name": "물짱이1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/8f4b9b19-6d5c-4e65-b239-3fb7d7d0e501.png"
-    //             },
-    //             {
-    //                 "clothing_id": 5,
-    //                 "clothing_name": "물짱이1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
-    //             },
-    //             {
-    //                 "clothing_id": 11,
-    //                 "clothing_name": "수댕이1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/c72e1499-d1d5-4c05-9f3f-1756d0a6752a.png"
-    //             }
-    //         ]
-    //     ]
-    // }
+    const recommenddata = {
+        "data": [
+            [
+                {
+                    "clothing_id": 1,
+                    "clothing_name": "나무지기1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
+                },
+                {
+                    "clothing_id": 1,
+                    "clothing_name": "나무지기1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(3).png"
+                },
+                {
+                    "clothing_id": 2,
+                    "clothing_name": "나무지기1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
+                }
+            ],
+            [
+                {
+                    "clothing_id": 4,
+                    "clothing_name": "아차모1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/d384eaf4-18e3-43fd-b8d7-789b3c9a3017.png"
+                },
+                {
+                    "clothing_id": 4,
+                    "clothing_name": "아차모1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
+                },
+                {
+                    "clothing_id": 7,
+                    "clothing_name": "불꽃숭이1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/92e60f21-1533-4a29-bff1-0487d6e00535.png"
+                }
+            ],
+            [
+                {
+                    "clothing_id": 5,
+                    "clothing_name": "물짱이1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/8f4b9b19-6d5c-4e65-b239-3fb7d7d0e501.png"
+                },
+                {
+                    "clothing_id": 5,
+                    "clothing_name": "물짱이1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
+                },
+                {
+                    "clothing_id": 11,
+                    "clothing_name": "수댕이1",
+                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/c72e1499-d1d5-4c05-9f3f-1756d0a6752a.png"
+                }
+            ]
+        ]
+    }
     const example: dataType = {
           rate: rate.toString(),
           date: formattedDate,
@@ -107,6 +107,11 @@ const HaveSchedule = () => {
           schedule: "없음",
           count: "1"
         };
+
+    // 여기는 해당 리스트를 가지고 일정 등록하기 이동으로 가자
+    const test = () => {
+        console.log('bla')
+    }
         
     useEffect(() => {
         // 조건을 추가하여 불필요한 호출을 방지
@@ -133,7 +138,7 @@ const HaveSchedule = () => {
                     <IconRe onClick={addRate}/>
                 </Re>
             </Message>
-            <CoordiList>
+            <CoordiList onClick={test}>
                 {(isError || isPending) ? <Loader/> :  
                     (
                         // 
@@ -149,18 +154,19 @@ const HaveSchedule = () => {
                      )
                 }
             </CoordiList>
-            <button>오늘 일정 등록하기</button>
+            <GreenButton>오늘 일정 등록하기</GreenButton>
  
         </Container>
         )
     } else {
         return (
             <Container>
+                <div>dsafsfds</div>
                 <Message>오늘 같은 날씨에 제안합니다</Message>
                 <CoordiList>
                     <span>충분한 데이터가 없습니다!</span>
                 </CoordiList>
-                <button>오늘 일정 등록하기</button>
+                <GreenButton>오늘 일정 등록하기</GreenButton>
     
             </Container>
         )
@@ -173,7 +179,9 @@ export default HaveSchedule;
 
 
 const Container = styled.div`
-
+position: relative;
+height : 100%
+    
 `
 
 const Message = styled.div`
@@ -182,7 +190,6 @@ padding: 1rem;
 font-size: 1.2rem;
 font-weight: bolder;
 color: black;
-position : relative;
 `
 
 const CoordiList = styled.div`
@@ -203,4 +210,20 @@ const Coordi = styled.div<LastItemProps>`
   height: 15vh;
   min-width: 15vh;
   ${({ $isLastItem }) => $isLastItem ? `margin: 0 0 0.7rem 0;` : `margin: 0 1rem 0.7rem 0;`}
+`;
+
+const GreenButton = styled.button`
+    border: none;
+    background-color: #45ba8c;
+    color: white;
+    border-radius: 40px;
+    box-sizing: border-box;
+    opacity: 0.7;
+    width: 50%;
+    padding: 1rem 1rem;
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translate(-50%);
+    
 `;

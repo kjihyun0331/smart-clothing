@@ -3,6 +3,9 @@ import NoSchedule from "@/sections/today_info/NoSchedule";
 import HaveSchedule from "@/sections/today_info/HaveSchedule";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
+import { useCurrentClothesStore } from "@/store/CurrentClothesStore";
+import { useEffect } from "react";
+import CurrentClothes from "./CurrentClothes";
 
 
 const TodaySchedule = () => {
@@ -28,41 +31,75 @@ const TodaySchedule = () => {
     const {
         isLoading: isLoadingExists,
         isError: isErrorExists,
-        data: dataExists
+        // data: dataExists
     } = useApi(
         "get",
         `calendar/exists?date=${formattedDate}`
     );
+    const dataExists = {scheduleExists:false}
 
-    if (isLoadingExists || isErrorExists) {
+    const { ChangeCurrentClothesList, CurrentClothesList } = useCurrentClothesStore()
+
+    const {
+        isLoading : isLoadingCurrent, 
+        isError : isErrorCurrent, 
+        data : dataCurrent
+    } = useApi(
+        "get",
+        `outfit/past/today`
+    );
+
+    useEffect(() => {
+        if (dataCurrent) {
+            console.log('들어옴')
+            console.log(CurrentClothesList)
+            ChangeCurrentClothesList(dataCurrent);
+        }
+    }, [dataCurrent, ChangeCurrentClothesList]);
+
+    if (isLoadingCurrent || isErrorCurrent) {
         return (
             <Loader/>
         )
-    }
-
-    if (dataExists) {
-        if (!dataExists.scheduleExists) {
-            return (
-                <Container>
-                    <NoSchedule/>
-                </Container>
-            )
-        } else {
-            console.log('일정있음!')
-            
-            if (isLoadingDetail || isErrorDetail) {
+    } else {
+        if (CurrentClothesList.length == 0) {
+            console.log('asdf')
+            if (isLoadingExists || isErrorExists) {
                 return (
                     <Loader/>
                 )
             }
-
-            return (
-                <Container>
-                    {dataDetail && <HaveSchedule schedule={dataDetail.scheduleCategory} outfit={dataDetail.outfitImagePath}/>}
-                </Container>
-            )
+        
+            if (dataExists) {
+                if (!dataExists.scheduleExists) {
+                    return (
+                        <Container>
+                            <NoSchedule/>
+                        </Container>
+                    )
+                } else {
+                    console.log('일정있음!')
+                    
+                    if (isLoadingDetail || isErrorDetail) {
+                        return (
+                            <Loader/>
+                        )
+                    }
+        
+                    return (
+                        <Container>
+                            {dataDetail && <HaveSchedule schedule={dataDetail.scheduleCategory} outfit={dataDetail.outfitImagePath}/>}
+                        </Container>
+                    )
+                }
+            }
+        } else {
+            return (<CurrentClothes/>)
         }
     }
+
+
+    
 };
 
 export default TodaySchedule;
