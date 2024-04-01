@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import CoordiImage from "@/components/CoordiImage";
-// import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
+import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
 import { useLocateStore } from "@/store/LocateStore";
 import { useState } from "react";
 import IconRe from "@/assets/ui/IconRe";
 import { Loader } from "@/components/Loader";
 import ClothesImage from "@/components/CLothesImage";
+import { useEffect } from "react";
 
 
 interface Clothes {
@@ -18,9 +19,17 @@ interface LastItemProps {
     isLastItem: boolean
 }
 
+type dataType = {
+  rate: string;
+  date: string;
+  locate: string;
+  schedule: string;
+  count: string;
+};
+
 
 const HaveSchedule = () => {
-    // const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
+    const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
     const {LocateInfo} = useLocateStore()
     const today:Date = new Date()
     const formattedDate:string = today.toISOString().split('T')[0]
@@ -28,15 +37,23 @@ const HaveSchedule = () => {
     const addRate = () => {
         setRate(rate + 1)
     }
-    // const example: dataType = {
-        //   rate: rate,
-        //   date: formattedDate,
-        //   locate: LocateInfo.toString,
-        //   schedule: "없음",
-        //   count: "1"
-        // };
+    const example: dataType = {
+          rate: rate.toString(),
+          date: formattedDate,
+          locate: LocateInfo.toString(),
+          schedule: "없음",
+          count: "1"
+        };
         
-    // mutate(example);
+    useEffect(() => {
+        // 조건을 추가하여 불필요한 호출을 방지
+        if (rate > 0 && LocateInfo) {
+        mutate(example);
+        console.log('데이터', recommenddata)
+        }
+    }, [rate, LocateInfo]);
+
+    const clothesData = recommenddata.data.map(item => item[1])
     const testDLResponse = {isPending: false, isError: false, data:{outfit_list: [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8, 9], [9, 10, 11]]}}
     return (
         <Container>
@@ -47,20 +64,18 @@ const HaveSchedule = () => {
             <CoordiList>
                 {testDLResponse.isPending && <div>isLoding...</div>}
                 {testDLResponse.isError && <div>Error!</div>}
-                {!testDLResponse.isPending && !testDLResponse.isError && 
-                // {(isError || isPending) ? <Loader/> :  
+                {/* {!testDLResponse.isPending && !testDLResponse.isError &&  */}
+                {(isError || isPending) ? <Loader/> :  
                     (
-                        // const clothesData = recommenddata.data.map(item => itme[1])
-                        // clothesData.map((item:Clothes, index:number) => {)
-                        testDLResponse.data.outfit_list.map((item:number[], index:number) => {
+                        // 
+                        clothesData.map((item:Clothes, index:number) => {
+                        // testDLResponse.data.outfit_list.map((item:number[], index:number) => {
                             const isLastItem = (index === testDLResponse.data.outfit_list.length - 1)
                             return (
-                                <div>asdf</div>
-                                // <Coordi isLastItem={isLastItem}>
-                                //     asdf
-                                //     <CoordiImage outfit={item}/>
-                                //     {/* <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/> */}
-                                // </Coordi>
+                                <Coordi isLastItem={isLastItem}>
+                                    {/* <CoordiImage outfit={item}/> */}
+                                    <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/>
+                                </Coordi>
                             )
                         })
                      )
