@@ -26,4 +26,10 @@ public class ClothingDetail {
     @Column(nullable = false)
     private List<ClothingTexture> clothingTextures = new ArrayList<>();
 
+    @Column
+    private String rfidUid;
+
+    @Column(nullable = false)
+    private String category;
+
 }

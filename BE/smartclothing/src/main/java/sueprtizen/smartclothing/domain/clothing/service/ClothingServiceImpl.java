@@ -11,7 +11,6 @@ import sueprtizen.smartclothing.domain.clothing.entity.*;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
 import sueprtizen.smartclothing.domain.clothing.repository.*;
-import sueprtizen.smartclothing.domain.outfit.recommended.dto.ClothingInPastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.users.entity.User;
 import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
@@ -131,7 +130,6 @@ public class ClothingServiceImpl implements ClothingService {
         ).toList());
 
 
-
         // 계절 모두 삭제
         clothingSeasonRepository.deleteAllByUserClothing(userClothing);
 
@@ -216,14 +214,13 @@ public class ClothingServiceImpl implements ClothingService {
     }
 
     public JSONObject getClothingInfo(String rfidUid) {
-        Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
-        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingDetail().getClothingDetailId());
+        ClothingDetail detail = clothingDetailRepository.findByRfidUid(rfidUid);
 
         JSONObject jsonObject = new JSONObject();
         List<ClothingTexture> texture = detail.getClothingTextures();
         jsonObject.put("texture", texture.get(0).getTexture().getTextureName());
         jsonObject.put("image", detail.getClothingImgPath());
-        jsonObject.put("category", clothing.getCategory());
+        jsonObject.put("category", detail.getCategory());
 
         return jsonObject;
     }
@@ -239,7 +236,7 @@ public class ClothingServiceImpl implements ClothingService {
     }
 
     public void addClothes(String rfid, JSONArray users, Long detailId) {
-        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId.intValue());
+        ClothingDetail detail = clothingDetailRepository.findByRfidUid(rfid);
         new Clothing();
         Clothing newClothing = Clothing.builder()
                 .ownerId(Integer.valueOf(String.valueOf(users.get(0))))
@@ -248,19 +245,19 @@ public class ClothingServiceImpl implements ClothingService {
                 .build();
         clothingRepository.save(newClothing);
         for (Object user : users) {
-            User newUser = getUser(Integer.valueOf(String.valueOf(user)));
+            User newUser = getUser(Integer.parseInt(String.valueOf(user)));
             UserClothing uc = new UserClothing(newUser, newClothing);
             userClothingRepository.save(uc);
         }
     }
 
-    public void putClothingIntoWasher(String rfid){
+    public void putClothingIntoWasher(String rfid) {
         Clothing clothing = clothingRepository.findByRfidUid(rfid);
         clothing.updateNowAt("세탁기");
         clothing.updateWashedAt();
     }
 
-    public void putClothingIntoAirdresser(String rfid){
+    public void putClothingIntoAirdresser(String rfid) {
         Clothing clothing = clothingRepository.findByRfidUid(rfid);
         clothing.updateNowAt("에어드레서");
         clothing.updateWashedAt();
@@ -272,7 +269,7 @@ public class ClothingServiceImpl implements ClothingService {
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_MEMBER));
     }
 
-    public Integer getClothingOwner(String rfid){
+    public Integer getClothingOwner(String rfid) {
         Clothing clothing = clothingRepository.findByRfidUid(rfid);
         return clothing.getOwnerId();
     }
