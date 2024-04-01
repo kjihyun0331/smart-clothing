@@ -82,11 +82,11 @@ function LocateWeather() {
                     <><LowestTemperature>
                         <span>최고{'\u00a0'}</span>{data.highestTemperature + '°'}
                     </LowestTemperature>
-                        <div>
+                        <div className='middle'>
                             /
                         </div>
                     <HighestTemperature>
-                        <span>최저{'\u00a0'}</span>{data.lowestTemperature}°
+                        <span>최저{'\u00a0'}</span>{data.lowestTemperature + '°'}
                     </HighestTemperature> 
                     </>
                     }
@@ -153,6 +153,7 @@ color: #ff7c7c;
 span {
     font-size: 1rem;
 }
+
 `;
 
 const HighestTemperature = styled.div`
@@ -201,6 +202,9 @@ font-size: 3rem;
 width: 100%;
 display: flex;
 justify-content: space-around;
+.middle {
+    color : #ababab;
+}
 `
 
 const DetailWeahterContainer = styled.div`
