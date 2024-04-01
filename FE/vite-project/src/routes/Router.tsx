@@ -14,8 +14,8 @@ import Basket from "@/pages/Basket";
 ////////////홈 하위
 import TodaySchedule from "@/sections/today_info/TodaySchedule";
 import HomeLocate from "@/sections/weather_location/HomeLocate";
-import CurrentClothes from "@/sections/fix_current_clothes/CurrentClothes";
-import AddCurrentClothes from "@/sections/fix_current_clothes/AddCurrentClothes";
+import FixHomeCurrentClothes from "@/sections/fix_current_clothes/FixHomeCurrentClothes";
+import HomeCurrentClothestsx from "@/sections/fix_current_clothes/FixCurrentClothes";
 ///////////캘린더 하위
 import MyCalendar from "@/sections/calendar/Calendar";
 import Recommend from "@/sections/calendar/Recommend";
@@ -59,7 +59,7 @@ const router = createBrowserRouter([
           },
           {
             path: "currentclothes",
-            element: <><CurrentClothes /></>,
+            element: <><FixHomeCurrentClothes /></>,
           },
         ],
       },

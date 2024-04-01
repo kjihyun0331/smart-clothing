@@ -19,7 +19,7 @@ interface LastItemProps {
 }
 
 
-const HomeCurrentClothestsx = ({isloading, iserror}: CurrentProps) => {
+const FixCurrentClothes = ({isloading, iserror}: CurrentProps) => {
 
     const { CurrentClothesList, ChangeAddClothesList } = useCurrentClothesStore()
 
@@ -67,7 +67,7 @@ const HomeCurrentClothestsx = ({isloading, iserror}: CurrentProps) => {
                             <IconAdd onClick={moveAddClothes}/>
                         </AddBox>
                     </InfoContainer>
-                    <button>확정하기</button>
+                    <GreenButton>확정하기</GreenButton>
                 </Container>
                 }
             </div> 
@@ -80,7 +80,7 @@ const HomeCurrentClothestsx = ({isloading, iserror}: CurrentProps) => {
     );
 };
 
-export default HomeCurrentClothestsx;
+export default FixCurrentClothes;
 
 
 const Container = styled.div`
@@ -90,6 +90,7 @@ background-color: #ffffff;
 border-radius: 1rem;
 box-sizing: border-box;
 height: 30vh;
+position: relative;
 
 `
 
@@ -129,3 +130,19 @@ const Clothes = styled.div<LastItemProps>`
   min-width: 15vh;
   margin: 0.5rem ${({ $isLastItem }) => ($isLastItem ? '0' : '1rem')} 0.5rem 0;
 `
+
+const GreenButton = styled.button`
+    border: none;
+    background-color: #45ba8c;
+    color: white;
+    border-radius: 40px;
+    box-sizing: border-box;
+    opacity: 0.7;
+    width: 50%;
+    padding: 1rem 1rem;
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translate(-50%);
+    
+`;
