@@ -460,7 +460,7 @@ def update(request):
     global model_dir
     model_dir = 'backup'
 
-    delete_path = f'{path}/current'
+    delete_path = f'{path}/ML_models/current'
 
     for file in os.listdir(delete_path):
         file_path = os.path.join(delete_path, file)
