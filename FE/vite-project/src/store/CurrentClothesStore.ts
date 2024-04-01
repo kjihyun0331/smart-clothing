@@ -12,6 +12,7 @@ interface CurrentClothesState {
   ChangeCurrentClothesList: (newList:Clothes[]) => void;
   DeleteCurrentClothes: (deleteClotehs:Clothes) => void;
   AddClothesList: Clothes[]
+  ChangeAddClothesList: (newList:Clothes[]) => void;
   AddCurrentClothes: (addClothes:Clothes) => void;
   DeleteAddCurrentClothes: (addDeleteClotehs:Clothes) => void;
 }
@@ -26,6 +27,7 @@ export const useCurrentClothesStore = create<CurrentClothesState>((set) => ({
           ),
       })),
     AddClothesList: [],
+    ChangeAddClothesList: (newList:Clothes[]) => set({AddClothesList:newList}),
     AddCurrentClothes: (addClothes: Clothes) => set((state) => ({
       AddClothesList: [...state.AddClothesList, addClothes],
     })),
