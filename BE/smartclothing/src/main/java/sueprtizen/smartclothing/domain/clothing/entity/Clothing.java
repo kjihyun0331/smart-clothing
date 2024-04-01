@@ -64,6 +64,7 @@ public class Clothing {
         this.nowAt="옷장";
         this.washedAt=LocalDateTime.now();
         this.ownerId=ownerId;
+        this.locationModifiedAt=LocalDateTime.now();
     }
 
     public void updateNowAt(String machine) {
