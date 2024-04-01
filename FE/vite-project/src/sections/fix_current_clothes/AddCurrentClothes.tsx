@@ -4,6 +4,7 @@ import { SimpleClothesResponseDataType } from "@/types/ClothesTypes";
 import styled from "styled-components";
 import ClothesImage from "@/components/CLothesImage";
 import { useCurrentClothesStore } from "@/store/CurrentClothesStore";
+import { useState } from 'react';
 
 
 const CATEGORY = ["전체", "상의", "하의", "아우터", "치마", "바지"];
@@ -42,6 +43,32 @@ const AddCurrentClothesPage = () => {
     const handleDetailClick = (clothes: Clothes) => {
       AddCurrentClothes(clothes)
     };
+    const [nfcData, setNfcData] = useState('');
+
+  const readNFC = async () => {
+    console.log('들어옴?')
+    // if ('NDEFReader' in window) {
+      try {
+        console.log('들어옴!')
+        const reader = new NDEFReader();
+        await reader.scan();
+        reader.onreading = event => {
+          const decoder = new TextDecoder();
+          for (const record of event.message.records) {
+            console.log(`Record type: ${record.recordType}`);
+            console.log(`MIME type: ${record.mediaType}`);
+            console.log(`Data: ${decoder.decode(record.data)}`);
+            setNfcData(decoder.decode(record.data)); // NFC 태그 데이터를 상태에 저장
+          }
+        };
+      } catch (error) {
+        console.log('에러!')
+        console.error(`Error: ${error.message}`);
+      }
+    // } else {
+    //   console.log('Web NFC is not supported.');
+    // }
+  };
 
     const isItemBlinded = (item:Clothes) => {
       const isCurrent = CurrentClothesList.find(findItem => findItem.clothingId === item.clothingId);
@@ -76,6 +103,10 @@ const AddCurrentClothesPage = () => {
     return (
       <>
         <Header>
+        <div>
+          <button onClick={readNFC}>Read NFC Tag</button>
+          {nfcData && <p>NFC Data: {nfcData}</p>}
+        </div>
           <p className="title">추가하기</p>
           <Filter>
             <select className="category" name="category">
