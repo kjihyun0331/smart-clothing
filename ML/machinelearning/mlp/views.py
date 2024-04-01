@@ -108,7 +108,7 @@ def mlp(request):
          
         # 학습된 모델이 없을 경우
         if not (os.path.exists(f'{path}/ML_models/{model_dir}/{gender_dict[user_gender]}_{schedule_dict[schedule]}.h5')):
-            return Response({1:2})
+            return Response({'data':[[]]})
             
         model = tensorflow.keras.models.load_model(f'{path}/ML_models/{model_dir}/{gender_dict[user_gender]}_{schedule_dict[schedule]}.h5')
     
@@ -123,7 +123,7 @@ def mlp(request):
         
         # 만약 재요청이 인덱스를 넘어가버리면
         if len(i_pred.tolist()) < rate + 1:
-            return Response()
+            return Response({'data':[[]]})
         
         # 1차 결과, 스케쥴 id를 가져옴
         result = result_list[i_pred.tolist()[rate]]
