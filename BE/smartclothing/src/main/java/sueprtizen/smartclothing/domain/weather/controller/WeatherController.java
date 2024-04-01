@@ -33,7 +33,7 @@ public class WeatherController {
     @Scheduled(cron="0 0 0 * * * ",zone="Asia/Seoul")
     @GetMapping("/openApi")
     public void callOpenApi() throws ParseException {
-        weatherService.callOpenApi(serviceKey);
+        weatherService.callOpenApi();
     }
 
 }

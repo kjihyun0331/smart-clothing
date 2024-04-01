@@ -8,5 +8,5 @@ public interface WeatherService {
 
     WeatherResponseDTO weatherFromLocationAndDate(int locationKey, String date);
 
-    void callOpenApi(String serviceKey) throws ParseException;
+    void callOpenApi() throws ParseException;
 }

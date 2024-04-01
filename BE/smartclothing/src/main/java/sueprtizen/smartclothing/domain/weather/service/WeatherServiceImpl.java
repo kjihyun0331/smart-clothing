@@ -55,7 +55,7 @@ public class WeatherServiceImpl implements WeatherService {
         return Double.parseDouble(strX);
     }
 
-    public void callOpenApi(String serviceKey) throws ParseException {
+    public void callOpenApi() throws ParseException {
         JSONParser parser = new JSONParser();
 
         List<Integer> keys = locationService.findAllLocationKeys();
