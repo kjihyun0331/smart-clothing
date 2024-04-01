@@ -44,6 +44,7 @@ function requestPermission() {
           console.log("current token", currenttoken);
           localStorage.setItem("FCMtoken", currenttoken);
           const userToken = localStorage.getItem("token");
+          console.log("user token", userToken);
           const data = {
             token: localStorage.getItem("FCMtoken"),
           };
