@@ -242,6 +242,7 @@ public class ClothingServiceImpl implements ClothingService {
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId.intValue());
         new Clothing();
         Clothing newClothing = Clothing.builder()
+                .ownerId(Integer.valueOf(String.valueOf(users.get(0))))
                 .rfidUid(rfid)
                 .detail(detail)
                 .build();
