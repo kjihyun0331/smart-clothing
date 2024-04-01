@@ -1,10 +1,11 @@
 package sueprtizen.smartclothing.domain.clothing.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -16,14 +17,14 @@ public class Clothing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int clothingId;
 
-    @OneToMany(mappedBy = "clothing",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "clothing", fetch = FetchType.EAGER)
     private List<UserClothing> userClothing;
 
     @ManyToOne
     @JoinColumn(name = "clothing_detail_id")
     private ClothingDetail clothingDetail;
 
-    @OneToMany(mappedBy = "clothing",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "clothing", fetch = FetchType.EAGER)
     private List<ClothingStyle> clothingStyleList;
 
     @Column
@@ -36,7 +37,10 @@ public class Clothing {
     private String rfidUid;
 
     @Column
-    private String washedAt;
+    private LocalDateTime washedAt;
+
+    @Column
+    private LocalDateTime locationModifiedAt;
 
     @Column
     private int polluted;
@@ -50,5 +54,26 @@ public class Clothing {
     public void updateClothing(List<ClothingStyle> clothingStyleList, String category) {
         this.clothingStyleList = clothingStyleList;
         this.category = category;
+    }
+
+    @Builder
+    public Clothing(String rfidUid, ClothingDetail detail) {
+        this.rfidUid = rfidUid;
+        this.clothingDetail = detail;
+        this.category = "없음";
+        this.nowAt = "옷장";
+    }
+
+    public void updateNowAt(String machine) {
+        this.nowAt = machine;
+        locationModifiedAt = LocalDateTime.now();
+    }
+
+    public void updateWashedAt() {
+        this.washedAt = LocalDateTime.now();
+    }
+
+    public void updateNowat(String machine){
+        this.nowAt=machine;
     }
 }

@@ -5,6 +5,8 @@ import "swiper/css/scrollbar";
 import styled from "styled-components";
 import { Scrollbar } from "swiper/modules";
 import { theme } from "@/styles/theme";
+import { Loader } from "@/components/Loader";
+import { useApi } from "@/hooks/useApi";
 
 const MEMUS = [
   { id: 0, name: "전체" },
@@ -12,25 +14,28 @@ const MEMUS = [
   { id: 2, name: "에어드레서" },
 ];
 
-const FAKEDATA = [
-  {
-    id: 0,
-    device: "에어드레서",
-    name: "핑크 아우터",
-    date: "2024-03-05 04:55",
-    img: "https://cdn-icons-png.flaticon.com/512/5289/5289542.png",
-  },
-  {
-    id: 1,
-    device: "세탁기",
-    name: "파란 스웨터",
-    date: "2024-03-05 04:55",
-    img: "https://cdn-icons-png.flaticon.com/512/4333/4333448.png",
-  },
-];
+type ClothingPositionType = {
+  id: number;
+  device: string;
+  name: string;
+  date: string;
+  img: string;
+};
+
+interface ClothingPositionQueryType {
+  isLoading: boolean;
+  data: ClothingPositionType[];
+}
 
 const BasketState = () => {
   const [menu, setMenu] = useState(0);
+  const { isLoading, data }: ClothingPositionQueryType = useApi(
+    "get",
+    "clothing/position"
+  );
+
+  if (isLoading) return <Loader />;
+
   return (
     <>
       <BasketContent>
@@ -60,8 +65,8 @@ const BasketState = () => {
           }}
         >
           <SwiperSlide>
-            {FAKEDATA.length ? (
-              FAKEDATA.map((item) => {
+            {data ? (
+              data.map((item) => {
                 return (
                   <Item key={item.id}>
                     <div className="imgarea">
@@ -83,8 +88,8 @@ const BasketState = () => {
             )}
           </SwiperSlide>
           <SwiperSlide>
-            {FAKEDATA.length ? (
-              FAKEDATA.map((item) => {
+            {data.length ? (
+              data.map((item) => {
                 if (item.device === "세탁기")
                   return (
                     <Item key={item.id}>
@@ -107,8 +112,8 @@ const BasketState = () => {
             )}
           </SwiperSlide>
           <SwiperSlide>
-            {FAKEDATA.length ? (
-              FAKEDATA.map((item) => {
+            {data ? (
+              data.map((item) => {
                 if (item.device === "에어드레서")
                   return (
                     <Item key={item.id}>

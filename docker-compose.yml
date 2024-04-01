@@ -11,6 +11,7 @@ services:
       - /etc/letsencrypt/:/etc/nginx/ssl/
       - /home/ubuntu/clothes_images/:/usr/share/nginx/images/
       - /home/ubuntu/profile_images/:/usr/share/nginx/profile_images/
+      - /home/ubuntu/outfit_images/:/usr/share/nginx/outfit_images/
     ports:
       - "80:80"
       - "443:443"
@@ -23,6 +24,8 @@ services:
       context: ./BE/smartclothing
       dockerfile: Dockerfile
     image: supertizen_backend_img
+    volumes:
+      - /home/ubuntu/outfit_images/:/app/outfit_images/
     ports:
       - "8080:8080"
       - "65432:65432"

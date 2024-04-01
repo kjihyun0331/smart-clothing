@@ -3,17 +3,21 @@ package sueprtizen.smartclothing.domain.clothing.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import sueprtizen.smartclothing.domain.clothing.dto.*;
 import sueprtizen.smartclothing.domain.clothing.entity.*;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingErrorCode;
 import sueprtizen.smartclothing.domain.clothing.exception.ClothingException;
 import sueprtizen.smartclothing.domain.clothing.repository.*;
+import sueprtizen.smartclothing.domain.outfit.recommended.dto.ClothingInPastOutfitResponseDTO;
 import sueprtizen.smartclothing.domain.users.entity.User;
 import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +36,8 @@ public class ClothingServiceImpl implements ClothingService {
     private final StyleRepository styleRepository;
     private final ClothingSeasonRepository clothingSeasonRepository;
     private final ClothingDetailRepository clothingDetailRepository;
+    private final ClothingTextureRepository clothingTextureRepository;
+    private final TextureRepository textureRepository;
 
     @Override
     public List<ClosetConfirmResponseDTO> closetConfirmation(int userId) {
@@ -109,6 +115,22 @@ public class ClothingServiceImpl implements ClothingService {
         //새로운 스타일 연결
         clothingStyleRepository.saveAll(newClothingStyleList);
 
+        //소재 모두 삭제
+        clothingTextureRepository.deleteAllByClothingDetail(clothing.getClothingDetail());
+        List<Texture> newTextures = clothingUpdateRequestDTO.textures().stream().map(textureName ->
+                textureRepository.findByTextureName(textureName)
+                        .orElseThrow(() -> new ClothingException(ClothingErrorCode.TEXTURE_NOT_FOUND))
+        ).toList();
+
+        //새로운 소재 연결
+        clothingTextureRepository.saveAll(newTextures.stream().map(texture ->
+                ClothingTexture.builder()
+                        .clothingDetail(clothing.getClothingDetail())
+                        .texture(texture)
+                        .build()
+        ).toList());
+
+
 
         // 계절 모두 삭제
         clothingSeasonRepository.deleteAllByUserClothing(userClothing);
@@ -128,7 +150,7 @@ public class ClothingServiceImpl implements ClothingService {
         if (clothing.getOwnerId() == currentUser.getUserId()) {
             //기존 옷 사용자 연결
             Set<Integer> userClothingSet = userClothingRepository.findSharedUsersByClothingIdAndUserId(
-                    currentUser.getUserId(), clothing.getClothingId()
+                    clothing.getClothingId(), currentUser.getUserId()
             );
 
             //새로운 옷 사용자 연결
@@ -162,27 +184,96 @@ public class ClothingServiceImpl implements ClothingService {
 
     }
 
-    public SocketClothingInfoDTO getClothingInfo(String rfidUid) {
-        Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
-        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingId());
-        SocketClothingInfoDTO info = SocketClothingInfoDTO.builder()
-                .image(detail.getClothingImgPath())
-                .category(clothing.getCategory())
-                .texture(detail.getClothingTextures().get(0).getTexture().getTextureName())
-                .build();
-        return info;
+    @Override
+    public List<ClothingPositionResponseDTO> getClothingPosition(int userId) {
+        User currentUser = getUser(userId);
+        List<UserClothing> userClothing = userClothingRepository.findAllByUser(currentUser);
+        return userClothing.stream().filter(uc ->
+                !uc.getClothing().getNowAt().equals("옷장")
+        ).map(uc ->
+                {
+                    Clothing clothing = uc.getClothing();
+                    return new ClothingPositionResponseDTO(
+                            clothing.getClothingId(),
+                            clothing.getNowAt(),
+                            uc.getClothingName(),
+                            clothing.getLocationModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
+                            clothing.getClothingDetail().getClothingImgPath()
+                    );
+                }
+        ).toList();
     }
 
-    public SocketClothingImageDTO getClothingImage(String rfid) {
+    public ClothingWashInfoResponseDTO getClothingWashInfo(int userId, int clothingId) {
+        Clothing clothing = clothingRepository.findById(clothingId)
+                .orElseThrow(() -> new ClothingException(ClothingErrorCode.CLOTHING_NOT_FOUND));
+
+        return new ClothingWashInfoResponseDTO(
+                clothing.getClothingId(),
+                clothing.getWornCount(),
+                clothing.getWashedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+        );
+    }
+
+    public JSONObject getClothingInfo(String rfidUid) {
+        Clothing clothing = clothingRepository.findByRfidUid(rfidUid);
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(clothing.getClothingDetail().getClothingDetailId());
+
+        JSONObject jsonObject = new JSONObject();
+        List<ClothingTexture> texture = detail.getClothingTextures();
+        jsonObject.put("texture", texture.get(0).getTexture().getTextureName());
+        jsonObject.put("image", detail.getClothingImgPath());
+        jsonObject.put("category", clothing.getCategory());
+
+        return jsonObject;
+    }
+
+    public JSONObject getClothingImage(String rfid) {
         Integer detailId = clothingRepository.findByRfidUid(rfid).getClothingDetail().getClothingDetailId();
         ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId);
-        return new SocketClothingImageDTO(detail.getClothingImgPath());
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("image", detail.getClothingImgPath());
+
+        return jsonObject;
+    }
+
+    public void addClothes(String rfid, JSONArray users, Long detailId) {
+        ClothingDetail detail = clothingDetailRepository.findByClothingDetailId(detailId.intValue());
+        new Clothing();
+        Clothing newClothing = Clothing.builder()
+                .rfidUid(rfid)
+                .detail(detail)
+                .build();
+        clothingRepository.save(newClothing);
+        for (Object user : users) {
+            User newUser = getUser(Integer.valueOf(String.valueOf(user)));
+            UserClothing uc = new UserClothing(newUser, newClothing);
+            userClothingRepository.save(uc);
+        }
+    }
+
+    public void putClothingIntoWasher(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        clothing.updateNowAt("세탁기");
+        clothing.updateWashedAt();
+    }
+
+    public void putClothingIntoAirdresser(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        clothing.updateNowAt("에어드레서");
+        clothing.updateWashedAt();
     }
 
 
     private User getUser(int userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    public Integer getClothingOwner(String rfid){
+        Clothing clothing = clothingRepository.findByRfidUid(rfid);
+        return clothing.getOwnerId();
     }
 
 }

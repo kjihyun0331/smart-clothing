@@ -8,8 +8,9 @@ class Clothing(models.Model):
     now_at = models.CharField(max_length=20)
     rfid_uid = models.CharField(db_column='RFID_uid', max_length=15)  # Field name made lowercase.
     created_at = models.DateTimeField()
-    update_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     washed_at = models.DateTimeField()
+    location_modified_at = models.DateTimeField()
     polluted = models.IntegerField()
     worn_count = models.IntegerField()
     category = models.CharField(max_length=20)
@@ -73,10 +74,6 @@ class PastOutfit(models.Model):
     past_outfit_id = models.BigAutoField(primary_key=True)
     schedule = models.ForeignKey('Schedule', models.DO_NOTHING)
     clothing = models.ForeignKey(Clothing, models.DO_NOTHING)
-    x = models.IntegerField()
-    y = models.IntegerField()
-    width = models.IntegerField()
-    height = models.IntegerField()
 
     class Meta:
         managed = False
@@ -100,12 +97,13 @@ class RecommendedOutfit(models.Model):
 class Schedule(models.Model):
     schedule_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey('User', models.DO_NOTHING)
-    weather = models.ForeignKey('Weather', models.DO_NOTHING)
-    schedule_name = models.CharField(max_length=20)     
-    schedule_category = models.CharField(max_length=20) 
+    weather = models.ForeignKey('Weather', models.DO_NOTHING, blank=True, null=True)
+    schedule_name = models.CharField(max_length=20)
+    schedule_category = models.CharField(max_length=20)
     date = models.DateTimeField()
     location_key = models.IntegerField()
     outfit_image_path = models.CharField(max_length=200)
+    schedule_disabled = models.IntegerField()
 
     class Meta:
         managed = False
@@ -114,7 +112,7 @@ class Schedule(models.Model):
 
 class SiDo(models.Model):
     si_do_id = models.AutoField(primary_key=True)
-    si_do_name = models.CharField(max_length=20) 
+    si_do_name = models.CharField(max_length=20)
 
     class Meta:
         managed = False

@@ -27,7 +27,7 @@ public class Schedule {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "weather_id", nullable = false)
+    @JoinColumn(name = "weather_id")
     private Weather weather;
 
     @OneToMany(mappedBy = "schedule")
@@ -52,6 +52,9 @@ public class Schedule {
     @Column(nullable = false)
     private String outfitImagePath;
 
+    @Column(nullable = false)
+    private boolean scheduleDisabled;
+
     @Builder
     public Schedule(User user, String scheduleName, String scheduleCategory, Weather weather, LocalDate date, int locationKey, String outfitImagePath) {
         this.user = user;
@@ -61,5 +64,20 @@ public class Schedule {
         this.date = date;
         this.locationKey = locationKey;
         this.outfitImagePath = outfitImagePath;
+    }
+
+    @Builder
+    public Schedule(User user, String scheduleName, String scheduleCategory, LocalDate date, int locationKey, String outfitImagePath) {
+        this.user = user;
+        this.weather = null;
+        this.scheduleName = scheduleName;
+        this.scheduleCategory = scheduleCategory;
+        this.date = date;
+        this.locationKey = locationKey;
+        this.outfitImagePath = outfitImagePath;
+    }
+
+    public void updateScheduleDisabled(boolean scheduleDisabled) {
+        this.scheduleDisabled = scheduleDisabled;
     }
 }

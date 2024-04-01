@@ -11,6 +11,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { registerServiceWorker } from "./registerServiceWorker";
+import axios from "axios";
+import { BASE_URL } from "@/config/config";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
@@ -40,6 +42,25 @@ function requestPermission() {
       }).then((currenttoken) => {
         if (currenttoken) {
           console.log("current token", currenttoken);
+          localStorage.setItem("FCMtoken", currenttoken);
+          const userToken = localStorage.getItem("token");
+          const data = {
+            token: localStorage.getItem("FCMtoken"),
+          };
+
+          try {
+            axios({
+              method: "post",
+              url: `${BASE_URL}/notifications`,
+              headers: {
+                "User-ID": userToken,
+              },
+              data: data,
+            }).then((res) => res.data);
+            console.log("token post 성공");
+          } catch (error) {
+            console.log("token post 실패", error);
+          }
         } else {
           console.log("cant get token");
         }
