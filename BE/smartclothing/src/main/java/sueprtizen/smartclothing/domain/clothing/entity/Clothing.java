@@ -60,7 +60,7 @@ public class Clothing {
     public Clothing(String rfidUid, ClothingDetail detail,Integer ownerId){
         this.rfidUid=rfidUid;
         this.clothingDetail=detail;
-        this.category="없음";
+        this.category=detail.getCategory();
         this.nowAt="옷장";
         this.washedAt=LocalDateTime.now();
         this.ownerId=ownerId;
