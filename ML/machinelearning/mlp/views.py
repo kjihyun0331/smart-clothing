@@ -321,7 +321,7 @@ def fine_tuning():
     
     # 추후 오늘 날짜 혹은 이틀 전 날짜로 바꾸기
     target_date = datetime.now().date() - timedelta(1)
-    new_schedules = Schedule.objects.select_related('user', 'weather').filter(date__date=target_date.date())
+    new_schedules = Schedule.objects.select_related('user', 'weather').filter(date__date=target_date)
     for schedule_ in schedule_list:
         for gender in gender_list:
             schedule_datas = new_schedules.filter(schedule_category=schedule_, user__gender=gender)
@@ -459,6 +459,119 @@ def test(request):
 def update(request):
     global model_dir
     model_dir = 'backup'
+
+    delete_path = f'{path}/current'
+
+    for file in os.listdir(delete_path):
+        file_path = os.path.join(delete_path, file)
+        os.remove(file_path)
+    
+
+    # 신규 라벨 파일 저장
+    new_label_form = {
+	"male_Interview": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Interview": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Graduate": {
+		"count": 0,
+		"label_list": [
+		]
+	},
+	"female_Graduate": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Date": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Date": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Business": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Business": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Trip": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Trip": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Workout": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Workout": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Rest": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Rest": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Wedding": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Wedding": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Meeting": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Meeting": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Event": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Event": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_Daily": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_Daily": {
+		"count": 0,
+		"label_list": []
+	},
+	"male_ETC": {
+		"count": 0,
+		"label_list": []
+	},
+	"female_ETC": {
+		"count": 0,
+		"label_list": []
+	}
+}
+
+
+    with open(os.path.join(f'{path}/ML_models/current', 'label.json'), 'w', encoding='utf-8') as file:
+        json.dump(new_label_form, file)
+
     
     # 추후 오늘 날짜 혹은 이틀 전 날짜로 바꾸기
     target_date = datetime.now().date() - timedelta(2)
@@ -475,9 +588,22 @@ def update(request):
                 with open(f'{path}/ML_models/current/label.json', 'r', encoding='utf-8') as file:
                     label_infos = json.load(file)
                 
+                
                 # 전처리
                 pre_data = np.empty((data_count, 11), dtype=np.float32)
                 for i, schedule in enumerate(schedule_datas):
+                    if schedule.weather == none:
+                        schedule.weather = {
+                            'lowest_temperature': 0,
+                            'highest_temperature': 0,
+                            'lowest_real_feeling_temperature': 0,
+                            'highest_real_feeling_temperature': 0,
+                            'precipitation': 0,
+                            'snow_cover': 0,
+                            'humidity': 0,
+                            'wind_speed': 0,
+                            'solar_irradiance': 0,
+                        }
                     pre_data[i] = [
                         schedule.user.age // 10,
                         schedule.weather.lowest_temperature,
