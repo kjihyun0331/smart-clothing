@@ -43,6 +43,13 @@ const TodaySchedule = () => {
                 </Container>
             )
         } else {
+            
+            if (isLoadingDetail || isErrorDetail) {
+                return (
+                    <Loader/>
+                )
+            }
+
             return (
                 <Container>
                     {dataDetail && <HaveSchedule schedule={dataDetail.schedule.scheduleCategory} outfit={dataDetail.clothingList}/>}
