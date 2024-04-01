@@ -7,8 +7,13 @@ import { Loader } from "@/components/Loader";
 
 const TodaySchedule = () => {
 
-    const today:Date = new Date()
-    const formattedDate:string = today.toISOString().split('T')[0];
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+    }).replace(/\./g, '-').replace(/\s/g, '').slice(0, -1);
+    console.log('지금 날짜', formattedDate)
 
 
     const {
@@ -43,6 +48,7 @@ const TodaySchedule = () => {
                 </Container>
             )
         } else {
+            console.log('일정있음!')
             
             if (isLoadingDetail || isErrorDetail) {
                 return (

@@ -69,7 +69,7 @@ const AddCurrentClothesPage = () => {
         if (length > 7) {
           return "0.8rem";
         } else {
-          return "1.2rem";
+          return "1.1rem";
         }
       };
 
