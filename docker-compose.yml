@@ -31,6 +31,8 @@ services:
       - "65432:65432"
     networks:
       - supertizen_net
+    environment:
+      - TZ=Asia/Seoul
 
   supertizen_machine_learning:
     container_name: supertizen_machine_learning
