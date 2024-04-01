@@ -221,9 +221,5 @@ const GreenButton = styled.button`
     opacity: 0.7;
     width: 50%;
     padding: 1rem 1rem;
-    position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translate(-50%);
-    
+    margin: 0.5rem 0 1rem 0;
 `;

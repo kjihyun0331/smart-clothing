@@ -51,8 +51,6 @@ const TodaySchedule = () => {
 
     useEffect(() => {
         if (dataCurrent) {
-            console.log('들어옴')
-            console.log(CurrentClothesList)
             ChangeCurrentClothesList(dataCurrent);
         }
     }, [dataCurrent, ChangeCurrentClothesList]);
@@ -63,7 +61,6 @@ const TodaySchedule = () => {
         )
     } else {
         if (CurrentClothesList.length == 0) {
-            console.log('asdf')
             if (isLoadingExists || isErrorExists) {
                 return (
                     <Loader/>
@@ -111,5 +108,6 @@ margin: auto;
 background-color: #ffffff;
 border-radius: 1rem;
 box-sizing: border-box;
-height: 30vh;
+text-align: center;
+padding-bottom: 1rem;
 `

@@ -18,10 +18,16 @@ interface LastItemProps {
     $isLastItem : boolean
 }
 
+interface Clothes {
+    clothingId: number,
+    clothingImagePath: string,
+    clothingName: string,
+  }
+
 
 const FixCurrentClothes = ({isloading, iserror}: CurrentProps) => {
 
-    const { CurrentClothesList, ChangeAddClothesList } = useCurrentClothesStore()
+    const { CurrentClothesList, ChangeAddClothesList, DeleteCurrentClothes } = useCurrentClothesStore()
 
     const [addPage, setAddPage] = useState<boolean>(false)
 
@@ -31,10 +37,17 @@ const FixCurrentClothes = ({isloading, iserror}: CurrentProps) => {
         setAddPage(true)
         // addlist초기화
         ChangeAddClothesList([])
+    };
+
+    const outAddClothes = () => {
+        setAddPage(false)
       };
     // 들어올 때 api를 보내거나 응답을 받기
 
     const testRFIDResponse = {isPending: false, isError: false, data:{outfit_list: [1, 2, 3,]}}
+    const deleteItem = (item:Clothes) => {
+        DeleteCurrentClothes(item)
+    }
 
     return (
         <div>
@@ -57,6 +70,9 @@ const FixCurrentClothes = ({isloading, iserror}: CurrentProps) => {
                                     return (
                                         <Clothes key={index} $isLastItem={isLastItem}>
                                             <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/>
+                                            <DeleteIconContainer>
+                                                <IconDelete onClick={() => deleteItem(item)}/>
+                                            </DeleteIconContainer>
                                         </Clothes>
                                     )
                                 })
@@ -73,7 +89,7 @@ const FixCurrentClothes = ({isloading, iserror}: CurrentProps) => {
             </div> 
             :
             <div>
-                <AddCurrentClothesPage/>
+                <AddCurrentClothesPage onClick={outAddClothes}/>
             </div>
             }
         </div>
@@ -89,10 +105,18 @@ margin: auto;
 background-color: #ffffff;
 border-radius: 1rem;
 box-sizing: border-box;
-height: 30vh;
 position: relative;
+text-align:center;
 
 `
+
+const DeleteIconContainer = styled.div`
+position: absolute;
+top: 0;
+right: 0;
+transform: translate(10%, -10%);
+`
+
 
 const Message = styled.div`
 text-align:center;
@@ -119,7 +143,7 @@ const AddBox = styled.div`
 padding: 1rem;
 flex: 1;
 min-width: 15%;
-min-height: 15vh;
+min-height: calc(15vh + 1rem);
 display: flex;
 justify-content: center;
 align-items: center;
@@ -128,7 +152,8 @@ align-items: center;
 const Clothes = styled.div<LastItemProps>`
   height: 15vh;
   min-width: 15vh;
-  margin: 0.5rem ${({ $isLastItem }) => ($isLastItem ? '0' : '1rem')} 0.5rem 0;
+  margin: 0.5rem ${({ $isLastItem }) => ($isLastItem ? '0.2rem' : '1rem')} 0.5rem 0;
+  position: relative;
 `
 
 const GreenButton = styled.button`
@@ -140,9 +165,6 @@ const GreenButton = styled.button`
     opacity: 0.7;
     width: 50%;
     padding: 1rem 1rem;
-    position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translate(-50%);
+    margin: 0.5rem 0 1rem 0;
     
 `;
