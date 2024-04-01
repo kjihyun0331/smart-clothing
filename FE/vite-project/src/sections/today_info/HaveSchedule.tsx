@@ -26,6 +26,7 @@ export default HaveSchedule;
 
 
 const Container = styled.div`
+margin-bottom: 0.1rem;
 
 `
 
