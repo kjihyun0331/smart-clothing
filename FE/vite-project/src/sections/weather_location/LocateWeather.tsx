@@ -78,7 +78,18 @@ function LocateWeather() {
 
             {/* 현재 온도 */}
             <SimpleWeahterContainer>
-                {isError || isLoading ? '--' : data.highestTemperature + '°' + '\u00a0\u00a0' + data.lowestTemperature + '°'}
+                {isError || isLoading ? '--' : 
+                    <><LowestTemperature>
+                        <span>최고{'\u00a0'}</span>{data.highestTemperature + '°'}
+                    </LowestTemperature>
+                        <div>
+                            /
+                        </div>
+                    <HighestTemperature>
+                        <span>최저{'\u00a0'}</span>{data.lowestTemperature}°
+                    </HighestTemperature> 
+                    </>
+                    }
             </SimpleWeahterContainer>
 
             {/* 날씨 세부사항 */}
@@ -102,23 +113,16 @@ function LocateWeather() {
                 {/* 현재 강수량 */}
                 <div>
                     <DetailWeahterHeader>강수확률</DetailWeahterHeader>
-                    <DetailWeahterInfo>{isError || isLoading ? '--' : data.precipitation}</DetailWeahterInfo>
+                    <DetailWeahterInfo>{isError || isLoading ? '--' : data.precipitation + '%'}</DetailWeahterInfo>
                 </div>
 
                 {/* 체감온도 */}
                 <div>
-                    <DetailWeahterHeader>체감온도</DetailWeahterHeader>
+                    <DetailWeahterHeader>습도</DetailWeahterHeader>
                     <DetailWeahterInfo>{isError || isLoading ? '--' : 
                         <>
                         <span>
-                            <LowestTemperature>
-                                {data.lowestRealFeelingTemperature}°
-                            </LowestTemperature>
-                            /
-                            <HighestTemperature>
-                                {data.highestRealFeelingTemperature}°
-                            </HighestTemperature>
-                            
+                                {data.humidity}%
                             </span>
                         </>}
                         </DetailWeahterInfo>
@@ -144,12 +148,18 @@ background-color: #f2f2f2;
 text-align: center;
 `
 
-const LowestTemperature = styled.span`
-  color: #9999ff;
+const LowestTemperature = styled.div`
+color: #ff7c7c;
+span {
+    font-size: 1rem;
+}
 `;
 
-const HighestTemperature = styled.span`
-  color: #ff7c7c;
+const HighestTemperature = styled.div`
+color: #9999ff;
+span {
+    font-size: 1rem;
+}
 `;
 
 
@@ -188,6 +198,9 @@ align-items: center;
 justify-content: center;
 font-weight: bolder;
 font-size: 3rem;
+width: 100%;
+display: flex;
+justify-content: space-around;
 `
 
 const DetailWeahterContainer = styled.div`
@@ -210,7 +223,4 @@ const DetailWeahterInfo = styled.div`
 font-size: 0.9rem;
 margin-top: 0.5rem;
 color: #000000;
-span {
-    font-size: 0.7rem;
-  }
 `
