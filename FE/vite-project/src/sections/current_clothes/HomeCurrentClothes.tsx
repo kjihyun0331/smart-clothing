@@ -23,7 +23,7 @@ const HomeCurrentClothestsx = ({isloading, iserror}: CurrentProps) => {
 
     const { CurrentClothesList, ChangeAddClothesList } = useCurrentClothesStore()
 
-    const [addPage, setAddPage] = useState<boolean>(true)
+    const [addPage, setAddPage] = useState<boolean>(false)
 
 
     // 여기는 모달방식 느낌으로 가자

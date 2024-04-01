@@ -47,6 +47,9 @@ function LocateWeather() {
         hours.current = today.getHours() % 12
         if (today.getHours() >= 12) {
             AMPM.current = 'PM'
+            if (hours.current == 0) {
+                hours.current = 12
+            }
         } else {
             AMPM.current = 'AM'
         }
@@ -83,13 +86,13 @@ function LocateWeather() {
 
                 {/* 현재 시간 */}
                 <div>
-                    <DetailWeahterHeader>Time</DetailWeahterHeader>
+                    <DetailWeahterHeader>시간</DetailWeahterHeader>
                     <DetailWeahterInfo>{hours.current}:{minutes}{AMPM.current}</DetailWeahterInfo>
                 </div>
 
                 {/* UV */}
                 <div>
-                    <DetailWeahterHeader>UV</DetailWeahterHeader>
+                    <DetailWeahterHeader>자외선</DetailWeahterHeader>
                     <DetailWeahterInfo>
                         {isError || isLoading ? '--' : data.UV}
                         <span>{isError || isLoading ? '' : '(' + data.UVMessage.replace(/\s*\(.*?\)\s*/g, '') + ')'}</span>
@@ -98,14 +101,27 @@ function LocateWeather() {
 
                 {/* 현재 강수량 */}
                 <div>
-                    <DetailWeahterHeader>%RAIN</DetailWeahterHeader>
+                    <DetailWeahterHeader>강수확률</DetailWeahterHeader>
                     <DetailWeahterInfo>{isError || isLoading ? '--' : data.precipitation}</DetailWeahterInfo>
                 </div>
 
                 {/* 체감온도 */}
                 <div>
                     <DetailWeahterHeader>체감온도</DetailWeahterHeader>
-                    <DetailWeahterInfo>{isError || isLoading ? '--' : data.highestRealFeelingTemperature+ '°/' + data.lowestRealFeelingTemperature + '°'}</DetailWeahterInfo>
+                    <DetailWeahterInfo>{isError || isLoading ? '--' : 
+                        <>
+                        <span>
+                            <LowestTemperature>
+                                {data.lowestRealFeelingTemperature}°
+                            </LowestTemperature>
+                            /
+                            <HighestTemperature>
+                                {data.highestRealFeelingTemperature}°
+                            </HighestTemperature>
+                            
+                            </span>
+                        </>}
+                        </DetailWeahterInfo>
                 </div>
             </DetailWeahterContainer>
         </Container>
@@ -117,6 +133,7 @@ function LocateWeather() {
 export default LocateWeather;
 
 
+
 const Container = styled.div`
 width: 90%;
 height: 50vh;
@@ -126,6 +143,15 @@ box-sizing: border-box;
 background-color: #f2f2f2;
 text-align: center;
 `
+
+const LowestTemperature = styled.span`
+  color: #9999ff;
+`;
+
+const HighestTemperature = styled.span`
+  color: #ff7c7c;
+`;
+
 
 const IconContainer = styled.div`
 width: auto;
