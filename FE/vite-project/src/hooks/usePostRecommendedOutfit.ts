@@ -32,7 +32,6 @@ export function usePostRecommendedOutfit() {
         url: `https://j10s006.p.ssafy.io/ML-api/test`,
         headers: {
           userid: userToken,
-          "Content-Type": "multipart/form-data",
         },
         data: formData,
       }).then((res) => res.data);
