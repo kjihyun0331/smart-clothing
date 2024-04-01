@@ -9,6 +9,7 @@ type dataType = {
     clothingId: number;
     clothingName: string;
     category: string;
+    textures: string[];
     styles: string[];
     seasons: number[];
     sharedUserIds: number[];

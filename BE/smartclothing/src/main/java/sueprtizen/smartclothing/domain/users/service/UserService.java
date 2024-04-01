@@ -1,8 +1,11 @@
 package sueprtizen.smartclothing.domain.users.service;
 
+import sueprtizen.smartclothing.domain.users.dto.FamilyMembersResponseDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserDetailResponseDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserRequestDTO;
 import sueprtizen.smartclothing.domain.users.dto.UserResponseDTO;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -21,4 +24,5 @@ public interface UserService {
      */
     UserDetailResponseDTO getUserDetail(int userId);
 
+    List<FamilyMembersResponseDTO> getFamilyMembers(int userId, boolean includeSelf);
 }

@@ -7,6 +7,8 @@ export const ACTION_TYPES = {
   toggleMonth: "toggleMonth",
   updateStyle: "updateStyle",
   deleteStyle: "deleteStyle",
+  updateSharedUsers: "updateSharedUsers",
+  deleteSharedUsers: "deleteSharedUsers",
 };
 
 export const initialState = {
@@ -67,6 +69,27 @@ export const clothesreducer = (state, action) => {
         (style) => style !== action.payload
       );
       return { ...state, styles: updatedStyles };
+    }
+    ////////////////////////////////////////////////////////////
+    case ACTION_TYPES.updateSharedUsers: {
+      // 새로운 공유 사용자 정보가 action.payload로 전달됨
+      // 이 예시에서는 action.payload가 { userId: number, userName: string } 형태로 전달된다고 가정
+      const isUserExists = state.sharedUsers.some(
+        (user) => user.userId === action.payload.userId
+      );
+      const updatedSharedUsers = isUserExists
+        ? state.sharedUsers.map((user) =>
+            user.userId === action.payload.userId ? action.payload : user
+          )
+        : [...state.sharedUsers, action.payload];
+      return { ...state, sharedUsers: updatedSharedUsers };
+    }
+    case ACTION_TYPES.deleteSharedUsers: {
+      // 삭제할 사용자의 ID가 action.payload로 전달됨
+      const updatedSharedUsers = state.sharedUsers.filter(
+        (user) => user.userId !== action.payload
+      );
+      return { ...state, sharedUsers: updatedSharedUsers };
     }
 
     default:

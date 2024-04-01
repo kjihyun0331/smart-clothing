@@ -17,14 +17,14 @@ public class Clothing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int clothingId;
 
-    @OneToMany(mappedBy = "clothing",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "clothing", fetch = FetchType.EAGER)
     private List<UserClothing> userClothing;
 
     @ManyToOne
     @JoinColumn(name = "clothing_detail_id")
     private ClothingDetail clothingDetail;
 
-    @OneToMany(mappedBy = "clothing",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "clothing", fetch = FetchType.EAGER)
     private List<ClothingStyle> clothingStyleList;
 
     @Column
@@ -37,7 +37,7 @@ public class Clothing {
     private String rfidUid;
 
     @Column
-    private String washedAt;
+    private LocalDateTime washedAt;
 
     @Column
     private LocalDateTime locationModifiedAt;
@@ -55,6 +55,7 @@ public class Clothing {
         this.clothingStyleList = clothingStyleList;
         this.category = category;
     }
+
     @Builder
     public Clothing(String rfidUid, ClothingDetail detail,Integer ownerId){
         this.rfidUid=rfidUid;

@@ -18,7 +18,7 @@ interface SelectedItem {
 
 const ConfirmOutfit = () => {
   const navigate = useNavigate();
-  const { clearItems, confirmOutfit, selectedItems } = useSelectedItemsStore();
+  const { confirmOutfit, selectedItems } = useSelectedItemsStore();
   const { selectedDate, title, selectedKeyword } = useSelectedDateStore();
   const { mutate } = usePatchConfirmClothes();
   const date = new Date();
@@ -34,8 +34,8 @@ const ConfirmOutfit = () => {
     selectedClothes: SelectedItem[],
     imageData: string
   ) => {
-    console.log(date, keyword, title);
-    console.log(imageData);
+    // console.log(date, keyword, title);
+    // console.log(imageData);
 
     const formData = new FormData();
 
@@ -47,8 +47,8 @@ const ConfirmOutfit = () => {
           JSON.stringify({
             date,
             title,
-            category: keyword, // 예시에서 keyword를 category로 사용
-            locationKey: 0, // 예시 값
+            category: keyword,
+            locationKey: 226003,
             clothing: selectedClothes.map((clothing) => ({
               clothingId: clothing.id,
               x: clothing.x,
@@ -64,6 +64,9 @@ const ConfirmOutfit = () => {
 
     // 이미지 데이터를 Blob으로 변환하여 FormData에 추가
     const imageBlob = await fetch(imageData).then((res) => res.blob());
+    // console.log("**** imageBlob 확인**************");
+    // console.log(typeof imageBlob);
+    // console.log(imageBlob);
     formData.append("file", imageBlob, "image.png");
 
     mutate(formData);
@@ -75,8 +78,6 @@ const ConfirmOutfit = () => {
         <IconBack onClick={() => navigate("/calendar/makeoutfit")} />
         <IconCheck
           onClick={() => {
-            navigate("/calendar");
-            clearItems();
             postCanvasImage(
               selectedDate,
               selectedKeyword,

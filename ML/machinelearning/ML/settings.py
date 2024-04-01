@@ -57,9 +57,18 @@ MIDDLEWARE = [
 ]
 
 # CORS 설정
+from corsheaders.defaults import default_headers
+
+
 CORS_ALLOWED_ORIGINS = [
     'https://j10s006.p.ssafy.io',
+    'http://localhost:5173'
 ]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+	'userid',
+]
+
 
 ROOT_URLCONF = 'ML.urls'
 
@@ -135,3 +144,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 SCHEDULER_DEFAULT = True
+
+SECURE_SSL_REDIRECT = False
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -10,6 +10,7 @@ import {
   initialState,
   clothesreducer,
 } from "@/reducers/updateClothesReducer";
+import { useDeleteClothes } from "@/hooks/useDeleteClothes";
 
 interface DetailClothesResponseType {
   isLoading: boolean;
@@ -32,14 +33,13 @@ const DetailClothes = () => {
       dispatch({ type: ACTION_TYPES.set, payload: data });
     }
   }, [data]);
-
+  const { deletemutate } = useDeleteClothes();
   const handleGoBack = () => {
-    navigate("/closet");
+    deletemutate(id);
   };
 
   const handleDelete = () => {
-    // 삭제 하기
-    navigate("/closet");
+    deletemutate(id);
   };
 
   if (isLoading) return <Loader />;

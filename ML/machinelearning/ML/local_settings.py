@@ -5,7 +5,7 @@ DATABASES = {
         'USER': 'gamza',
         'PASSWORD': 'hello147',
         'HOST': 'j10s006.p.ssafy.io',
-        'PORT': '3306',
+        'PORT': '8999',
     }
 }
 # SECURITY WARNING: keep the secret key used in production secret!

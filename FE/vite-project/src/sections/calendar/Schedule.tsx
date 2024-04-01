@@ -85,7 +85,7 @@ const NoSchedule = ({ date, attendDay, selected }: NoSchedulePropType) => {
   );
 
   useEffect(() => {
-    if (selectedKeyword) {
+    if (selectedKeyword.length > 1) {
       setPopup(true);
     }
   }, []);

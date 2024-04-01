@@ -2,6 +2,7 @@ package sueprtizen.smartclothing.domain.calendar.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sueprtizen.smartclothing.domain.calendar.dto.*;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
@@ -21,12 +22,14 @@ import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
 import sueprtizen.smartclothing.domain.weather.entity.Weather;
-import sueprtizen.smartclothing.domain.weather.exception.WeatherErrorCode;
-import sueprtizen.smartclothing.domain.weather.exception.WeatherException;
 import sueprtizen.smartclothing.domain.weather.repository.WeatherRepository;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -64,26 +67,57 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @Transactional
     public void scheduleSave(int userId, ScheduleSaveRequestDTO scheduleSaveRequestDTO, MultipartFile file) {
         User currentUser = getUser(userId);
 
-        Weather weather = weatherRepository.findByLocationKeyAndDate(
+        Optional<Schedule> oldSchedule = calendarRepository.findScheduleByUserAndDate(currentUser, LocalDate.parse(scheduleSaveRequestDTO.date()));
+
+        if (oldSchedule.isPresent()) {
+            throw new CalendarException(CalendarErrorCode.SCHEDULE_ALREADY_EXISTS);
+        }
+
+        Optional<Weather> weather = weatherRepository.findByLocationKeyAndDate(
                 scheduleSaveRequestDTO.locationKey(),
-                scheduleSaveRequestDTO.date()
-        ).orElseThrow(
-                () -> new WeatherException(WeatherErrorCode.WEATHER_NOT_FOUND)
+                LocalDate.parse(scheduleSaveRequestDTO.date())
         );
 
         //TODO: file 저장 후 file 위치 저장
+        String uploadDir = "/app/outfit_images/";
+        String fileName = UUID.randomUUID()+".png";
+        // 파일 객체 생성
+        File outfitPNG = new File(uploadDir + fileName);
 
-        Schedule newScheDule = Schedule.builder()
-                .scheduleName(scheduleSaveRequestDTO.title())
-                .scheduleCategory(scheduleSaveRequestDTO.category())
-                .user(currentUser)
-                .weather(weather)
-                .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
-                .locationKey(scheduleSaveRequestDTO.locationKey())
-                .build();
+        try {
+            // 파일 저장
+            file.transferTo(outfitPNG);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        Schedule newScheDule;
+
+        if (weather.isEmpty()) {
+            newScheDule = Schedule.builder()
+                    .scheduleName(scheduleSaveRequestDTO.title())
+                    .scheduleCategory(scheduleSaveRequestDTO.category())
+                    .user(currentUser)
+                    .outfitImagePath("https://j10s006.p.ssafy.io/outfit/"+fileName) //url
+                    .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
+                    .locationKey(scheduleSaveRequestDTO.locationKey())
+                    .build();
+        } else {
+            newScheDule = Schedule.builder()
+                    .scheduleName(scheduleSaveRequestDTO.title())
+                    .scheduleCategory(scheduleSaveRequestDTO.category())
+                    .user(currentUser)
+                    .outfitImagePath("https://j10s006.p.ssafy.io/outfit/"+fileName)
+                    .weather(weather.get())
+                    .date(LocalDate.parse(scheduleSaveRequestDTO.date()))
+                    .locationKey(scheduleSaveRequestDTO.locationKey())
+                    .build();
+        }
 
         calendarRepository.save(newScheDule);
 
@@ -106,6 +140,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    @Transactional
     public void scheduleDelete(int userId, String date) {
         User currentUser = getUser(userId);
 
@@ -114,7 +149,8 @@ public class CalendarServiceImpl implements CalendarService {
         Schedule schedule = calendarRepository.findScheduleByUserAndDate(currentUser, scheduleDate)
                 .orElseThrow(() -> new CalendarException(CalendarErrorCode.SCHEDULE_NOT_FOUND));
 
-        calendarRepository.delete(schedule);
+        schedule.updateScheduleDisabled(true);
+
     }
 
     @Override
@@ -133,33 +169,23 @@ public class CalendarServiceImpl implements CalendarService {
                 schedule.getDate().toString()
         );
 
-        List<OutfitResponseDTO> outfitResponseDTOList;
-        if (scheduleDate.isBefore(LocalDate.now())) {
-            outfitResponseDTOList = schedule.getPastOutfits().stream().map(pastOutfit ->
-                    new OutfitResponseDTO(
-                            pastOutfit.getPastOutfitId(),
-                            pastOutfit.getClothing().getClothingDetail().getClothingImgPath(),
-                            0, 0, 0, 0
-                    )
-            ).toList();
-        } else {
-            outfitResponseDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
-                    new OutfitResponseDTO(
-                            recommendedOutfit.getRecommendedOutfitId(),
-                            recommendedOutfit.getClothing().getClothingDetail().getClothingImgPath(),
-                            recommendedOutfit.getX(),
-                            recommendedOutfit.getY(),
-                            recommendedOutfit.getWidth(),
-                            recommendedOutfit.getHeight()
-                    )
-            ).toList();
-        }
-
+        List<OutfitResponseDTO> outfitResponseDTOList = schedule.getRecommendedOutfits().stream().map(recommendedOutfit ->
+                new OutfitResponseDTO(
+                        recommendedOutfit.getRecommendedOutfitId(),
+                        recommendedOutfit.getClothing().getClothingDetail().getClothingImgPath(),
+                        recommendedOutfit.getX(),
+                        recommendedOutfit.getY(),
+                        recommendedOutfit.getWidth(),
+                        recommendedOutfit.getHeight()
+                )
+        ).toList();
 
         return new ScheduleDetailResponseDTO(
                 scheduleDTO,
                 outfitResponseDTOList
         );
+
+
     }
 
     @Override

@@ -2,54 +2,74 @@ import styled from "styled-components";
 import ClothesImage from "@/components/CLothesImage";
 import IconDelete from "@/assets/ui/IconDelete";
 import IconAdd from "@/assets/ui/IconAdd";
-import { useNavigate } from "react-router-dom";
 import { useCurrentClothesStore } from "@/store/CurrentClothesStore";
+import HomeLocate from "../weather_location/HomeLocate";
+import { Loader } from "@/components/Loader";
+import { useState } from "react";
+import AddCurrentClothes from "./AddCurrentClothes";
 
+
+interface CurrentProps {
+    isloading : boolean,
+    iserror : boolean
+}
 
 interface LastItemProps {
     $isLastItem : boolean
 }
 
 
-interface ClothesList {
-    clothes: number[]; 
-}
+const HomeCurrentClothestsx = ({isloading, iserror}: CurrentProps) => {
+
+    const { CurrentClothesList } = useCurrentClothesStore()
+
+    const [addPage, setAddPage] = useState<boolean>(false)
 
 
-const HomeCurrentClothestsx = ({clothes}: ClothesList) => {
-    const navigate = useNavigate();
+    // 여기는 모달방식 느낌으로 가자
     const moveAddClothes = () => {
-        navigate(`/home/addclothes`);
+        setAddPage(true)
       };
     // 들어올 때 api를 보내거나 응답을 받기
 
     const testRFIDResponse = {isPending: false, isError: false, data:{outfit_list: [1, 2, 3,]}}
 
     return (
-        <Container>
-            <Message>오늘 내가 입은 옷</Message>
-            <InfoContainer>
-                <ClothesList>
-                {testRFIDResponse.isPending && <div>isLoding...</div>}
-                {testRFIDResponse.isError && <div>Error!</div>}
-                {!testRFIDResponse.isPending && !testRFIDResponse.isError && 
-                    (
-                        testRFIDResponse.data.outfit_list.map((item:number, index:number) => {
-                            const isLastItem = (index === testRFIDResponse.data.outfit_list.length - 1)
-                            return (
-                                <Clothes key={index} $isLastItem={isLastItem}>
-                                    <ClothesImage clothes_id={item}/>
-                                </Clothes>
+        <div>
+            {
+            !addPage ? <div>
+                <HomeLocate />
+                {(isloading || iserror ) ?  <Loader/> : <Container>
+                    <Message>오늘 내가 입은 옷</Message>
+                    <InfoContainer>
+                        <ClothesList>
+                        {testRFIDResponse.isPending && <div>isLoding...</div>}
+                        {testRFIDResponse.isError && <div>Error!</div>}
+                        {!testRFIDResponse.isPending && !testRFIDResponse.isError && 
+                            (
+                                CurrentClothesList.map((item, index:number) => {
+                                    const isLastItem = (index === testRFIDResponse.data.outfit_list.length - 1)
+                                    return (
+                                        <Clothes key={index} $isLastItem={isLastItem}>
+                                            <ClothesImage clothingId={item.clothingId} clothingImagePath={item.clothingImagePath} clothingName={item.clothingName}/>
+                                        </Clothes>
+                                    )
+                                })
                             )
-                        })
-                     )
-                }
-                </ClothesList>
-                <AddBox>
-                    <IconAdd onClick={moveAddClothes}/>
-                </AddBox>
-            </InfoContainer>
-        </Container>
+                        }
+                        </ClothesList>
+                        <AddBox>
+                            <IconAdd onClick={moveAddClothes}/>
+                        </AddBox>
+                    </InfoContainer>
+                    <button>확정하기</button>
+                </Container>}
+            </div> : 
+            <div>
+                <AddCurrentClothes/>
+            </div>
+            }
+        </div>
     );
 };
 
@@ -57,6 +77,12 @@ export default HomeCurrentClothestsx;
 
 
 const Container = styled.div`
+width: 95%;
+margin: auto;
+background-color: #ffffff;
+border-radius: 1rem;
+box-sizing: border-box;
+height: 30vh;
 
 `
 
@@ -90,8 +116,6 @@ display: flex;
 justify-content: center;
 align-items: center;
 `
-
-
 
 const Clothes = styled.div<LastItemProps>`
   height: 15vh;

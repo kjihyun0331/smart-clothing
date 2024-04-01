@@ -1,6 +1,7 @@
 package sueprtizen.smartclothing.domain.clothing.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,10 @@ public class ClothingTexture {
     @ManyToOne
     @JoinColumn(name = "clothing_detail_id", nullable = false)
     private ClothingDetail clothingDetail;
+
+    @Builder
+    public ClothingTexture(Texture texture, ClothingDetail clothingDetail) {
+        this.texture = texture;
+        this.clothingDetail = clothingDetail;
+    }
 }

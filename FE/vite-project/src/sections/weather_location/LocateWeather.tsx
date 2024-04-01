@@ -3,7 +3,7 @@ import LocateSelectModal from './LocateSelectModal';
 import { useState, useRef } from 'react';
 import { useLocateStore } from '@/store/LocateStore';
 import IconLocate from '@/assets/ui/IconLocate';
-// import { useTodayWeather } from '@/hooks/useCustomQuery';
+import IconLargeWeather from '@/assets/weather/IconLargeWeather';
 import { useApi } from '@/hooks/useApi';
 
 
@@ -63,7 +63,7 @@ function LocateWeather() {
 
             {/* icon 영역 */}
             <IconContainer>
-                {isError || isLoading ? '--' : data.WeatherIcon}
+                {isError || isLoading ? '--' : <IconLargeWeather id={data.WeatherIcon} />}
             </IconContainer>
 
             {/* 현재 위치 */}
@@ -131,7 +131,7 @@ text-align: center;
 `
 
 const IconContainer = styled.div`
-width: 100%;
+width: auto;
 height: 40%;
 margin: 0 auto 1rem auto;
 box-sizing: border-box;

@@ -1,32 +1,30 @@
-// import { useEffect, useState } from "react";
-import styled from "styled-components";
 import HomeCurrentClothestsx from "./HomeCurrentClothes.tsx";
-
+import { useApi } from "@/hooks/useApi.ts";
+import { useCurrentClothesStore } from "@/store/CurrentClothesStore";
+import { useEffect } from "react";
 
 
 const CurrentClothes = () => {
-    // axios 요청
-    // 혹은 데이터 받기?
-    // 더미데이터(옷 종류)
-    const todayClothes = {isPending: false, isError: false, data:{clothes: [1, 2, 3, 4]}}
+    const { ChangeCurrentClothesList } = useCurrentClothesStore()
 
+    const {isLoading, isError, data} = useApi(
+        "get",
+        `outfit/past/today`
+    );
+
+
+    useEffect(() => {
+        if (data) {
+            ChangeCurrentClothesList(data);
+        }
+    }, [data, ChangeCurrentClothesList]);
 
     return (
-        <Container>
-            {(todayClothes.isPending || todayClothes.isError) && <p>is Loding...</p>}
-            {todayClothes.data && <HomeCurrentClothestsx clothes={todayClothes.data.clothes}/>}
-        </Container>
+        <div>
+            <HomeCurrentClothestsx isloading={isLoading} iserror={isError}/>
+        </div>
     );
 }; 
 
 export default CurrentClothes;
 
-
-const Container = styled.div`
-width: 95%;
-margin: auto;
-background-color: #ffffff;
-border-radius: 1rem;
-box-sizing: border-box;
-height: 30vh;
-`
