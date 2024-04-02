@@ -705,3 +705,11 @@ def update(request):
     all_update_files_list = os.listdir(f'{path}/ML_models/current')
     for file in all_update_files_list:
         shutil.copy2(f'{path}/ML_models/current/{file}', f'{path}/ML_models/backup')
+    test = {}
+    with open(f'{path}/ML_models/current/label.json', 'r', encoding='utf-8') as file:
+        label_infos = json.load(file)
+        
+    test['label'] = label_infos
+    
+    return Response(test)
+    
