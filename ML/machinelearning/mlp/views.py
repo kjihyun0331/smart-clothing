@@ -84,7 +84,9 @@ def mlp(request):
         if days_difference < 3:
             user_clothes = user_clothes.filter(worn_count__lte=3)
             
-        schedule_weather = get_object_or_404(Weather, location_key=locate, date=pre_schedule_date)
+        schedule_weather = Weather.objects.filter(location_key=locate, date=pre_schedule_date)
+        if not len(schedule_weather):
+            return Response({'data':[[]]})
         
         schedule_vector = np.zeros(10)
         
