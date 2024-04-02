@@ -585,7 +585,7 @@ def update(request):
 
     
     # 추후 오늘 날짜 혹은 이틀 전 날짜로 바꾸기
-    target_date = datetime.now().date() - timedelta(2)
+    target_date = datetime.now().date() - timedelta(1)
     new_schedules = Schedule.objects.select_related('user', 'weather').filter(date__date__lt=target_date)
     for schedule_ in schedule_list:
         for gender in gender_list:
