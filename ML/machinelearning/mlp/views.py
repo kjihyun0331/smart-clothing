@@ -67,7 +67,11 @@ def mlp(request):
     if request.method == 'POST':
         rate = int(request.data['rate'])       
         pre_schedule_date = request.data['date']
-        schedule_date = datetime.strptime(pre_schedule_date, '%Y-%m-%d').date()
+        try:
+            schedule_date = datetime.strptime(pre_schedule_date, '%Y-%m-%d').date()
+        except ValueError:
+            return Response({'data':[[]]})
+        # schedule_date = datetime.strptime(pre_schedule_date, '%Y-%m-%d').date()
         recommend_count = request.data['count']
         schedule = request.data['schedule']
         user = get_object_or_404(User, user_id=request.META['HTTP_USERID'])
@@ -78,7 +82,6 @@ def mlp(request):
         # 1차 유저 옷 필터링
         user_clothes = Clothing.objects.filter(userclothing__user__user_id=request.META['HTTP_USERID'])
         now = datetime.now().date()
-        print('시간',now)
         days_difference = (schedule_date - now).days
         
         # 가용가능 필터링
@@ -95,7 +98,6 @@ def mlp(request):
         
         # 전처리
         if schedule_weather:
-            print('프린트', schedule_weather)
             # 0: 나이, 1: 최저기온, 2: 최고기온, 3: 최저체감온도, 4: 최고체감온도,
             # 5: 강수량, 6: 적설량, 7: 습도, 8: 풍속, 9: 일조량
             schedule_vector[0] = user_age
@@ -206,8 +208,10 @@ def mlp(request):
         
         # schedule에서 옷 가져오기
         recommand_outfit = PastOutfit.objects.filter(schedule__schedule_id=result)
+
         
         nes_response_form = []
+
         
         # start = time.time()
         for clothes in recommand_outfit:
@@ -295,7 +299,7 @@ def mlp(request):
             knn = KNeighborsClassifier(n_neighbors=1, weights='distance', metric='euclidean')
             knn.fit(knn_data, knn_label)
             
-            knn_n_neighbors = recommend_count
+            knn_n_neighbors = int(recommend_count)
             
             if len(knn_data) <= 1:
                 knn_n_neighbors = 1
