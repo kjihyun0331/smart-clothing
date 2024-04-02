@@ -31,12 +31,12 @@ const TodaySchedule = () => {
     const {
         isLoading: isLoadingExists,
         isError: isErrorExists,
-        // data: dataExists
+        data: dataExists
     } = useApi(
         "get",
         `calendar/exists?date=${formattedDate}`
     );
-    const dataExists = {scheduleExists:false}
+    // const dataExists = {scheduleExists:false}
 
     const { ChangeCurrentClothesList, CurrentClothesList } = useCurrentClothesStore()
 
@@ -110,4 +110,6 @@ border-radius: 1rem;
 box-sizing: border-box;
 text-align: center;
 padding-bottom: 1rem;
+margin-bottom: 30vh;
+
 `

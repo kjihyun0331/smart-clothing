@@ -6,6 +6,7 @@ import IconRe from "@/assets/ui/IconRe";
 import { Loader } from "@/components/Loader";
 import ClothesImage from "@/components/CLothesImage";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 interface Clothes {
@@ -28,8 +29,8 @@ type dataType = {
 
 
 const HaveSchedule = () => {
-    // const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
-    const { mutate, isPending, isError } = usePostRecommendedOutfit();
+    const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
+    // const { mutate, isPending, isError } = usePostRecommendedOutfit();
     const {LocateInfo} = useLocateStore()
     const today = new Date();
     const formattedDate = today.toLocaleDateString('ko-KR', {
@@ -37,69 +38,80 @@ const HaveSchedule = () => {
         month: '2-digit',
         day: '2-digit'
         }).replace(/\./g, '-').replace(/\s/g, '').slice(0, -1);
+
+
     const [rate, setRate] = useState<number>(0)
+
+    const navigate = useNavigate()
+
+    const moveAddSchedule = () => {navigate(`/calendar`)}
+
+
     const addRate = () => {
-        if (recommenddata.data[0].length != 0) {
+        if (recommenddata.data[0].length == 0 && rate == 0) {
+            console.log('ddd')
+        } else if (rate == 0) {
             setRate(0)
-        } else {
+        } else
+        {
             setRate(rate + 1)
         }
     }
-    const recommenddata = {
-        "data": [
-            [
-                {
-                    "clothing_id": 1,
-                    "clothing_name": "나무지기1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
-                },
-                {
-                    "clothing_id": 1,
-                    "clothing_name": "나무지기1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(3).png"
-                },
-                {
-                    "clothing_id": 2,
-                    "clothing_name": "나무지기1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
-                }
-            ],
-            [
-                {
-                    "clothing_id": 4,
-                    "clothing_name": "아차모1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/d384eaf4-18e3-43fd-b8d7-789b3c9a3017.png"
-                },
-                {
-                    "clothing_id": 4,
-                    "clothing_name": "아차모1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
-                },
-                {
-                    "clothing_id": 7,
-                    "clothing_name": "불꽃숭이1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/92e60f21-1533-4a29-bff1-0487d6e00535.png"
-                }
-            ],
-            [
-                {
-                    "clothing_id": 5,
-                    "clothing_name": "물짱이1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/8f4b9b19-6d5c-4e65-b239-3fb7d7d0e501.png"
-                },
-                {
-                    "clothing_id": 5,
-                    "clothing_name": "물짱이1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
-                },
-                {
-                    "clothing_id": 11,
-                    "clothing_name": "수댕이1",
-                    "clothing_img_path": "https://j10s006.p.ssafy.io/images/c72e1499-d1d5-4c05-9f3f-1756d0a6752a.png"
-                }
-            ]
-        ]
-    }
+    // const recommenddata = {
+    //     "data": [
+    //         [
+    //             {
+    //                 "clothing_id": 1,
+    //                 "clothing_name": "나무지기1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
+    //             },
+    //             {
+    //                 "clothing_id": 1,
+    //                 "clothing_name": "나무지기1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(3).png"
+    //             },
+    //             {
+    //                 "clothing_id": 2,
+    //                 "clothing_name": "나무지기1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
+    //             }
+    //         ],
+    //         [
+    //             {
+    //                 "clothing_id": 4,
+    //                 "clothing_name": "아차모1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/d384eaf4-18e3-43fd-b8d7-789b3c9a3017.png"
+    //             },
+    //             {
+    //                 "clothing_id": 4,
+    //                 "clothing_name": "아차모1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
+    //             },
+    //             {
+    //                 "clothing_id": 7,
+    //                 "clothing_name": "불꽃숭이1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/92e60f21-1533-4a29-bff1-0487d6e00535.png"
+    //             }
+    //         ],
+    //         [
+    //             {
+    //                 "clothing_id": 5,
+    //                 "clothing_name": "물짱이1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/8f4b9b19-6d5c-4e65-b239-3fb7d7d0e501.png"
+    //             },
+    //             {
+    //                 "clothing_id": 5,
+    //                 "clothing_name": "물짱이1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
+    //             },
+    //             {
+    //                 "clothing_id": 11,
+    //                 "clothing_name": "수댕이1",
+    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/c72e1499-d1d5-4c05-9f3f-1756d0a6752a.png"
+    //             }
+    //         ]
+    //     ]
+    // }
     const example: dataType = {
           rate: rate.toString(),
           date: formattedDate,
@@ -154,19 +166,18 @@ const HaveSchedule = () => {
                      )
                 }
             </CoordiList>
-            <GreenButton>오늘 일정 등록하기</GreenButton>
+            <GreenButton onClick={moveAddSchedule}>오늘 일정 등록하기</GreenButton>
  
         </Container>
         )
     } else {
         return (
             <Container>
-                <div>dsafsfds</div>
                 <Message>오늘 같은 날씨에 제안합니다</Message>
-                <CoordiList>
-                    <span>충분한 데이터가 없습니다!</span>
-                </CoordiList>
-                <GreenButton>오늘 일정 등록하기</GreenButton>
+                <NotEnough>
+                    <span>아직 충분한 데이터가 없습니다!</span>
+                </NotEnough>
+                <GreenButton onClick={moveAddSchedule}>오늘 일정 등록하기</GreenButton>
     
             </Container>
         )
@@ -190,6 +201,11 @@ padding: 1rem;
 font-size: 1.2rem;
 font-weight: bolder;
 color: black;
+`
+
+const NotEnough = styled.div`
+width: 95%;
+margin: 0 auto;
 `
 
 const CoordiList = styled.div`

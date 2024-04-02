@@ -6,7 +6,11 @@ import { useSelectedItemsStore } from "@/store/ClothesStore";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
 import { DUMMY } from "./recommend-test";
-// import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
+import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
+import { useState, useEffect } from "react";
+import { useLocateStore } from "@/store/LocateStore";
+
+
 
 type userResponseType = {
   age: number;
@@ -18,31 +22,47 @@ interface userQuery {
   data: userResponseType;
 }
 
-// type dataType = {
-//   rate: string;
-//   date: string;
-//   locate: string;
-//   schedule: string;
-//   count: string;
-// };
+type dataType = {
+  rate: string;
+  date: string;
+  locate: string;
+  schedule: string;
+  count: string;
+};
 
 function Recommend() {
+  const {LocateInfo} = useLocateStore()
   const navigate = useNavigate();
   const { selectedDate, selectedKeyword } = useSelectedDateStore();
   const { selectedItems, toggleItem } = useSelectedItemsStore();
 
   const { isLoading, data }: userQuery = useApi("get", "users");
-  // const { recommenddata, mutate } = usePostRecommendedOutfit();
 
-  // const example: dataType = {
-  //   rate: "0",
-  //   date: "2024-03-28",
-  //   locate: "223680",
-  //   schedule: "졸업식",
-  //   count: "2"
-  // };
+  const [rate, setRate] = useState<number>(0)
 
-  // mutate(example);
+  const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
+  const today = new Date();
+    const formattedDate = today.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+        }).replace(/\./g, '-').replace(/\s/g, '').slice(0, -1);
+
+  const example: dataType = {
+    rate: rate.toString(),
+    date: formattedDate,
+    locate: LocateInfo.toString(),
+    schedule: selectedKeyword,
+    count: "2"
+  };
+
+
+  useEffect(() => {
+    // 조건을 추가하여 불필요한 호출을 방지
+    if (rate >= 0 && LocateInfo) {
+    mutate(example);
+    }
+}, [rate, LocateInfo]);
 
   if (isLoading) return <Loader />;
   const userAge = Math.floor(data.age);
@@ -66,6 +86,7 @@ function Recommend() {
       </RecommendHeader>
 
       <RecomendContainer>
+        {/* {(isPending || isError) ? */}
         {DUMMY.map((list) => {
           return (
             <div className="category" key={list[0].clothing_id}>
@@ -103,6 +124,8 @@ function Recommend() {
             </div>
           );
         })}
+         {/* : <div></div> */}
+      {/* } */}
       </RecomendContainer>
 
       <RecommendSelect>
