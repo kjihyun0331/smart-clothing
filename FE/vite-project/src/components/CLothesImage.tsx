@@ -16,10 +16,10 @@ interface ColorProps {
 
 const ClothesImage = ({clothingId, clothingImagePath, clothingName, backgroundColor}: Clothes) => {
     // 옷 인덱스 보내면 여기서 옷 상세정보 api 호출
-    console.log(clothingId)
+    console.log(clothingName)
     return (
         <Container backgroundColor={backgroundColor}>
-            <img src={clothingImagePath} alt="" />
+            <img src={clothingImagePath} alt={clothingId.toString()} />
         </Container>
     );
 };

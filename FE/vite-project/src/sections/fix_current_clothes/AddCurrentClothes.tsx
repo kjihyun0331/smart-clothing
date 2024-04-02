@@ -65,7 +65,7 @@ const AddCurrentClothesPage = ({ onClick }: ModalProps) => {
     const deleteItem = (item:Clothes) => {
       DeleteAddCurrentClothes(item)
     }
-    const [showDetail, setShowDetail] = useState(true);
+    const [showDetail, setShowDetail] = useState(false);
     const [timerId, setTimerId] = useState(null);
 
     const handleMouseDown = () => {

@@ -38,6 +38,10 @@ export const Item = styled.div`
 
   .imgarea {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
     aspect-ratio: 1/1;
     height: auto;
     border-radius: 10px;
@@ -47,8 +51,10 @@ export const Item = styled.div`
         .replace(")", ", 0.2)")}`};
 
     img {
-      width: 100%;
-      object-fit: fill;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      object-position: center;
     }
   }
 
