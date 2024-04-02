@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 type dataType = {
@@ -11,6 +11,7 @@ type dataType = {
 
 export function usePostRecommendedOutfit() {
   const userToken = localStorage.getItem("token");
+  const queryClient = useQueryClient();
 
   const { data, mutate, isPending, isError } = useMutation({
     mutationFn: (data: dataType) => {
@@ -36,7 +37,19 @@ export function usePostRecommendedOutfit() {
         data: formData,
       }).then((res) => res.data);
     },
-    onSuccess: () => {},
+    onSuccess: (data
+      // queryClient.invalidateQueries({
+      //   queryKey: ["detail", data.id],
+      // });
+      // queryClient.invalidateQueries({
+      //   queryKey:
+      // })
+
+    ) => {
+      queryClient.invalidateQueries({
+        queryKey: ["ML", data.date],
+      });
+    },
   });
 
   return { recommenddata: data, mutate, isPending, isError };
