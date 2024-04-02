@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useMLApi } from "@/hooks/usePostRecommendedOutfit";
+import { useMLApi } from "@/hooks/usePostRecommendedOutfitt";
 import { useLocateStore } from "@/store/LocateStore";
 import { useState } from "react";
 import IconRe from "@/assets/ui/IconRe";

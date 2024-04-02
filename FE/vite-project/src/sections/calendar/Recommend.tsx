@@ -5,7 +5,7 @@ import { useSelectedDateStore } from "@/store/DateStore";
 import { useSelectedItemsStore } from "@/store/ClothesStore";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
-import { useMLApi } from "@/hooks/usePostRecommendedOutfit";
+import { useMLApi } from "@/hooks/usePostRecommendedOutfitt";
 
 
 type userResponseType = {
