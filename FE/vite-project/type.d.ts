@@ -1,71 +1,65 @@
-interface Window {
-    NDEFMessage: NDEFMessage
-  }
-  declare class NDEFMessage {
-    constructor(messageInit: NDEFMessageInit)
-    records: ReadonlyArray<NDEFRecord>
-  }
-  declare interface NDEFMessageInit {
-    records: NDEFRecordInit[]
-  }
-  
-  declare type NDEFRecordDataSource = string | BufferSource | NDEFMessageInit
-  
-  interface Window {
-    NDEFRecord: NDEFRecord
-  }
-  declare class NDEFRecord {
-    constructor(recordInit: NDEFRecordInit)
-    readonly recordType: string
-    readonly mediaType?: string
-    readonly id?: string
-    readonly data?: DataView
-    readonly encoding?: string
-    readonly lang?: string
-    toRecords?: () => NDEFRecord[]
-  }
-  declare interface NDEFRecordInit {
-    recordType: string
-    mediaType?: string
-    id?: string
-    encoding?: string
-    lang?: string
-    data?: NDEFRecordDataSource
-  }
-  
-  declare type NDEFMessageSource = string | BufferSource | NDEFMessageInit
-  
-  interface Window {
-    NDEFReader: NDEFReader
-  }
-  declare class NDEFReader extends EventTarget {
-    constructor()
-    onreading: (this: this, event: NDEFReadingEvent) => any
-    onreadingerror: (this: this, error: Event) => any
-    scan: (options?: NDEFScanOptions) => Promise<void>
-    write: (
-      message: NDEFMessageSource,
-      options?: NDEFWriteOptions
-    ) => Promise<void>
-  }
-  
-  interface Window {
-    NDEFReadingEvent: NDEFReadingEvent
-  }
-  declare class NDEFReadingEvent extends Event {
-    constructor(type: string, readingEventInitDict: NDEFReadingEventInit)
-    serialNumber: string
-    message: NDEFMessage
-  }
-  interface NDEFReadingEventInit extends EventInit {
-    serialNumber?: string
-    message: NDEFMessageInit
-  }
-  
-  interface NDEFWriteOptions {
-    overwrite?: boolean
-    signal?: AbortSignal
-  }
-  interface NDEFScanOptions {
-    signal: AbortSignal
-  }
+type NotificationPermission = "default" | "denied" | "granted";
+
+type NotificationDirection = "auto" | "ltr" | "rtl";
+
+interface NotificationPermissionCallback {
+  (permission: NotificationPermission): void;
+}
+
+interface NotificationOptions {
+  dir?: NotificationDirection;
+  lang?: string;
+  body?: string;
+  tag?: string;
+  image?: string;
+  icon?: string;
+  badge?: string;
+  sound?: string;
+  vibrate?: number | number[];
+  timestamp?: number;
+  renotify?: boolean;
+  silent?: boolean;
+  requireInteraction?: boolean;
+  data?: any;
+  actions?: NotificationAction[];
+}
+
+interface NotificationAction {
+  action: string;
+  title: string;
+  icon?: string;
+}
+
+declare class Notification extends EventTarget {
+  constructor(title: string, options?: NotificationOptions);
+
+  static readonly permission: NotificationPermission;
+  static requestPermission(): Promise<NotificationPermission>;
+  static requestPermission(
+    deprecatedCallback: (permission: NotificationPermission) => void
+  ): void;
+
+  static readonly maxActions: number;
+
+  onclick: EventListenerOrEventListenerObject;
+  onerror: EventListenerOrEventListenerObject;
+
+  close(): void;
+
+  readonly title: string;
+  readonly dir: NotificationDirection;
+  readonly lang: string;
+  readonly body: string;
+  readonly tag: string;
+  readonly image: string;
+  readonly icon: string;
+  readonly badge: string;
+  readonly sound: string;
+  readonly vibrate: number[];
+  readonly timestamp: number;
+  readonly renotify: boolean;
+  readonly silent: boolean;
+  readonly requireInteraction: boolean;
+  readonly data: any;
+  readonly actions: NotificationAction[];
+}
