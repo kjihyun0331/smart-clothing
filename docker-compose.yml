@@ -17,6 +17,8 @@ services:
       - "443:443"
     networks:
       - supertizen_net
+    environment:
+      - TZ=Asia/Seoul
 
   supertizen_backend:
     container_name: supertizen_backend
@@ -44,6 +46,8 @@ services:
       - "8000:8000"
     networks:
       - supertizen_net
+    environment:
+      - TZ=Asia/Seoul
 
 networks:
   supertizen_net:
