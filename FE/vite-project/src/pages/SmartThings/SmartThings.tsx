@@ -75,11 +75,11 @@ function requestPermission() {
           body: payload.notification.body,
         };
 
-        if (notificationTitle.length > 0 && notificationTitle != undefined) {
+        // if (notificationTitle.length > 0 && notificationTitle != undefined) {
           if (Notification.permission === "granted") {
             new Notification(notificationTitle, notificationOptions);
           }
-        }
+        // }
       });
     } else {
       console.log("permission denied");
