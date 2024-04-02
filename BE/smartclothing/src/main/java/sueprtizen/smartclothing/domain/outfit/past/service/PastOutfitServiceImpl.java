@@ -22,6 +22,7 @@ import sueprtizen.smartclothing.domain.users.entity.User;
 import sueprtizen.smartclothing.domain.users.exception.UserErrorCode;
 import sueprtizen.smartclothing.domain.users.exception.UserException;
 import sueprtizen.smartclothing.domain.users.repository.UserRepository;
+import sueprtizen.smartclothing.global.fcm.FCMService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,6 +37,7 @@ public class PastOutfitServiceImpl implements PastOutfitService {
     final private PastOutfitRepository pastOutfitRepository;
     final private ClothingRepository clothingRepository;
     final private UserClothingRepository userClothingRepository;
+    final private FCMService fcmService;
 
 
     @Override
@@ -98,6 +100,7 @@ public class PastOutfitServiceImpl implements PastOutfitService {
             PastOutfit newpastOutfit = new PastOutfit(todaySchedule,tmpClothing);
             pastOutfitRepository.save(newpastOutfit);
         }
+        fcmService.sendMessageTo(userId,"오늘 입은 옷이 인식되었어요. 맞는 지 확인해주세요.","RFID 태깅 알림");
     }
 
     private User getUser(int userId) {
