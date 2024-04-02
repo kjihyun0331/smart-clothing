@@ -35,7 +35,10 @@ const FixCurrentClothes = ({isloading, iserror}: CurrentProps) => {
     const {mutate, isError, isPending, data} = usePatchPastToday()
 
     const saveList = () => {
-        mutate({putData:CurrentClothesList.map((item) => item.clothingId)})
+        console.log('aaaa')
+        const putData = CurrentClothesList.map((item) => item.clothingId)
+        console.log(putData)
+        mutate({putData:putData})
     }
 
 
