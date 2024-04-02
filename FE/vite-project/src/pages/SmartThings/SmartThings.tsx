@@ -68,18 +68,31 @@ function requestPermission() {
       });
       registerServiceWorker();
 
-      onMessage(messaging, (payload) => {
-        // console.log("알림 도착 ", payload);
-        const notificationTitle = payload.notification.title;
-        const notificationOptions = {
-          body: payload.notification.body,
-        };
+      // onMessage(messaging, (payload) => {
+      //   // console.log("알림 도착 ", payload);
+      //   const notificationTitle = payload.notification.title;
+      //   const notificationOptions = {
+      //     body: payload.notification.body,
+      //   };
 
-        // if (notificationTitle.length > 0 && notificationTitle != undefined) {
-          if (Notification.permission === "granted") {
-            new Notification(notificationTitle, notificationOptions);
-          }
-        // }
+      //   // if (notificationTitle.length > 0 && notificationTitle != undefined) {
+      //     if (Notification.permission === "granted") {
+      //       new Notification(notificationTitle, notificationOptions);
+      //     }
+      //   // }
+      // });
+      onMessage(messaging, (payload) => {
+        console.log("Message received. ", payload);
+        navigator.serviceWorker.ready.then(function (registration) {
+          // payload.notification에는 알림에 필요한 정보(title, body 등)가 포함되어 있어야 합니다.
+          const notificationTitle = payload.notification.title;
+          const notificationOptions = {
+            body: payload.notification.body,
+            // 여기에 추가적인 알림 옵션을 지정할 수 있습니다.
+          };
+
+          registration.showNotification(notificationTitle, notificationOptions);
+        });
       });
     } else {
       console.log("permission denied");
