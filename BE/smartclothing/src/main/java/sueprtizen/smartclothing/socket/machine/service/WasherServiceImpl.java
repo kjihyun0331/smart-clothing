@@ -33,7 +33,7 @@ public class WasherServiceImpl implements WasherService {
                 .image(entity.getClothingDetail().getClothingImgPath())
                 .wornCount(entity.getWornCount())
                 .build()
-        ).collect(Collectors.toList());
+        ).toList();
 
         List<JSONObject> jsonArray = new ArrayList<JSONObject>();
         for (WasherResponseDTO dto : laundryDtos) {
@@ -55,7 +55,7 @@ public class WasherServiceImpl implements WasherService {
                 .image(entity.getClothingDetail().getClothingImgPath())
                 .wornCount(entity.getWornCount())
                 .build()
-        ).collect(Collectors.toList());
+        ).toList();
 
         List<JSONObject> jsonArray = new ArrayList<JSONObject>();
         for (WasherResponseDTO dto : laundryDtos) {
@@ -71,7 +71,6 @@ public class WasherServiceImpl implements WasherService {
 
     public void addLaundry(String rfid) {
         clothingService.putClothingIntoWasher(rfid);
-        String image = clothingService.getClothingImage(rfid).get("image").toString();
-        fcmService.sendMessageTo(Long.valueOf(clothingService.getClothingOwner(rfid)),"옷이 세탁기에 들어갔습니다.","세탁 알림",image);
+        fcmService.sendMessageTo(Long.valueOf(clothingService.getClothingOwner(rfid)),"옷이 세탁기에 들어갔습니다.","세탁 알림");
     }
 }
