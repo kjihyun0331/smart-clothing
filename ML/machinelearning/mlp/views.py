@@ -78,6 +78,7 @@ def mlp(request):
         # 1차 유저 옷 필터링
         user_clothes = Clothing.objects.filter(userclothing__user__user_id=request.META['HTTP_USERID'])
         now = datetime.now().date()
+        print('시간',now)
         days_difference = (schedule_date - now).days
         
         # 가용가능 필터링
@@ -87,11 +88,14 @@ def mlp(request):
         schedule_weather = Weather.objects.filter(location_key=locate, date=pre_schedule_date)
         if not len(schedule_weather):
             return Response({'data':[[]]})
+        schedule_weather = schedule_weather[0]
         
         schedule_vector = np.zeros(10)
+
         
         # 전처리
         if schedule_weather:
+            print('프린트', schedule_weather)
             # 0: 나이, 1: 최저기온, 2: 최고기온, 3: 최저체감온도, 4: 최고체감온도,
             # 5: 강수량, 6: 적설량, 7: 습도, 8: 풍속, 9: 일조량
             schedule_vector[0] = user_age
