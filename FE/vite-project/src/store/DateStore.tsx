@@ -19,12 +19,14 @@ export const useSelectedDateStore = create<SelectedDateState>((set) => ({
         selectedDate: input,
       };
     }),
-  setSelectedKeyword: (input) =>
-    set(() => {
+  setSelectedKeyword: (input) => {
+    localStorage.setItem("schedule", input);
+    return set(() => {
       return {
         selectedKeyword: input,
+        
       };
-    }),
+    })},
   setTitle: (input) =>
     set(() => {
       return {

@@ -102,7 +102,7 @@ export const AddSchedule = ({
               if (selectedKeyword) {
                 clearItems();
                 // console.log(selectedKeyword);
-                navigator("recommend");
+                navigator(`recommend`);
               } else {
                 window.alert("상황 하나 이상 선택해주세요");
               }

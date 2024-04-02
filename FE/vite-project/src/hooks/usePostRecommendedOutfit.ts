@@ -1,53 +1,37 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import axios, { AxiosRequestConfig } from "axios";
 
-type dataType = {
-  rate: string;
-  date: string;
-  locate: string;
-  schedule: string;
-  count: string;
-};
 
-export function usePostRecommendedOutfit() {
+export function useMLApi(method: string, url: string, querykey?: string) {
   const userToken = localStorage.getItem("token");
-  // const queryClient = useQueryClient();
 
-  const { data, mutate, isPending, isError } = useMutation({
-    mutationFn: (data: dataType) => {
-    // mutationFn: () => {
-      const formData = new FormData();
-      formData.append("rate", data.rate);
-      formData.append("date", data.date);
-      formData.append("locate", data.locate);
-      formData.append("schedule", data.schedule);
-      formData.append("count", data.count)
-      // formData.append("rate", "0");
-      // formData.append("date", "2024-03-28");
-      // formData.append("locate", "223680");
-      // formData.append("schedule", "졸업식");
-      // formData.append("count", "2");
-
-      return axios({
-        method: "post",
-        url: `http://127.0.0.1:8000/ML-api/test`,
-        headers: {
-          userid: userToken,
-        },
-        data: formData,
-      }).then((res) => res.data);
+  const axiosRequestConfig: AxiosRequestConfig = {
+    method: method,
+    url: `https://j10s006.p.ssafy.io/ML-api/${url}`,
+    headers: {
+      "UserID": userToken,
     },
-    // onSuccess: (data
-    //   // queryClient.invalidateQueries({
-    //   //   queryKey: ["detail", data.id],
-    //   // });
-    //   // queryClient.invalidateQueries({
-    //   //   queryKey:
-    //   // })
-
-    // ) => {
+  };
+  const { isLoading, isError, data, isSuccess } = useQuery({
+    queryKey: [querykey, url],
+    queryFn: () => axios(axiosRequestConfig).then((res) => {
+      console.log('응답코드', res.data)
+      return res.data}),
+    
+    select: (res) => {
+      console.log('응답',res['data'])
+      return res['data']},
+      
+    // onSuccess: data => {
+    //   // 성공시 호출
+    //   console.log(data);
     // },
-  });
-
-  return { recommenddata: data, mutate, isPending, isError };
+  }
+  );
+  return {
+    isLoading,
+    isError,
+    data,
+    isSuccess,
+  };
 }
