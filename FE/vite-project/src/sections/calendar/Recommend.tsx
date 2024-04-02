@@ -60,8 +60,10 @@ function Recommend() {
   useEffect(() => {
     // 조건을 추가하여 불필요한 호출을 방지
     if (rate >= 0 && LocateInfo) {
+      console.log('위치정보', LocateInfo)
     mutate(example);
     }
+    console.log('위치정보', LocateInfo) 
 }, [rate, LocateInfo]);
 
   if (isLoading) return <Loader />;
@@ -69,7 +71,9 @@ function Recommend() {
   const userGender = data?.gender;
 
   // console.log("recommenddata");
-  // console.log(recommenddata);
+  if (recommenddata) {
+  console.log('데이터!', recommenddata);
+}
   return (
     <>
       <Header style={{ height: "8dvh" }}>
@@ -86,46 +90,45 @@ function Recommend() {
       </RecommendHeader>
 
       <RecomendContainer>
-        {/* {(isPending || isError) ? */}
-        {DUMMY.map((list) => {
-          return (
-            <div className="category" key={list[0].clothing_id}>
-              <div className="imgarea recommend">
-                <img
-                  src={list[0].clothing_img_path}
-                  alt={list[0].clothing_name}
-                />
-              </div>
-              {[1, 2].map((idx) => {
-                const isSelected = selectedItems.some(
-                  (selectedItem: { id: string }) =>
-                    Number(selectedItem.id) === list[idx].clothing_id
-                );
-                return (
-                  <div
-                    key={idx}
-                    className={`imgarea ${isSelected ? "selected" : ""}`}
-                    onClick={() => {
-                      const item = {
-                        clothingId: list[idx].clothing_id,
-                        clothingName: list[idx].clothing_name,
-                        clothingImagePath: list[idx].clothing_img_path,
-                      };
-                      toggleItem(item);
-                    }}
-                  >
-                    <img
-                      src={list[idx].clothing_img_path}
-                      alt={list[idx].clothing_name}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
-         {/* : <div></div> */}
-      {/* } */}
+        { (isPending || isError) ? <Loader/>
+         : ((recommenddata.data[0] != 0) ? 
+         recommenddata.data.map((list) => {
+           return (
+             <div className="category" key={list[0].clothing_id}>
+               <div className="imgarea recommend">
+                 <img
+                   src={list[0].clothing_img_path}
+                   alt={list[0].clothing_name}
+                 />
+               </div>
+               {[1, 2].map((idx) => {
+                 const isSelected = selectedItems.some(
+                   (selectedItem: { id: string }) =>
+                     Number(selectedItem.id) === list[idx].clothing_id
+                 );
+                 return (
+                   <div
+                     key={idx}
+                     className={`imgarea ${isSelected ? "selected" : ""}`}
+                     onClick={() => {
+                       const item = {
+                         clothingId: list[idx].clothing_id,
+                         clothingName: list[idx].clothing_name,
+                         clothingImagePath: list[idx].clothing_img_path,
+                       };
+                       toggleItem(item);
+                     }}
+                   >
+                     <img
+                       src={list[idx].clothing_img_path}
+                       alt={list[idx].clothing_name}
+                     />
+                   </div>
+                 );
+               })}
+             </div>
+           );
+         }) : <div>not enough data</div>)}
       </RecomendContainer>
 
       <RecommendSelect>

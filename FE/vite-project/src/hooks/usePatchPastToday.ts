@@ -21,7 +21,7 @@ export function usePatchPastToday() {
         headers: {
           "User-ID": userToken,
         },
-        data: putData,
+        data: {'todayClothing':putData},
       }).then((res) => res.data);
     },
     onSuccess: () => {
