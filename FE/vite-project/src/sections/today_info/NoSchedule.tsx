@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
+import { useMLApi } from "@/hooks/usePostRecommendedOutfit";
 import { useLocateStore } from "@/store/LocateStore";
 import { useState } from "react";
 import IconRe from "@/assets/ui/IconRe";
 import { Loader } from "@/components/Loader";
 import ClothesImage from "@/components/CLothesImage";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -19,36 +18,33 @@ interface LastItemProps {
     $isLastItem: boolean
 }
 
-type dataType = {
-  rate: string;
-  date: string;
-  locate: string;
-  schedule: string;
-  count: string;
-};
-
 
 const HaveSchedule = () => {
-    const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
-    // const { mutate, isPending, isError } = usePostRecommendedOutfit();
     const {LocateInfo} = useLocateStore()
     const today = new Date();
     const formattedDate = today.toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit'
-        }).replace(/\./g, '-').replace(/\s/g, '').slice(0, -1);
-
-
+    }).replace(/\./g, '-').replace(/\s/g, '').slice(0, -1);
+    
+    
     const [rate, setRate] = useState<number>(0)
-
+    
     const navigate = useNavigate()
+
+    // const { data:MLdata, isLoading:MLisLoding, isError:MLisError } = useMLApi("get", "test", { rate: rate.toString(), date: formattedDate,  locate: LocateInfo.toString(), schedule:'없음', count: "1"});
+    // const { data:MLdata, isLoading:MLisLoding, isError:MLisError } = useMLApi("get", `test/${rate.toString()}/${formattedDate}/${LocateInfo.toString()}/없음/${1}`);
+
+    // const MLdata = useMLApi("get", `test/${rate.toString()}/${formattedDate}/${LocateInfo.toString()}/없음/${1}`)
+    
+    const { data:MLdata, isLoading:MLisLoding, isError:MLisError } = useMLApi("get", `test/${rate.toString()}/${formattedDate}/${LocateInfo.toString()}/없음/${1}`, 'MLQ');
 
     const moveAddSchedule = () => {navigate(`/calendar`)}
 
 
     const addRate = () => {
-        if (recommenddata.data[0].length == 0 && rate == 0) {
+        if (MLdata[0].length == 0 && rate == 0) {
             console.log('ddd')
         } else if (rate == 0) {
             setRate(0)
@@ -57,91 +53,23 @@ const HaveSchedule = () => {
             setRate(rate + 1)
         }
     }
-    // const recommenddata = {
-    //     "data": [
-    //         [
-    //             {
-    //                 "clothing_id": 1,
-    //                 "clothing_name": "나무지기1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
-    //             },
-    //             {
-    //                 "clothing_id": 1,
-    //                 "clothing_name": "나무지기1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(3).png"
-    //             },
-    //             {
-    //                 "clothing_id": 2,
-    //                 "clothing_name": "나무지기1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/a0e6c5a0-9e7c-4f87-a2c6-65c5473c8e5f.png"
-    //             }
-    //         ],
-    //         [
-    //             {
-    //                 "clothing_id": 4,
-    //                 "clothing_name": "아차모1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/d384eaf4-18e3-43fd-b8d7-789b3c9a3017.png"
-    //             },
-    //             {
-    //                 "clothing_id": 4,
-    //                 "clothing_name": "아차모1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
-    //             },
-    //             {
-    //                 "clothing_id": 7,
-    //                 "clothing_name": "불꽃숭이1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/92e60f21-1533-4a29-bff1-0487d6e00535.png"
-    //             }
-    //         ],
-    //         [
-    //             {
-    //                 "clothing_id": 5,
-    //                 "clothing_name": "물짱이1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/8f4b9b19-6d5c-4e65-b239-3fb7d7d0e501.png"
-    //             },
-    //             {
-    //                 "clothing_id": 5,
-    //                 "clothing_name": "물짱이1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/image-removebg-preview%20(4).png"
-    //             },
-    //             {
-    //                 "clothing_id": 11,
-    //                 "clothing_name": "수댕이1",
-    //                 "clothing_img_path": "https://j10s006.p.ssafy.io/images/c72e1499-d1d5-4c05-9f3f-1756d0a6752a.png"
-    //             }
-    //         ]
-    //     ]
-    // }
-    const example: dataType = {
-          rate: rate.toString(),
-          date: formattedDate,
-          locate: LocateInfo.toString(),
-          schedule: "없음",
-          count: "1"
-        };
 
     // 여기는 해당 리스트를 가지고 일정 등록하기 이동으로 가자
     const test = () => {
         console.log('bla')
     }
-        
-    useEffect(() => {
-        // 조건을 추가하여 불필요한 호출을 방지
-        if (rate >= 0 && LocateInfo) {
-        mutate(example);
-        }
-    }, [rate, LocateInfo]);
+    
 
     
-    if (isPending || isError) {
+    if (MLisLoding || MLisError) {
         return (
             <Loader/>
         )
     } else {
-        if (recommenddata) {
-            console.log('출력', recommenddata)
-            if (recommenddata.data[0].length != 0) {
-        const clothesData = recommenddata.data.map(item => item[1])
+        if (MLdata) {
+            console.log('출력', MLdata)
+            if (MLdata[0].length != 0) {
+        const clothesData = MLdata.map(item => item[1])
         return (
         <Container>
             
@@ -151,12 +79,12 @@ const HaveSchedule = () => {
                 </Re>
             </Message>
             <CoordiList onClick={test}>
-                {(isError || isPending) ? <Loader/> :  
+                {(MLisError || MLisLoding) ? <Loader/> :  
                     (
                         // 
                         clothesData.map((item:Clothes, index:number) => {
                             console.log(clothesData)
-                            const isLastItem = (index === recommenddata.data.length - 1)
+                            const isLastItem = (index === MLdata.length - 1)
                             return (
                                 <Coordi $isLastItem={isLastItem} key={index}>
                                     <ClothesImage clothingId={item.clothing_id} clothingImagePath={item.clothing_img_path} clothingName={item.clothing_name}/>

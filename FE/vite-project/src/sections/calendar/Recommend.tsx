@@ -5,11 +5,7 @@ import { useSelectedDateStore } from "@/store/DateStore";
 import { useSelectedItemsStore } from "@/store/ClothesStore";
 import { useApi } from "@/hooks/useApi";
 import { Loader } from "@/components/Loader";
-import { DUMMY } from "./recommend-test";
-import { usePostRecommendedOutfit } from "@/hooks/usePostRecommendedOutfit";
-import { useState, useEffect } from "react";
-import { useLocateStore } from "@/store/LocateStore";
-
+import { useMLApi } from "@/hooks/usePostRecommendedOutfit";
 
 
 type userResponseType = {
@@ -22,59 +18,46 @@ interface userQuery {
   data: userResponseType;
 }
 
-type dataType = {
-  rate: string;
-  date: string;
-  locate: string;
-  schedule: string;
-  count: string;
-};
+const Recommend = () => {
 
-function Recommend() {
-  const {LocateInfo} = useLocateStore()
   const navigate = useNavigate();
   const { selectedDate, selectedKeyword } = useSelectedDateStore();
   const { selectedItems, toggleItem } = useSelectedItemsStore();
 
-  const { isLoading, data }: userQuery = useApi("get", "users");
+  const { isLoading, data:qqqq }: userQuery = useApi("get", "users");
 
-  const [rate, setRate] = useState<number>(0)
+  const rate:number = 0
 
-  const { recommenddata, mutate, isPending, isError } = usePostRecommendedOutfit();
+  
   const today = new Date();
-    const formattedDate = today.toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-        }).replace(/\./g, '-').replace(/\s/g, '').slice(0, -1);
+  const formattedDate = today.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+      }).replace(/\./g, '-').replace(/\s/g, '').slice(0, -1);
+  const schedule = localStorage.getItem("schedule");
+  const locateInfo = localStorage.getItem("locate");
 
-  const example: dataType = {
-    rate: rate.toString(),
-    date: formattedDate,
-    locate: LocateInfo.toString(),
-    schedule: selectedKeyword,
-    count: "2"
-  };
+  const { data:MLdata, isLoading:MLisLoding, isError:MLisError } = useMLApi("get", `test/${rate.toString()}/${formattedDate}/${locateInfo.toString()}/${schedule}/${2}`, 'MLQ');
 
-
-  useEffect(() => {
-    // 조건을 추가하여 불필요한 호출을 방지
-    // if (rate >= 0 && LocateInfo) {
-    //   console.log('위치정보', LocateInfo)
-    mutate(example);
-    // }
-    console.log('위치정보', LocateInfo) 
-}, [rate, LocateInfo]);
+  if (MLisLoding || MLisError) {
+    console.log('api돌아가는ㄴ중 ')
+  }
 
   if (isLoading) return <Loader />;
-  const userAge = Math.floor(data.age);
-  const userGender = data?.gender;
+  const userAge = Math.floor(qqqq.age);
+  const userGender = qqqq?.gender;
+
+  
+
+  if (isLoading) return <Loader />;
+  if (MLisError) return <div>Error</div>;
 
   // console.log("recommenddata");
-  if (recommenddata) {
-  console.log('데이터!', recommenddata);
+  if (MLdata) {
+  console.log('데이터!', MLdata);
 }
-console.log('데이터', recommenddata, example)
+// console.log('데이터', MLData, example)
   return (
     <>
       <Header style={{ height: "8dvh" }}>
@@ -91,9 +74,9 @@ console.log('데이터', recommenddata, example)
       </RecommendHeader>
 
       <RecomendContainer>
-        { (isPending || isError) ? <Loader/>
-         : ((recommenddata.data[0] != 0) ? 
-         recommenddata.data.map((list) => {
+        {/* {(MLisLoding || MLisError) ? <Loader/> : MLData} */}
+        { (MLisLoding || MLisError) ? <div><Loader/></div> : ((MLdata) ? 
+         MLdata.map((list) => {
            return (
              <div className="category" key={list[0].clothing_id}>
                <div className="imgarea recommend">
@@ -137,7 +120,7 @@ console.log('데이터', recommenddata, example)
           <>
             <div className="arr">
               {selectedItems.map((item) => {
-                return (
+                return (  
                   <div className="selectedimgarea">
                     <img src={item.url} alt={item.name} />
                   </div>
