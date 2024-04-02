@@ -7,6 +7,7 @@ import HomeLocate from "../weather_location/HomeLocate";
 import { Loader } from "@/components/Loader";
 import { useState } from "react";
 import AddCurrentClothesPage from "./AddCurrentClothes";
+import { usePatchPastToday } from "@/hooks/usePatchPastToday";
 
 
 interface CurrentProps {
@@ -30,6 +31,12 @@ const FixCurrentClothes = ({isloading, iserror}: CurrentProps) => {
     const { CurrentClothesList, ChangeAddClothesList, DeleteCurrentClothes } = useCurrentClothesStore()
 
     const [addPage, setAddPage] = useState<boolean>(false)
+
+    const {mutate, isError, isPending, data} = usePatchPastToday()
+
+    const saveList = () => {
+        mutate({putData:CurrentClothesList.map((item) => item.clothingId)})
+    }
 
 
     // 여기는 모달방식 느낌으로 가자
@@ -83,7 +90,7 @@ const FixCurrentClothes = ({isloading, iserror}: CurrentProps) => {
                             <IconAdd onClick={moveAddClothes}/>
                         </AddBox>
                     </InfoContainer>
-                    <GreenButton>확정하기</GreenButton>
+                    <GreenButton onClick={saveList}>확정하기</GreenButton>
                 </Container>
                 }
             </div> 

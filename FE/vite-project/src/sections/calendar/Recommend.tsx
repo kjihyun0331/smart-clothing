@@ -80,7 +80,7 @@ function Recommend() {
         <h2 className="comment">
           <span className="point">{selectedDate}</span> 예상 날씨와 <br />
           <span className="point">{selectedKeyword}</span> 키워드에 맞는 <br />
-          <span className="point">{userAge}</span>대인{" "}
+          <span className="point">{Math.floor(userAge / 10) * 10}</span>대인{" "}
           <span className="point">{userGender}</span>를 위한 추천 코디
         </h2>
       </RecommendHeader>
