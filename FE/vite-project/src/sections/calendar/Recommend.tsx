@@ -59,10 +59,10 @@ function Recommend() {
 
   useEffect(() => {
     // 조건을 추가하여 불필요한 호출을 방지
-    if (rate >= 0 && LocateInfo) {
-      console.log('위치정보', LocateInfo)
+    // if (rate >= 0 && LocateInfo) {
+    //   console.log('위치정보', LocateInfo)
     mutate(example);
-    }
+    // }
     console.log('위치정보', LocateInfo) 
 }, [rate, LocateInfo]);
 
@@ -74,6 +74,7 @@ function Recommend() {
   if (recommenddata) {
   console.log('데이터!', recommenddata);
 }
+console.log('데이터', recommenddata, example)
   return (
     <>
       <Header style={{ height: "8dvh" }}>

@@ -11,7 +11,7 @@ type dataType = {
 
 export function usePostRecommendedOutfit() {
   const userToken = localStorage.getItem("token");
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const { data, mutate, isPending, isError } = useMutation({
     mutationFn: (data: dataType) => {
@@ -30,26 +30,23 @@ export function usePostRecommendedOutfit() {
 
       return axios({
         method: "post",
-        url: `https://j10s006.p.ssafy.io/ML-api/test`,
+        url: `http://127.0.0.1:8000/ML-api/test`,
         headers: {
           userid: userToken,
         },
         data: formData,
       }).then((res) => res.data);
     },
-    onSuccess: (data
-      // queryClient.invalidateQueries({
-      //   queryKey: ["detail", data.id],
-      // });
-      // queryClient.invalidateQueries({
-      //   queryKey:
-      // })
+    // onSuccess: (data
+    //   // queryClient.invalidateQueries({
+    //   //   queryKey: ["detail", data.id],
+    //   // });
+    //   // queryClient.invalidateQueries({
+    //   //   queryKey:
+    //   // })
 
-    ) => {
-      queryClient.invalidateQueries({
-        queryKey: ["ML", data.date],
-      });
-    },
+    // ) => {
+    // },
   });
 
   return { recommenddata: data, mutate, isPending, isError };
