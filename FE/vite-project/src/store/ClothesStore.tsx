@@ -37,8 +37,8 @@ export const useSelectedItemsStore = create<SelectedItemsState>((set) => ({
         const newItem = {
           id: item.clothingId.toString(),
           name: item.clothingId.toString(),
-          width: 100,
-          height: 100,
+          width: 160,
+          height: 160,
           url: item.clothingImagePath,
           x: Math.floor(Math.random() * (250 - 10 + 1)) + 10,
           y: Math.floor(Math.random() * (250 - 10 + 1)) + 10,
