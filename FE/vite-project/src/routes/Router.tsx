@@ -15,7 +15,6 @@ import Basket from "@/pages/Basket";
 import TodaySchedule from "@/sections/today_info/TodaySchedule";
 import HomeLocate from "@/sections/weather_location/HomeLocate";
 import FixHomeCurrentClothes from "@/sections/fix_current_clothes/FixHomeCurrentClothes";
-import HomeCurrentClothestsx from "@/sections/fix_current_clothes/FixCurrentClothes";
 ///////////캘린더 하위
 import MyCalendar from "@/sections/calendar/Calendar";
 import Recommend from "@/sections/calendar/Recommend";

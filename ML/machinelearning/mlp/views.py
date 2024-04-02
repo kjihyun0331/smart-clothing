@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 import numpy as np
 from .models import User, Weather, Schedule, PastOutfit, Style, Texture, Clothing, ClothingStyle, ClothingTexture, UserClothing
 import os
@@ -19,9 +20,10 @@ import requests
 from .serializers import ClothingSerializer
 import copy
 from datetime import timedelta
-# import time
+from urllib.parse import unquote
+import pytz
 
-
+tz = pytz.timezone('UTC')
 
 # 이미지 비교 벡터 가중치
 weight = 5
@@ -60,24 +62,30 @@ clothes_type = []
 
 
 
-@api_view(['POST'])
-def mlp(request):
+@api_view(['GET'])
+def mlp(request, rate, formattedDate, locateInfo, schedule, count):
+    print('ddd')
     global clothes_type
     clothes_type = Clothing.objects.values_list('category', flat=True).distinct()
-    if request.method == 'POST':
-        rate = int(request.data['rate'])       
-        pre_schedule_date = request.data['date']
+    if request.method == 'GET':
+        rate = int(rate)
+        pre_schedule_date = formattedDate
         try:
             schedule_date = datetime.strptime(pre_schedule_date, '%Y-%m-%d').date()
         except ValueError:
             return Response({'data':[[]]})
         # schedule_date = datetime.strptime(pre_schedule_date, '%Y-%m-%d').date()
-        recommend_count = request.data['count']
-        schedule = request.data['schedule']
+        recommend_count = count
         user = get_object_or_404(User, user_id=request.META['HTTP_USERID'])
         user_age = user.age // 10
         user_gender = user.gender
-        locate = request.data['locate']
+        locate = int(locateInfo)
+        schedule = unquote(schedule)
+        print(locate)
+        print(schedule_date),
+        print(rate)
+        print(schedule_date)
+        print(schedule)
 
         # 1차 유저 옷 필터링
         user_clothes = Clothing.objects.filter(userclothing__user__user_id=request.META['HTTP_USERID'])
@@ -94,7 +102,7 @@ def mlp(request):
         schedule_weather = schedule_weather[0]
         
         schedule_vector = np.zeros(10)
-
+        print('abcd')
         
         # 전처리
         if schedule_weather:
@@ -112,12 +120,11 @@ def mlp(request):
             schedule_vector[9] = schedule_weather.solar_irradiance
         
         input_data = np.expand_dims(np.array(schedule_vector, dtype=np.float32), axis=0) 
-        
-         
+        print('asdfasfd')         
         # 학습된 모델이 없을 경우
         if not (os.path.exists(f'{path}/ML_models/{model_dir}/{gender_dict[user_gender]}_{schedule_dict[schedule]}.h5')):
             return Response({'data':[[]]})
-            
+        
         model = tensorflow.keras.models.load_model(f'{path}/ML_models/{model_dir}/{gender_dict[user_gender]}_{schedule_dict[schedule]}.h5')
     
         with open(f'{path}/ML_models/current/label.json', 'r', encoding='utf-8') as file:
@@ -156,7 +163,7 @@ def mlp(request):
         
         style_count = len(style_idx_list)
         texture_count = len(texture_idx_list)
-
+        
         for category, category_clothes in user_category_clothes.items():
             
             input_list = user_clothes_vectors[category]
@@ -208,7 +215,7 @@ def mlp(request):
         
         # schedule에서 옷 가져오기
         recommand_outfit = PastOutfit.objects.filter(schedule__schedule_id=result)
-
+        
         
         nes_response_form = []
 
@@ -235,7 +242,7 @@ def mlp(request):
             clothes_styles = ClothingStyle.objects.filter(clothing=actual_clothing).values_list('style_id', flat=True)
             for clothes_style in clothes_styles:
                 style_vector[clothes_style] = 1
-                
+            
             for clothes_texture in clothes_textures:
                 texture_vector[clothes_texture] = 1
             
@@ -320,8 +327,8 @@ def mlp(request):
             nes_response_form.append(new_response)
             
         
-
-        return Response({'data':nes_response_form})
+        print('여기옴', {'data':nes_response_form})
+        return Response({'data':nes_response_form}, status=status.HTTP_200_OK)
         
         
 
@@ -463,7 +470,7 @@ def test(request):
         
     test['label'] = label_infos
     
-    return Response(test)
+    return Response(test, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
