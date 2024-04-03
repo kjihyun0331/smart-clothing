@@ -75,7 +75,7 @@ const Recommend = () => {
 
       <RecomendContainer>
         {/* {(MLisLoding || MLisError) ? <Loader/> : MLData} */}
-        { (MLisLoding || MLisError) ? <div><Loader/></div> : ((MLdata) ? 
+        { (MLisLoding || MLisError) ? <div><Loader/></div> : ((MLdata.length) ? (MLdata[0].length) ? 
          MLdata.map((list) => {
            return (
              <div className="category" key={list[0].clothing_id}>
@@ -112,7 +112,7 @@ const Recommend = () => {
                })}
              </div>
            );
-         }) : <div>not enough data</div>)}
+         }) : <div>not enough data</div> : <div>not enough data</div>)}
       </RecomendContainer>
 
       <RecommendSelect>
