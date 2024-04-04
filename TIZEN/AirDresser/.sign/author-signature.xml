@@ -4,13 +4,13 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"></SignatureMethod>
 <Reference URI="author-signature-default.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>mkpL5QA3vpgv5Pd/xV+1KuufuhccW5sNv6LyRFP0BXO/N6LXQ2VETqv6H5z789/Pd6bDUDj7w18t
-NujpdtYCmw==</DigestValue>
+<DigestValue>CKjJ3994awh1d+CzRpy+jzy1EJNYbvkvSwVunU1ihrsTtgm1z//t9lOpdawXaM6hR+Ir8247Myw8
+3QlTzw+qfw==</DigestValue>
 </Reference>
 <Reference URI="bin%2Fairdresser">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>h5pTkA2b4P9c+tQQei5dpiJxf9HadL2ExnCdzLJdY7uBq7c6mstqfYs0oEv3rk7QT4yQLVnjd5o3
-BO4lMAOvqA==</DigestValue>
+<DigestValue>0VdAtqT4WJQQkdKCyIuA1422JL5m7y09TxbypTlPnhD2JgFlYP4BzTzGok1ezCT41kBpIMcSVEBj
+LiftLgpJHQ==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fback_button.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -92,9 +92,9 @@ QY10fG1EWQ==</DigestValue>
 </Reference>
 </SignedInfo>
 <SignatureValue>
-d0lBu0mS8LQJsAnmjh7kKtwb9nDFM+jSJ+045HLhyFllc5ZnJ/+byZf3oM6zhf5jAv2RXBqIq1U7
-7YPuH037U9kkhXVYwbv2YlARXgKHap4GUyTjMOB4/QXl++/GDkm38jpwYmBWvRZ/J1eRAstkptVF
-R3dWpl6i451ksUOS0UY=
+WZve7dOrnRdqqAO650v+Ps7q0E0euPBXErVkwQeaWkTdNkg5Aw4feZcIx3YL8iWK9+BNK0+yndh5
+mc+1/Kq+5BXTYoEJwL0IGx5tZhRm91DMqQ4pr2pJV201rp5XeAPNkxdsUjjCrgX0U1TuUmX5N/vP
+lvisVq9KZWcNS3IgZPI=
 </SignatureValue>
 <KeyInfo>
 <X509Data>

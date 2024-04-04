@@ -281,6 +281,7 @@ void socket_send(void *data) {
 		send_buf[len + 1] = 0;
 
 		write(sockfd, send_buf, strlen(send_buf));
+		dlog_print(DLOG_INFO, LOG_TAG, "%s", send_buf);
 
 		json_object_unref(root);
 		json_node_free(node);
@@ -294,6 +295,7 @@ void socket_recv(void *data) {
 	while(true){
 		memset(recv_buf, 0, BUF_SIZE);
 		int recv_len = read(sockfd, recv_buf, BUF_SIZE);
+		dlog_print(DLOG_INFO, LOG_TAG, "%s", recv_buf);
 		if(recv_len == 0){
 			break;
 		}
@@ -432,6 +434,8 @@ void add_laundry_rfid(char *rfid_uid) {
 	// wait socket
 	pthread_cond_wait(&cv_read, &mtx_read);
 	pthread_mutex_unlock(&mtx_read);
+
+	set_main_laundry_list();
 }
 
 void set_main_laundry_list() {
@@ -637,6 +641,7 @@ create_base_gui(appdata_s *ad)
 	elm_box_pack_end(course_menu_box, course_expand_btn);
 	evas_object_show(course_expand_btn);
 
+
 	// course - list box
 	Evas_Object *course_list_box = elm_box_add(course_box);
 	elm_box_horizontal_set(course_list_box, EINA_TRUE);
@@ -703,6 +708,7 @@ create_base_gui(appdata_s *ad)
 	// laundry box
 	Evas_Object *laundry_box = elm_box_add(laundry_box_wrapper);
 	elm_layout_content_set(laundry_box_wrapper, "elm.swallow.content", laundry_box);
+	elm_box_align_set(laundry_box, 0.5, 0);
 	elm_box_padding_set(laundry_box, 0, 25);
 	evas_object_show(laundry_box);
 
@@ -738,7 +744,10 @@ create_base_gui(appdata_s *ad)
 
 	// laundry - list box
 	Evas_Object *laundry_list_box = elm_box_add(laundry_box);
+	evas_object_size_hint_weight_set(laundry_list_box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(laundry_list_box, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	elm_box_horizontal_set(laundry_list_box, EINA_TRUE);
+	elm_box_align_set(laundry_list_box, 0, 0);
 	elm_box_padding_set(laundry_list_box, 50, 0);
 	elm_box_pack_end(laundry_box, laundry_list_box);
 	evas_object_show(laundry_list_box);
@@ -941,6 +950,7 @@ void laundry_expand_cb(void *data, Evas_Object *obj, void *event_info) {
 			}
 		}
 	}
+	pthread_mutex_unlock(&mtx_read);
 }
 
 static bool

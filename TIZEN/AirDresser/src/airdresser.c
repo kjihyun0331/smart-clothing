@@ -263,6 +263,7 @@ void socket_init() {
 	hints.ai_protocol = IPPROTO_TCP;
 
 	dlog_print(DLOG_INFO, LOG_TAG, "hints : %d", hints.ai_flags);
+
 	if (getaddrinfo("52.78.199.11", "65432", &hints, &result) != 0) {	// server ip
 		dlog_print(DLOG_INFO, LOG_TAG, "getaddrinfo() error\n");
 		connection_profile_destroy(profile_h);
@@ -376,7 +377,7 @@ void socket_send(void *data) {
 			json_object_set_string_member(root, "rfidUid", daily_outfit_data[daily_outfit_count - 1].rfid_uid);
 		}
 		else if(request == REQUEST_DAILY_OUTFIT){
-			json_object_set_string_member(root, "requestName", "getDailyOutfit");
+			json_object_set_string_member(root, "requestName", "addDailyOutfit");
 			json_object_set_int_member(root, "requestNumber", request_number);
 			json_object_set_int_member(root, "userId", user_data[selectedIndex].id);
 
@@ -392,9 +393,10 @@ void socket_send(void *data) {
 			json_object_set_string_member(root, "rfidUid", clothes_data.rfid_uid);
 		}
 		else if(request == REQUEST_ADD_CLOTHES){
-			json_object_set_string_member(root, "requestName", "getClothes");
+			json_object_set_string_member(root, "requestName", "addClothes");
 			json_object_set_int_member(root, "requestNumber", request_number);
-			json_object_set_string_member(root, "clothesRfidUid", clothes_data.rfid_uid);
+			json_object_set_string_member(root, "rfidUid", clothes_data.rfid_uid);
+			json_object_set_int_member(root, "clothesDetailId", 1);
 
 			JsonArray *users = json_array_new();
 			for(int i = 0; i < user_count; i++){
@@ -415,6 +417,7 @@ void socket_send(void *data) {
 		send_buf[len + 1] = 0;
 
 		write(sockfd, send_buf, strlen(send_buf));
+		dlog_print(DLOG_INFO, LOG_TAG, "%s", send_buf);
 
 		json_object_unref(root);
 		json_node_free(node);
@@ -428,6 +431,7 @@ void socket_recv(void *data) {
 	while(true){
 		memset(recv_buf, 0, BUF_SIZE);
 		int recv_len = read(sockfd, recv_buf, BUF_SIZE);
+		dlog_print(DLOG_INFO, LOG_TAG, "%s", recv_buf);
 		if(recv_len == 0){
 			break;
 		}

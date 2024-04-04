@@ -4,13 +4,13 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"></SignatureMethod>
 <Reference URI="author-signature-default.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>d5AgO/sYMSwTh2y4l1IdLHtgo0rys2HnfAlGPLFuORPTF/0TKuahXpgwrvb6v0unlV2BaqezbqXX
-88vnAVjJ+A==</DigestValue>
+<DigestValue>FM2Fy3GTPVn1IB4IprkciEl/D9AwJRqt9c4IwkNt2qrfMclDxhCelF9g4KKw30xZqwLYJhj5YMFW
+vqtCTsY1iw==</DigestValue>
 </Reference>
 <Reference URI="bin%2Fwasher">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
-<DigestValue>bafSTtlaaUi7VDLyj70QCprLZmhkjEYEWmR6bjXnGRcKGKCkiYIrtW3WwfXcfIMeoDH0bVquysTa
-qigceW6vng==</DigestValue>
+<DigestValue>tw8jiTS5HamgdfKliwCtQkPyT+dambxJ/a+qL1VySlEHXrI+sjcwdj+7F1zMM1U/b82lPkD/+vXu
+lmgecJc+oQ==</DigestValue>
 </Reference>
 <Reference URI="res%2Fcontents%2Fclothes_example.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></DigestMethod>
@@ -67,9 +67,9 @@ QY10fG1EWQ==</DigestValue>
 </Reference>
 </SignedInfo>
 <SignatureValue>
-apwtAQHYyzwfZnyDVEsxEeFftRQ3lP+71NRzH5N5mBjRFi2oCYfk9B7/QD3Kbr4g/kHmPoAWtqm6
-hUbCoF9fQsouAsXIhUsKGNlusDJwT2ECTzWm1wm/NSRm/UWtj+TviVgcK5jSnZHZ5oY5hSxqysmw
-FK/Zw+7Dgp3uuvxrqg4=
+ckq6s2P0k2KDz8W6wJRN951/EZVRB3yKbVlPDPqrSNfJFkjd0nCNuCLcXsEJ/m4SAHho9Y+g5DVz
+9UJ9IGt6Rq9VUZ6obr2feUdKxOB7VwcsZ/KvPoySEJ6An5oAHR4LwM6g9vJsHsGz9ORBwnexwBbF
+1ZdYmhgQMfq9K6BSFGI=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
