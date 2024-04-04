@@ -154,7 +154,12 @@ TODO
 
 ### [ML]
 
-TODO
+- tensorflow를 통해 판단 MLP 모델의 keras파일 생성
+- fine-tuning 기법을 통해 추가된 데이터 추가 학습
+- open-cv를 통한 이미지 프로세싱
+- scikit-image를 통해 이미지 유사도 벡터화
+- scikit-learn의 KNN 모델을 통한 추천 옷 도출
+- django-apscheduler을 이용하여 fine-tuning scheudle관리
 
 <br>
 <br>
