@@ -1,12 +1,12 @@
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'super_tizen',
-        'USER': 'gamza',
-        'PASSWORD': 'hello147',
-        'HOST': 'j10s006.p.ssafy.io',
-        'PORT': '8999',
+        'ENGINE': 'custom_db_engine',
+        'NAME': 'custom_db_name',
+        'USER': 'custom_db_user',
+        'PASSWORD': 'custom_db_password',
+        'HOST': 'custom_db_host',
+        'PORT': 'custom_db_port',
     }
 }
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rkqs46$wzdn!hs+5@ywcw@t-mrb1za2%@m0bt0@h22pa(+m(a!'
+SECRET_KEY = 'django_secret_key'
