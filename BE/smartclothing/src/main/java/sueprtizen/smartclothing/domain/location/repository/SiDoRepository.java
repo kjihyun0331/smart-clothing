@@ -6,4 +6,5 @@ import sueprtizen.smartclothing.domain.location.entity.SiDo;
 
 @Repository
 public interface SiDoRepository extends JpaRepository<SiDo, Integer> {
+    SiDo findBySiDoId(Integer siDoId);
 }

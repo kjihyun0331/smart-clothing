@@ -3,5 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.mlp),
+    path('test/<str:rate>/<str:formattedDate>/<str:locateInfo>/<str:schedule>/<int:count>/', views.mlp),
+    path('test2', views.test),
+    path('update', views.update)
 ]

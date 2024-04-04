@@ -25,6 +25,12 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["src", "src/main.tsx", "vite-env.d.ts"],
+  "include": [
+    "src",
+    "src/main.tsx",
+    "vite-env.d.ts",
+    "notification.d.ts",
+    "type.d.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

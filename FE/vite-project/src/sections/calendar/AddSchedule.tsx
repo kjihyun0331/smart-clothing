@@ -41,7 +41,6 @@ export const AddSchedule = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-    console.log(e.target.value);
   };
 
   return (
@@ -73,10 +72,28 @@ export const AddSchedule = ({
           onChange={handleInputChange}
           defaultValue={title}
         />
-        <GreenButton onClick={() => navigator("makeoutfit")}>
+        <GreenButton
+          onClick={() => {
+            if (selectedKeyword) {
+              clearItems();
+              navigator("makeoutfit");
+            } else {
+              window.alert("상황 하나 이상 선택해주세요");
+            }
+          }}
+        >
           옷장에서 고르기
         </GreenButton>
-        <GreenButton onClick={() => navigator("past")}>
+        <GreenButton
+          onClick={() => {
+            if (selectedKeyword) {
+              clearItems();
+              navigator("past");
+            } else {
+              window.alert("상황 하나 이상 선택해주세요");
+            }
+          }}
+        >
           과거 코디에서 고르기
         </GreenButton>
         {isWithinNextFiveDays && (
@@ -84,7 +101,8 @@ export const AddSchedule = ({
             onClick={() => {
               if (selectedKeyword) {
                 clearItems();
-                navigator("recommend");
+                // console.log(selectedKeyword);
+                navigator(`recommend`);
               } else {
                 window.alert("상황 하나 이상 선택해주세요");
               }

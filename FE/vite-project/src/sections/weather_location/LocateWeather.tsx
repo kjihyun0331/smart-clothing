@@ -3,22 +3,33 @@ import LocateSelectModal from './LocateSelectModal';
 import { useState, useRef } from 'react';
 import { useLocateStore } from '@/store/LocateStore';
 import IconLocate from '@/assets/ui/IconLocate';
-import { useTodayWeather } from '@/hooks/useCustomQuery';
+import IconLargeWeather from '@/assets/weather/IconLargeWeather';
+import { useApi } from '@/hooks/useApi';
 
 
-function StoreLocate() {
+
+function LocateWeather() {
     // 상태관리
     const { Sido, Sigungu, LocateInfo } = useLocateStore()
     // modal 관리
     const [selectLocate, setSelectLocate] = useState<boolean>(false)
     // 시계 변수
     let today:Date = new Date()
+
+    const date:string = today.toISOString().split('T')[0];
+
     const hours = useRef<number>(0)
     const AMPM = useRef<string>('AM')
     const [minutes, setMinutes] = useState<string>('00')
 
+    const locatekey = LocateInfo
+
     // 날씨 API
-    const weatherInfo = useTodayWeather(LocateInfo);
+    const { isLoading, isError, data } = useApi(
+        "get",
+        `weather?locationKey=${locatekey}&date=${date}`
+    );
+    // console.log('확인api!', data.icon)
 
 
     // modal controll
@@ -36,6 +47,9 @@ function StoreLocate() {
         hours.current = today.getHours() % 12
         if (today.getHours() >= 12) {
             AMPM.current = 'PM'
+            if (hours.current == 0) {
+                hours.current = 12
+            }
         } else {
             AMPM.current = 'AM'
         }
@@ -43,12 +57,13 @@ function StoreLocate() {
     }, 100);
 
     
+    
     return (
         <Container>
 
             {/* icon 영역 */}
             <IconContainer>
-                {weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].WeatherIcon}
+                {isError || isLoading ? '--' : <IconLargeWeather id={data.icon} />}
             </IconContainer>
 
             {/* 현재 위치 */}
@@ -63,7 +78,18 @@ function StoreLocate() {
 
             {/* 현재 온도 */}
             <SimpleWeahterContainer>
-                {weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].Temperature.Metric.Value + '°'}
+                {isError || isLoading ? '--' : 
+                    <><LowestTemperature>
+                        <span>최고{'\u00a0'}</span>{data.highestTemperature + '°'}
+                    </LowestTemperature>
+                        <div className='middle'>
+                            /
+                        </div>
+                    <HighestTemperature>
+                        <span>최저{'\u00a0'}</span>{data.lowestTemperature + '°'}
+                    </HighestTemperature> 
+                    </>
+                    }
             </SimpleWeahterContainer>
 
             {/* 날씨 세부사항 */}
@@ -71,29 +97,35 @@ function StoreLocate() {
 
                 {/* 현재 시간 */}
                 <div>
-                    <DetailWeahterHeader>Time</DetailWeahterHeader>
+                    <DetailWeahterHeader>시간</DetailWeahterHeader>
                     <DetailWeahterInfo>{hours.current}:{minutes}{AMPM.current}</DetailWeahterInfo>
                 </div>
 
                 {/* UV */}
                 <div>
-                    <DetailWeahterHeader>UV</DetailWeahterHeader>
+                    <DetailWeahterHeader>자외선</DetailWeahterHeader>
                     <DetailWeahterInfo>
-                        {weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].UVIndex}
-                        <span>{weatherInfo.isError || weatherInfo.isPending ? '' : '(' + weatherInfo.data.data[0].UVIndexText + ')'}</span>
+                        {isError || isLoading ? '--' : data.UV}
+                        <span>{isError || isLoading ? '' : '(' + data.UVMessage.replace(/\s*\(.*?\)\s*/g, '') + ')'}</span>
                     </DetailWeahterInfo>
                 </div>
 
                 {/* 현재 강수량 */}
                 <div>
-                    <DetailWeahterHeader>%RAIN</DetailWeahterHeader>
-                    <DetailWeahterInfo>{weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].Precip1hr.Metric.Value}</DetailWeahterInfo>
+                    <DetailWeahterHeader>강수확률</DetailWeahterHeader>
+                    <DetailWeahterInfo>{isError || isLoading ? '--' : data.precipitation + '%'}</DetailWeahterInfo>
                 </div>
 
                 {/* 체감온도 */}
                 <div>
-                    <DetailWeahterHeader>체감온도</DetailWeahterHeader>
-                    <DetailWeahterInfo>{weatherInfo.isError || weatherInfo.isPending ? '--' : weatherInfo.data.data[0].RealFeelTemperature.Metric.Value + '°'}</DetailWeahterInfo>
+                    <DetailWeahterHeader>습도</DetailWeahterHeader>
+                    <DetailWeahterInfo>{isError || isLoading ? '--' : 
+                        <>
+                        <span>
+                                {data.humidity}%
+                            </span>
+                        </>}
+                        </DetailWeahterInfo>
                 </div>
             </DetailWeahterContainer>
         </Container>
@@ -102,7 +134,8 @@ function StoreLocate() {
 }
 
 
-export default StoreLocate;
+export default LocateWeather;
+
 
 
 const Container = styled.div`
@@ -115,12 +148,27 @@ background-color: #f2f2f2;
 text-align: center;
 `
 
+const LowestTemperature = styled.div`
+color: #ff7c7c;
+span {
+    font-size: 1rem;
+}
+
+`;
+
+const HighestTemperature = styled.div`
+color: #9999ff;
+span {
+    font-size: 1rem;
+}
+`;
+
+
 const IconContainer = styled.div`
-width: 100%;
-height: 40%;
+width: auto;
+height: 35%;
 margin: 0 auto 1rem auto;
 box-sizing: border-box;
-background-color: #ffffff;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -150,7 +198,13 @@ display: flex;
 align-items: center;
 justify-content: center;
 font-weight: bolder;
-font-size: 4.5rem;
+font-size: 3rem;
+width: 100%;
+display: flex;
+justify-content: space-around;
+.middle {
+    color : #ababab;
+}
 `
 
 const DetailWeahterContainer = styled.div`
@@ -173,7 +227,4 @@ const DetailWeahterInfo = styled.div`
 font-size: 0.9rem;
 margin-top: 0.5rem;
 color: #000000;
-span {
-    font-size: 0.7rem;
-  }
 `

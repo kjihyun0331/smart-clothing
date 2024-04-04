@@ -55,7 +55,7 @@ collections {
 				type: RECT;
 				description {
 					state: "default" 0.0;
-					color: 255 255 255 127;
+					color: 148 144 129 127;
 					rel1 {
 						relative: 1.0 0.0;
 						offset: -15 0;
@@ -76,36 +76,6 @@ collections {
 					}
 					rel2 {
 						relative: 1.0 1.0;
-					}
-				}
-			}
-		}
-	}
-	group {
-		name: "elm/scroller/base/laundry_scroller";
-		parts {
-			part {
-				name: "base";
-				type: RECT;
-				description {
-					state: "default" 0.0;
-					color: 0 0 0 255;
-				}
-			}
-			part {
-				name: "elm.bar";
-				type: RECT;
-				scale: 1;
-				description {
-					state: "default" 0.0;
-					color: 255 0 0 255;
-					rel1 {
-						relative: 1.0 0.0;
-						offset: -4 0;
-					}
-					rel2 {
-						relative: 1.0 1.0;
-						offset: 0 -4;
 					}
 				}
 			}
@@ -151,6 +121,50 @@ collections {
 					rel2 {
 						offset: -50 -30;
 						to: "right_bottom_padding";
+					}
+				}
+			}
+		}
+	}
+	group {
+		name: "image_wrapper";
+		parts {
+			part {
+				name: "bg";
+				type: RECT;
+				description	{
+					state: "default" 0.0;
+					color: 233 233 233 255;
+				}
+			}
+			part {
+				name: "left_top_padding";
+				type: SPACER;
+				description {
+					state: "default" 0.0;
+					align: 0 0;
+				}
+			}
+			part {
+				name: "right_bottom_padding";
+				type: SPACER;
+				description {
+					state: "default" 0.0;
+					align: 1 1;
+				}
+			}
+			part {
+				name: "elm.swallow.content";
+				type: SWALLOW;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						to: "left_top_padding";
+						offset: 0 0;
+					}
+					rel2 {
+						to: "right_bottom_padding";
+						offset: 0 0;
 					}
 				}
 			}

@@ -1,6 +1,7 @@
 package sueprtizen.smartclothing.domain.outfit.past.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sueprtizen.smartclothing.domain.calendar.entity.Schedule;
@@ -22,11 +23,10 @@ public class PastOutfit {
     @JoinColumn(name = "clothing_id", nullable = false)
     private Clothing clothing;
 
-    private int x;
 
-    private int y;
-
-    private int width;
-
-    private int height;
+    @Builder
+    public PastOutfit(Schedule schedule, Clothing clothing) {
+        this.schedule = schedule;
+        this.clothing = clothing;
+    }
 }

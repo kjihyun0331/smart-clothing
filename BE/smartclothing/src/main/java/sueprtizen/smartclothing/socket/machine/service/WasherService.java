@@ -1,10 +1,14 @@
 package sueprtizen.smartclothing.socket.machine.service;
 
-import sueprtizen.smartclothing.socket.machine.dto.WasherResponseDTO;
+import org.json.simple.JSONObject;
 
 import java.util.List;
 
 
 public interface WasherService {
-    List<WasherResponseDTO> getAllLaundryList();
+    List<JSONObject> getAllLaundryList();
+
+    List<JSONObject> getMainLaundryList();
+
+    void addLaundry(String rfid);
 }

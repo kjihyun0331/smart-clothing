@@ -1,12 +1,8 @@
-interface ImageType {
+type ImageType = {
   url: string;
-}
+};
 
-interface ConfirmClothesProps {
-  images: ImageType[];
-}
-
-export async function createImage(images: ConfirmClothesProps) {
+export async function createImage(images: ImageType[]) {
   const createImages = images.map(async (image) => {
     const img = new Image();
     img.setAttribute("crossOrigin", "anonymous");

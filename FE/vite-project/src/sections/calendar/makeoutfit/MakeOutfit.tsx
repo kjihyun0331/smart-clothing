@@ -6,6 +6,8 @@ import { Loader } from "@/components/Loader";
 import IconBack from "@/assets/ui/IconBack";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
+// import store
+
 
 const MakeOutfit = () => {
   // const [showCanvas, setShowCanvas] = useState(false);

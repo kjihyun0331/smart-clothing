@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocate } from '@/hooks/useCustomQuery';
 import { cities } from './LocationInfo';
+// import { useApi } from '@/hooks/useApi';
+// import { Loader } from '@/components/Loader';
 
 
 interface CurrentProps {
@@ -15,6 +17,12 @@ function CurrentLocate(props: CurrentProps) {
     // Sigungun, Sido를 update하기 위한 function
     const {ChangeLocateInfo} = useLocateStore()
 
+    // 위치 API
+    // const { isLoading, isError, data } = useApi(
+    //     "get",
+    //     `location?latitude=${props.latitude}&longtitude=${props.longitude}`
+    // );
+
     // 좌표를 통한 현재 위치 query
     const locateQuery = useLocate(props.latitude, props.longitude)
 
@@ -25,7 +33,17 @@ function CurrentLocate(props: CurrentProps) {
             const newSigungu:string  = locateQuery.data.data.documents[0].address.region_2depth_name.split(" ")[0]
             ChangeLocateInfo(newSido, newSigungu, cities[newSido][newSigungu])
         }
-    }, [locateQuery])
+
+        // if (data) {
+        //     const newSido:string = data.sido
+        //     const newSigungu:string  = data.sigungu
+        //     ChangeLocateInfo(newSido, newSigungu, cities[newSido][newSigungu])
+        // }
+
+    }, [
+        locateQuery, 
+        // data
+    ])
     
 
     if (props.latitude == null ||  props.longitude == null) {
@@ -50,6 +68,12 @@ function CurrentLocate(props: CurrentProps) {
             )
         }
     }
+
+    // if (props.latitude == null ||  props.longitude == null || isLoading || isError) {
+    //     return (
+    //         <Loader/>
+    //     )
+    // }
 }
 
 

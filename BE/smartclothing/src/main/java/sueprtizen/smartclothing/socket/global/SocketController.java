@@ -1,17 +1,16 @@
 package sueprtizen.smartclothing.socket.global;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingImageDTO;
-import sueprtizen.smartclothing.domain.clothing.dto.SocketClothingInfoDTO;
 import sueprtizen.smartclothing.domain.clothing.service.ClothingService;
-import sueprtizen.smartclothing.socket.clothes.dto.SocketUserResponseDTO;
+import sueprtizen.smartclothing.domain.outfit.past.service.PastOutfitService;
 import sueprtizen.smartclothing.socket.clothes.service.SocketUserService;
-import sueprtizen.smartclothing.socket.machine.dto.WasherResponseDTO;
+import sueprtizen.smartclothing.socket.machine.service.AirdresserService;
 import sueprtizen.smartclothing.socket.machine.service.WasherService;
 
 import java.io.*;
@@ -71,6 +70,8 @@ public class SocketController {
             WasherService washerService = applicationContext.getBean(WasherService.class);
             SocketUserService userService = applicationContext.getBean(SocketUserService.class);
             ClothingService clothingService = applicationContext.getBean(ClothingService.class);
+            AirdresserService airdresserService = applicationContext.getBean(AirdresserService.class);
+            PastOutfitService pastOutfitService = applicationContext.getBean(PastOutfitService.class);
 
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -83,7 +84,6 @@ public class SocketController {
                     if ("exit".equalsIgnoreCase(clientMessage)) {
                         break;
                     }
-                    writer.println("Request Accpeted");
 
                     JSONObject requestDTO = (JSONObject) parser.parse(clientMessage);
                     try {
@@ -95,23 +95,50 @@ public class SocketController {
                         responseJson.put("requestNumber", requestNumber);
 
                         switch (requestName) {
+                            case "getMainLaundryList":
+                                List<JSONObject> minLaundry = washerService.getMainLaundryList();
+                                responseJson.put("count", minLaundry.size());
+                                responseJson.put("result", minLaundry);
+                                break;
                             case "getAllLaundryList":
-                                List<WasherResponseDTO> laundry = washerService.getAllLaundryList();
+                                List<JSONObject> laundry = washerService.getAllLaundryList();
                                 responseJson.put("count", laundry.size());
                                 responseJson.put("result", laundry);
                                 break;
+                            case "getMainOutfitList":
+                                List<JSONObject> minOutfit = airdresserService.getMainOutfitList();
+                                responseJson.put("count", minOutfit.size());
+                                responseJson.put("result", minOutfit);
+                                break;
+                            case "getAllOutfitList":
+                                List<JSONObject> outfit = airdresserService.getAllOutfitList();
+                                responseJson.put("count", outfit.size());
+                                responseJson.put("result", outfit);
+                                break;
                             case "getUserList":
-                                List<SocketUserResponseDTO> users = userService.getAllUsers();
+                                List<JSONObject> users = userService.getAllUsers();
                                 responseJson.put("count", users.size());
                                 responseJson.put("result", users);
                                 break;
                             case "getClothesInfo":
-                                SocketClothingInfoDTO info = clothingService.getClothingInfo((String)requestDTO.get("rfidUid"));
-                                responseJson.put("result", objectMapper.writeValueAsString(info));
+                                JSONObject info = clothingService.getClothingInfo((String) requestDTO.get("rfidUid"));
+                                responseJson.put("result", info);
                                 break;
                             case "getClothesImage":
-                                SocketClothingImageDTO path = clothingService.getClothingImage((String) requestDTO.get("rfidUid"));
-                                responseJson.put("result", objectMapper.writeValueAsString(path));
+                                JSONObject path = clothingService.getClothingImage((String) requestDTO.get("rfidUid"));
+                                responseJson.put("result", path);
+                                break;
+                            case "addClothes":
+                                clothingService.addClothes((String) requestDTO.get("rfidUid"), (JSONArray) requestDTO.get("users"), (Long) requestDTO.get("clothesDetailId"));
+                                break;
+                            case "addDailyOutfit":
+                                pastOutfitService.addTodayOutfit((Long) requestDTO.get("userId"), (JSONArray) requestDTO.get("clothes"));
+                                break;
+                            case "addLaundry":
+                                washerService.addLaundry((String) requestDTO.get("rfidUid"));
+                                break;
+                            case "addCareClothes":
+                                airdresserService.addCareClothes((String) requestDTO.get("rfidUid"));
                                 break;
                         }
                         writer.println(responseJson);

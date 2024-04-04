@@ -12,6 +12,9 @@ RUN python -m pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
+# opencv 사전준비
+RUN apt-get update && apt-get install -y libgl1-mesa-glx
+
 # 데이터베이스 마이그레이션
 RUN python manage.py makemigrations
 RUN python manage.py migrate

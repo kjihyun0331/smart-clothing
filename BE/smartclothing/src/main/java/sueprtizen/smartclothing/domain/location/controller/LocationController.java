@@ -2,10 +2,7 @@ package sueprtizen.smartclothing.domain.location.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sueprtizen.smartclothing.domain.location.dto.SiDoResponseDTO;
 import sueprtizen.smartclothing.domain.location.dto.SiGunGuResponseDTO;
 import sueprtizen.smartclothing.domain.location.service.LocationService;
