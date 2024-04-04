@@ -17,13 +17,13 @@ import { BASE_URL } from "@/config/config";
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
-  apiKey: "AIzaSyAX5dTw8B5y4lPSsHrhSwTyyrMLrib_rjA",
-  authDomain: "smartclothing-6d964.firebaseapp.com",
-  projectId: "smartclothing-6d964",
-  storageBucket: "smartclothing-6d964.appspot.com",
-  messagingSenderId: "75126210766",
-  appId: "1:75126210766:web:c1672e5eafaaea2736d09f",
-  measurementId: "G-CXPQ0KX5CN",
+  apiKey: import.meta.env.VITE_APP_API_KEY,
+  authDomain: import.meta.env.VITE_APP_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_APP_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_APP_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_APP_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_APP_ID,
+  measurementId: import.meta.env.VITE_APP_MEASUREMENT_ID,
 };
 
 function requestPermission() {

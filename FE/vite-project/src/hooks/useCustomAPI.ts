@@ -1,24 +1,23 @@
 import axios from "axios";
 
-
-const weatherToken = 'abcd'
+const weatherToken = "abcd";
 
 const weatherURL = `http://dataservice.accuweather.com/`;
-const weatherAxiosInstance = axios.create({ 
-    baseURL: weatherURL 
+const weatherAxiosInstance = axios.create({
+  baseURL: weatherURL,
 });
 
 const locateURL = `https://dapi.kakao.com/`;
-const locateAxiosInstance = axios.create({ 
-    baseURL: locateURL,
-    headers: {
-        'Authorization': 'KakaoAK 51ed9bb753bc25e7d5a84697266346f4'
-      }
+const locateAxiosInstance = axios.create({
+  baseURL: locateURL,
+  headers: {
+    Authorization: import.meta.env.VITE_KAKAO_API_KEY,
+  },
 });
 
 // // 로그인 유저 api
 // const backendURL = '';
-// const userAxiosInstance = axios.create({ 
+// const userAxiosInstance = axios.create({
 //     baseURL: backendURL,
 //     headers: {
 //         'userID': ``
@@ -26,7 +25,7 @@ const locateAxiosInstance = axios.create({
 // });
 
 // // 로그인 필요x api
-// const nonUserAxiosInstance = axios.create({ 
+// const nonUserAxiosInstance = axios.create({
 //     baseURL: backendURL,
 // });
 
@@ -35,22 +34,26 @@ const locateAxiosInstance = axios.create({
 //     return (await userAxiosInstance.get<void>(`${date}`));
 // }
 
-
 // 하루 날씨 데이터 요청
 export const fetchTodayWeather = async (locateKey: number) => {
-    return (await weatherAxiosInstance.get<void>(`currentconditions/v1/${locateKey}?apikey=${weatherToken}&language=ko-kr&details=true`));
+  return await weatherAxiosInstance.get<void>(
+    `currentconditions/v1/${locateKey}?apikey=${weatherToken}&language=ko-kr&details=true`
+  );
 };
 
 // 5일 날씨 데이터 요청
-export const fetch5daysWeather  = async (locateKey: number, language: string) => {
-    return (await weatherAxiosInstance.get<void>(`currentconditions/v1/${locateKey}?apikey=${weatherToken}&language=${language}&details=true&metric=true`));
+export const fetch5daysWeather = async (
+  locateKey: number,
+  language: string
+) => {
+  return await weatherAxiosInstance.get<void>(
+    `currentconditions/v1/${locateKey}?apikey=${weatherToken}&language=${language}&details=true&metric=true`
+  );
 };
-
 
 // 좌표 -> 주소 변경
-export const fetchLocate  = async (latitude: number, longitude: number) => {
-    return (await locateAxiosInstance.get<any>(`v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`));
+export const fetchLocate = async (latitude: number, longitude: number) => {
+  return await locateAxiosInstance.get<any>(
+    `v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`
+  );
 };
-
-
-
